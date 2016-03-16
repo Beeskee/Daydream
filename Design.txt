@@ -165,16 +165,15 @@ It is impossible to return multiple values.  I find multiple return values to be
 
 Inspiration:
 
-Common Lisp
 Scheme
   Chicken Scheme and Picrin Scheme
-Racket
-Clojure
-Hy
-Emacs Lisp
 Haskell
+Racket
+Common Lisp
+Emacs Lisp
 Python
 Lua
-
+Clojure
+Hy
 
 The order of evaluation of arguments is from left to right, as in Common Lisp.  Depending on this is bad taste, but it is at least documented.
