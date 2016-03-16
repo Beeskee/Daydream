@@ -1,3 +1,180 @@
-?
+Goals:
 
-Deviations from Typical Lisp-likes:
+* be good for automating Windows and Windows programs that were not designed with automation in mind
+
+  It should be good for automating installation, upgrading, uninstallation, and reconfiguration of software that provides no support for automation.  These are among the worst problems for Windows system administrators.
+
+  It should be able to run arbitrary code when a button or button combination is pressed, globally or only when a certain window is active.  Infrequently used key combinations can be used to launch programs.  It is useful for adding some automation while using a particular program.  For example, quickly filling in fields in a badly-designed database interface.  It is also useful for video games which did not bother to provide rapid fire.
+
+  It should be good for remapping buttons, globally or only when a certain window is active.  This is useful for temporarily changing the keyboard layout.  For example, a computer technician who has switched to the Dvorak keyboard layout to treat their repetitive strain injury could use it while repairing the computer of someone that uses the QWERTY keyboard layout.  It is also useful for programs that did not bother to provide proper button remapping.  3-D modelers and video games frequently do not provide button remapping, and may have a very awkward default mapping, especially if you use an alternative keyboard layout.
+
+* have good error handling
+
+  Good error handling makes writing safe code and debugging easier.
+
+  Where possible, the programming language should make errors impossible, without reducing what can be expressed in it.
+
+  Detecting errors should require no effort.
+
+  The damage errors can cause should be minimized.
+
+  If the program does not handle an error, the programming language implementation should immediately halt execution, display what expectation was violated, where the error occurred, and the relevant values.
+
+  Errors should be classified such that errors due to defects are separate from errors that are not the programmer's fault.  Only the latter should normally be handled.  This prevents defects from being hidden by accident.
+
+  It should be possible, though normally discouraged, to handle all errors.  This makes writing interpreters possible.
+
+  Mechanism should be separated from policy.  Code that can experience errors should provide one or more ways to recover from those errors (mechanisms).  Code that calls code that can experience errors should be what chooses the way to handle the error (the policy).
+
+* be consistent
+
+  Consistency means not having to remember, and abstract over, differences that should not exist.
+
+  Constructs should always compose with any construct that can satisfy its requirements.
+
+  Related constructs should have similar names.
+
+  Related functions should have similar parameters, and parameter order.
+
+* distinguish unrelated concepts
+
+  Conflation means having to remember, and abstract over, similarities that should not exist.  For example, many vector (array) operations only have useful semantics when sequential integer indices are assumed, and therefore vectors and dictionaries should not be the same type.
+
+  Constructs should never compose with any construct that cannot satisfy its requirements.
+
+  Unrelated constructs should have different names.
+
+* be elegant
+
+  Elegance usually results in less code to write, test, document, and maintain.
+
+  * be simple
+
+    Minimize the number of primitive constructs.
+
+  * be general
+
+    Constructs should be useful for many different purposes.
+
+  * be composable
+
+    It should be possible to combine most constructs to produce new, useful, constructs.  Non-composable constructs should be minimized.
+
+  * be brief
+
+    It should require little code to achieve the programmer's goal.
+
+  * be relevant
+
+    The majority of the code should relate to solving the problem.  Code to manage resources should be minimized.
+
+  * seek symmetry
+
+    Where practical, inverse functions should be provided.  Other forms of symmetry may also be of practical value.
+
+* do not restrict those programming in our language
+
+  If the programming language is too limited, it will be unpleasant to work in.
+
+  It should be possible to implement a metacircular evaluator in our programming language without much effort or loss in efficiency.  This is a good test.  For example, environments are dictionaries, and implementing them requires vectors and lists.  These should all be exposed in the programming language.
+
+
+Non-Goals:
+
+* familiarity or ease of learning by novice programmers
+
+  The syntax used in Lisp-like programming languages is not familiar to the average person.  Many concepts, like closures, are also unfamiliar.  This makes Lisp-like programming languages more difficult to learn than most popular programming languages.
+
+  However, I do not intend to go out of my way to make it difficult to learn for novice programmers.
+
+* syntactic innovation
+
+  I hope to take all my syntax from existing Lisp-like programming languages.  I want to keep the amount of punctuation very low.  I /like/ the simple, regular, appearance of Lisp source code.
+
+  I might use "%" for modulo, as in popular programming languages, even though I cannot find a Lisp-like programming language that does that.
+
+  I might use some original names (not punctuation) for things if I cannot find something acceptable.  I want frequently used constructs to have very short, but very readable, names, so expressions remain readable.
+
+* compatibility with any existing Lisp-like programming languages
+
+  Being compatible with an existing Lisp-like programming language means accepting all their design decisions.  I am unaware of any Lisp-like programming languages where I agree with all of their design decisions.
+
+* extreme immutability
+
+  While I agree that heavy use of mutation causes maintainability problems, limited use of mutation occasionally results in more maintainable code.
+
+  Functions that mutate their local variables, but not their arguments or global variables, are just as safe as those written in programming languages with mandatory immutability, and are sometimes much shorter, easier to understand, and efficient.
+
+* automatic (as in Smalltalk) or manual (as in Lisp Machine Lisp) persistence
+
+  Automatic persistence is a marvelous feature, so long as you do not try to use it to replace the file system (as Smalltalk did).
+
+  Unfortunately, it is very difficult to implement, and very inefficient, if you do not implement your own allocator.  Running on top of AutoHotkey makes that impossible.
+
+* object-oriented programming support
+
+  I believe object-oriented programming usually does more harm than good.  The difficulty in maintaining code that uses mutable global variables is widely recognized.  When something corrupts the value of a global variable, it is very hard to tell where it occurred.  Mutable objects are mutable global variables.  Implementation inheritance is also, recently, widely recognized as a source of maintainability problems.  Changing a method's implementation can break anything that inherits it.  Of course you can use immutable objects, and only inherit interfaces, but then objects aren't much more useful than records or dictionaries.
+
+  I intend on providing mutable closures, and it should be possible to implement a CLOS-like system on top of it, which is far more powerful than popular programming languages' object-oriented programming support, but I do not intend to write that myself.
+
+  That does imply that the programming language will have a fixed set of types.  It is better to have a small number of types and a large number of procedures that operate on each, than to have a large number of types and a small number of procedures that operate on each, because more code can be reused.  Dictionaries will be used in place of new types.
+
+* reader macro support
+
+  I have no strong objection to reader macros, they just do not seem helpful to me.  Their scope is unlimited, making them hard to use safely.  Without the ability to extend the type system and 'printer' there is little motivation for new literal notations.
+
+* generalized variable support
+
+  While I can see the appeal of having a single "set!" special form that can accept any mutable place (variables, those referred to by a dictionary and key, the return values of "first" and "rest", or a vector and index), I cannot imagine how to implement this in AutoHotkey.  AutoHotkey's "byref" only works with some variables, not Objects.  Anything else is likely to break when AutoHotkey's implementation changes.
+
+  I can still provide special forms that mutate each of those kinds of places, but the programmer will have to use the right one.
+
+  The absence of this feature should not be very annoying if you are doing mostly-functional programming.
+
+* symbol macro support
+
+  Symbol macros are only useful for generalized variables, which is a feature I do not plan to support.  Since they have no parameters, they cannot perform any useful processing.
+
+* high efficiency
+
+  Running on top of AutoHotkey makes high efficiency impossible.  It was never designed with efficiency in mind.  It uses string interpolation of code, which is roughly equivalent to parsing and evaluating lines repeatedly.  The current implementation uses reference counting, which we cannot avoid even on objects that have to be traced to be garbage collected (e.g. environments).  It makes no attempt at optimization.  Code written on one line, using commas to separate statements, is 35% faster than properly formatted code, for some unfathomable reason.
+
+  So long as our implementation is not too wasteful it should still be usable.
+
+
+Unconventional Features:
+
+The syntax for Booleans ("true" and "false") and integers in other bases ("0b101" and "0xF00") is similar to popular programming languages.
+
+Only "true" and "false" are true and false.  Integers can be converted to (0 is false, anything else is true) and from (true is 1, false is 0) Booleans, explicitly.  All type conversions are explicit.  This should make debugging easier, and I have always found treating non-Boolean values as Boolean confusing.
+
+A "null" type and value has been added, and lists are now defined in terms of it.  "null" is the null pointer, not an empty list.
+(cons null null) => '()
+(cons 0 null)    => '(0)
+
+Improper lists are not supported.  The second argument to "cons" must be a list or "null".  Improper lists seem to be inferior to proper lists or vectors for all purposes, and the infix syntax they use is unlike everything else in Lisp.
+
+Equality is much simpler than in most Lisp-likes.  Most equality tests are performed with "=", which compares values for immutable types, and identity (i.e. address) for mutable types, like "==" in most popular programming languages.  Dictionaries always use this form of equality.  "equal?" is also provided, which compares values even for mutable types, and correctly handles reference cycles.  The behavior of "=" is almost always what is desired, and "equal?" covers when it is not.  The complexity of equality in most Lisp-likes is neither necessary nor helpful.
+
+Variadic functions are not supported.  If you call a function with less than the number of arguments it expects, it will return a closure that will accept the remaining arguments, and has the closed-over arguments in its environment.  Parameters should appear in order from the most to least likely to be reused.  This makes using closures much more convenient.  Calling a function with the expected number of arguments causes it to run normally.  Calling a function with too many arguments is a defect.  Data structures like dictionaries, lists, and vectors are used where variadic functions would be used in other Lisp-like programming languages.
+
+Everything always returns a single value.  Nothing is 'undefined'.  Forms that perform definition or mutation return the value that they used.  Forms that involve a block of code return the value returned by the last expression in the block.  This should prevent undefined values from entering the program.
+
+It is impossible to return multiple values.  I find multiple return values to be confusing and aesthetically offensive.  Evaluation should reduce a tree of expressions to a single value.  If you want easy destructuring, return a dictionary.  If that is too verbose, use macros.
+
+
+Inspiration:
+
+Common Lisp
+Scheme
+  Chicken Scheme and Picrin Scheme
+Racket
+Clojure
+Hy
+Emacs Lisp
+Haskell
+Python
+Lua
+
+
+The order of evaluation of arguments is from left to right, as in Common Lisp.  Depending on this is bad taste, but it is at least documented.
