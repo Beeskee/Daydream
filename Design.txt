@@ -168,7 +168,7 @@ Inspiration:
 Scheme
   Chicken Scheme and Picrin Scheme
   Racket
-Haskell
+ML
 Common Lisp
 Emacs Lisp
 Python
