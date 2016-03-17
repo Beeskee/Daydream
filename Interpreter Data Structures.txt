@@ -1,0 +1,1 @@
+If we point to the 'outer' object, which we will probably need anyway for things like the type, we may be able to break pointer cycles more efficiently than setting large numbers of references to empty string.

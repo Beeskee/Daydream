@@ -167,8 +167,8 @@ Inspiration:
 
 Scheme
   Chicken Scheme and Picrin Scheme
+  Racket
 Haskell
-Racket
 Common Lisp
 Emacs Lisp
 Python
@@ -176,4 +176,7 @@ Lua
 Clojure
 Hy
 
-The order of evaluation of arguments is from left to right, as in Common Lisp.  Depending on this is bad taste, but it is at least documented.
+The order of evaluation of arguments is from left to right, as in Common Lisp.  Depending on this is bad taste, but at least it is documented.
+
+relatively static like racket
+modules vaguely like racket
