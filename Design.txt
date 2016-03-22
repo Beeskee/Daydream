@@ -34,7 +34,7 @@ Goals:
 
   Related constructs should have similar names.
 
-  Related functions should have similar parameters, and parameter order.
+  Related functions and macros should have similar parameters, and parameter order.
 
 * distinguish unrelated concepts
 
@@ -76,7 +76,9 @@ Goals:
 
   If the programming language is too limited, it will be unpleasant to work in.
 
-  It should be possible to implement a metacircular evaluator in our programming language without much effort or loss in efficiency.  This is a good test.  For example, environments are dictionaries, and implementing them requires vectors and lists.  These should all be exposed in the programming language.
+  As much as practical should be implemented in the programming language itself.  This has more to do with me finding it very hard to write anything reliable in AutoHotkey than aesthetics.  The lack of error handling, introspection, and recursion support makes programming difficult.
+
+  It should be possible to implement a metacircular evaluator in our programming language without much effort or loss in efficiency.  This assures the programming language's implementation is exposed in a useful way to programs written in it.
 
 
 Non-Goals:
@@ -87,47 +89,29 @@ Non-Goals:
 
   However, I do not intend to go out of my way to make it difficult to learn for novice programmers.
 
+* compatibility with any existing Lisp-like programming languages
+
+  Being compatible with an existing Lisp-like programming language means accepting all their design decisions.  I am unaware of any Lisp-like programming languages where I agree with all of their design decisions.
+
 * syntactic innovation
 
   I hope to take all my syntax from existing Lisp-like programming languages.  I want to keep the amount of punctuation very low.  I /like/ the simple, regular, appearance of Lisp source code.
 
   I might use "%" for modulo, as in popular programming languages, even though I cannot find a Lisp-like programming language that does that.
 
-  I might use some original names (not punctuation) for things if I cannot find something acceptable.  I want frequently used constructs to have very short, but very readable, names, so expressions remain readable.
-
-* compatibility with any existing Lisp-like programming languages
-
-  Being compatible with an existing Lisp-like programming language means accepting all their design decisions.  I am unaware of any Lisp-like programming languages where I agree with all of their design decisions.
-
-* extreme immutability
-
-  While I agree that heavy use of mutation causes maintainability problems, limited use of mutation occasionally results in more maintainable code.
-
-  Functions that mutate their local variables, but not their arguments or global variables, are just as safe as those written in programming languages with mandatory immutability, and are sometimes much shorter, easier to understand, and efficient.
-
-* automatic (as in Smalltalk) or manual (as in Lisp Machine Lisp) persistence
-
-  Automatic persistence is a marvelous feature, so long as you do not try to use it to replace the file system (as Smalltalk did).
-
-  Unfortunately, it is very difficult to implement, and very inefficient, if you do not implement your own allocator.  Running on top of AutoHotkey makes that impossible.
-
-* object-oriented programming support
-
-  I believe object-oriented programming usually does more harm than good.  The difficulty in maintaining code that uses mutable global variables is widely recognized.  When something corrupts the value of a global variable, it is very hard to tell where it occurred.  Mutable objects are mutable global variables.  Implementation inheritance is also, recently, widely recognized as a source of maintainability problems.  Changing a method's implementation can break anything that inherits it.  Of course you can use immutable objects, and only inherit interfaces, but then objects aren't much more useful than records or dictionaries.
-
-  I intend on providing mutable closures, and it should be possible to implement a CLOS-like system on top of it, which is far more powerful than popular programming languages' object-oriented programming support, but I do not intend to write that myself.
-
-  That does imply that the programming language will have a fixed set of types.  It is better to have a small number of types and a large number of procedures that operate on each, than to have a large number of types and a small number of procedures that operate on each, because more code can be reused.  Dictionaries will be used in place of new types.
+  I might use some original names for things if I cannot find something acceptable.  I want frequently used constructs to have very short, but very readable, names, so expressions remain readable.
 
 * reader macro support
 
-  I have no strong objection to reader macros, they just do not seem helpful to me.  Their scope is unlimited, making them hard to use safely.  Without the ability to extend the type system and 'printer' there is little motivation for new literal notations.
+  I have no strong objection to reader macros, they just do not seem helpful to me.  Their scope is unlimited, making them hard to use safely.  Without the ability to extend the type system and "printer" there is little motivation for new literal notations.
 
 * generalized variable support
 
-  While I can see the appeal of having a single "set!" special form that can accept any mutable place (variables, those referred to by a dictionary and key, the return values of "first" and "rest", or a vector and index), I cannot imagine how to implement this in AutoHotkey.  AutoHotkey's "byref" only works with some variables, not Objects.  Anything else is likely to break when AutoHotkey's implementation changes.
+  While I can see the appeal of having a single "set!" special form that can accept any mutable place (variables, those referred to by a dictionary and key, the return values of "first" and "rest", or a vector and index), I cannot imagine how to implement this in AutoHotkey.  AutoHotkey's "byref" only works with some variables, not Objects.  Pointer hacks are likely to break when AutoHotkey's implementation changes.
 
   I can still provide special forms that mutate each of those kinds of places, but the programmer will have to use the right one.
+
+  If it was possible to correct this, it would still reduce the efficiency of our garbage collector, since it currently does not have to set every reference in a collection to null when freeing it to cope with AutoHotkey's reference counting.  If you could refer to locations inside collections, instead of just to the collection, this would not work.
 
   The absence of this feature should not be very annoying if you are doing mostly-functional programming.
 
@@ -135,32 +119,106 @@ Non-Goals:
 
   Symbol macros are only useful for generalized variables, which is a feature I do not plan to support.  Since they have no parameters, they cannot perform any useful processing.
 
+* static type checking
+
+  I am not a fan of static type systems, despite them being trendy at the moment.  They are rarely sufficient to prove a program is free of defects.  They ossify a program, making it take more effort to change.
+
+  To prove a program is free of defects a dependent type system is required, and the specification of the program's types is equivalent to a program (the Curry-Howard correspondence).  That means type checking can suffer from all the problems that programs can have.  The good news is that if your program type checks in a system like this, it is highly unlikely it has any defects you thought to prove it free of, because to go unnoticed it would require that the proof and program have compatible defects.  There is still a risk of forgetting to prove something important.  Writing a program to construct correct code for your task is likely to be easier than using a general-purpose dependent type system.
+
+  If performance is the concern, most variables in a program written in a dynamically type checked programming language will be of a single type, and type inference will be able to determine it statically.  There are Lisp implementations that have performed type inference as part of their optimization for over a decade (e.g. SBCL).
+
+  However, it should be possible to implement a static type system on top of my programming language without having to reimplement anything.
+
+* introducing a null type
+
+  Do not confuse this with Scheme's terminology for the empty list.  The empty list will still exist in my programming language, and will probably be called "null".
+
+  The absence of an equivalent to the null type in most Lisp-like languages results in abusing other types or values as sentinel values.  The empty list is the most common choice, but false is usually chosen when an empty list could be confused with a meaningful value.  This feels like a kludge, but it is the cleanest solution.
+
+  If lists are described in terms of null references, the length of "'(null)" becomes ambiguous, because it is equivalent to "'()".  List operations lose useful semantics.  Converting vectors with trailing nulls to lists will result in lists that have less elements than the corresponding vector.  "cons"ing a value to a list does not necessarily result in a longer list, since that value might have been null.
+
+  This does raise the question of what the "first" and "rest" of the empty list is.  In my programming language they are defects, as in Scheme and most Lisp-like languages other than Common Lisp (where they are the empty list).  This is consistent with trying to access a vector out of bounds.  The "rest" of a 1 element list is the empty list, and "null?" can be used to test for that.
+
+* parallelism support
+
+  AutoHotkey does not support multithreading, making this difficult to implement.
+
+  To this day most C and C++ code is not thread-safe, so many programming languages with easy integration with C and C++ do not support it.  AutoHotkey may never do so.
+
+  There are hacks abusing inter-process communication for this purpose in the forums, similar to Python's multiprocessing and concurrent.futures implementations.  I may eventually add support for thread pools and futures this way.
+
+* mandatory immutability
+
+  While I agree that heavy use of mutation causes maintainability problems, limited use of mutation occasionally results in more maintainable code.
+
+  Functions that mutate their local variables, but not their arguments or global variables, are just as safe as those written in programming languages with mandatory immutability, and are sometimes shorter, easier to understand, and more efficient.
+
+  Without multithreading there is little motivation to enforce immutability.
+
+* implicit lazy evaluation
+
+  Implicit lazy evaluation makes it difficult to determine when, and in what order, side effects will occur, and side effects are required for a program to be useful.
+
+  Optimizing compilers for Haskell spend a lot of effort to eliminate implicit lazy evaluation.  We should avoid the same trap.
+
+* object-oriented programming support
+
+  I believe object-oriented programming usually does more harm than good.  The difficulty in maintaining code that uses mutable global variables is widely recognized.  When a global variable becomes corrupt, it is very hard to tell what code was responsible.  Mutable objects are mutable global variables.  Implementation inheritance is also, recently, widely recognized as a source of maintainability problems.  Changing a method's implementation can break anything that inherits it.  Of course you can use immutable objects, and only inherit interfaces and use composition, but then objects are no more useful than records or dictionaries.
+
+  I intend to provide mutable closures, and it should be possible to implement a CLOS-like system using them, which is far more powerful than popular programming languages' object-oriented programming support, but I do not plan to write that myself.
+
+  That does imply that the programming language will have a fixed set of types.  It is better to have a small number of types and a large number of procedures that operate on each, than to have a large number of types and a small number of procedures that operate on each, because more code can be reused.  Dictionaries will be used in place of new types.
+
+* transparent (as in Smalltalk) or non-transparent (as in Lisp Machine Lisp) persistence
+
+  Transparent persistence is a marvelous feature, so long as you do not try to use it to replace the file system (as Smalltalk did).  Hardware and software are likely to fail eventually, and if that occurs it is important to be able to recover programs and data, which is almost impossible if they are only stored in a, likely corrupted, core dump.
+
+  Unfortunately, it is very difficult to implement, and very inefficient, if you do not implement your own allocator.  Running on top of AutoHotkey makes that impossible.
+
 * high efficiency
 
-  Running on top of AutoHotkey makes high efficiency impossible.  It was never designed with efficiency in mind.  It uses string interpolation of code, which is roughly equivalent to parsing and evaluating lines repeatedly.  The current implementation uses reference counting, which we cannot avoid even on objects that have to be traced to be garbage collected (e.g. environments).  It makes no attempt at optimization.  Code written on one line, using commas to separate statements, is 35% faster than properly formatted code, for some unfathomable reason.
+  Running on top of AutoHotkey makes high efficiency impossible.  It was never designed with efficiency in mind.  It uses string interpolation of code, which is roughly equivalent to parsing and evaluating lines repeatedly.  The current implementation uses reference counting, which we cannot avoid even on objects that have to be traced to be garbage collected (e.g. environments).  It makes no attempt at optimization.  Code written on one line, using commas to separate statements, is up to 35% faster than properly formatted code, for some unfathomable reason.
 
   So long as our implementation is not too wasteful it should still be usable.
+
+  While I do not plan to write an optimizing compiler for my programming language, I have attempted to avoid design decisions that would make that harder.
 
 
 Unconventional Features:
 
-The syntax for Booleans ("true" and "false") and integers in other bases ("0b101" and "0xF00") is similar to popular programming languages.
+Some aspects of the programming language behave differently when they are used interactively.  This allows both good exploratory programming and good error handling.  At the REPL "def" and "set!" are equivalent, because not being able to redefine an erroneous definition while doing exploratory programming would be a problem, but redefining something, or mutating a variable that has not been defined, is a defect in code loaded from a file.  In a file, redefining something indicates you did not know it was already in use.  In a file, mutating a variable that has not been defined indicates you typoed the name.  Mutating an imported variable is allowed at the REPL, but forbidden in files, because it should never be necessary to violate encapsulation in correct code.
+
+The syntax for Booleans ("true" and "false") and integers in bases other than 10 ("0b101" and "0xF00") is similar to popular programming languages.
 
 Only "true" and "false" are true and false.  Integers can be converted to (0 is false, anything else is true) and from (true is 1, false is 0) Booleans, explicitly.  All type conversions are explicit.  This should make debugging easier, and I have always found treating non-Boolean values as Boolean confusing.
 
-A "null" type and value has been added, and lists are now defined in terms of it.  "null" is the null pointer, not an empty list.
-(cons null null) => '()
-(cons 0 null)    => '(0)
+Improper lists are not supported.  The second argument to "cons" must be a list.  Improper lists seem to be inferior to proper lists or vectors for all purposes, and the infix syntax they use is unlike everything else in Lisp.
 
-Improper lists are not supported.  The second argument to "cons" must be a list or "null".  Improper lists seem to be inferior to proper lists or vectors for all purposes, and the infix syntax they use is unlike everything else in Lisp.
+There is no character type.  Strings are effectively immutable vectors of strings of 1 character.  Strings can be indexed like a vector.  Strings of 1 character can be converted to and from integers.  This may result in more code reuse.
 
 Equality is much simpler than in most Lisp-likes.  Most equality tests are performed with "=", which compares values for immutable types, and identity (i.e. address) for mutable types, like "==" in most popular programming languages.  Dictionaries always use this form of equality.  "equal?" is also provided, which compares values even for mutable types, and correctly handles reference cycles.  The behavior of "=" is almost always what is desired, and "equal?" covers when it is not.  The complexity of equality in most Lisp-likes is neither necessary nor helpful.
 
-Variadic functions are not supported.  If you call a function with less than the number of arguments it expects, it will return a closure that will accept the remaining arguments, and has the closed-over arguments in its environment.  Parameters should appear in order from the most to least likely to be reused.  This makes using closures much more convenient.  Calling a function with the expected number of arguments causes it to run normally.  Calling a function with too many arguments is a defect.  Data structures like dictionaries, lists, and vectors are used where variadic functions would be used in other Lisp-like programming languages.
+Only lexical scope is supported.  Dynamic scope prevents composition and makes understanding code more difficult.  Closures and partial application are a composable, understandable, alternative to dynamic scope for avoiding repeatedly specifying an argument.
 
-Everything always returns a single value.  Nothing is 'undefined'.  Forms that perform definition or mutation return the value that they used.  Forms that involve a block of code return the value returned by the last expression in the block.  This should prevent undefined values from entering the program.
+While (trailing) optional and rest parameters are supported, they are rarely used.  Keyword parameters are not supported.  They interact in confusing ways with optional and rest parameters.  Data structures like dictionaries, lists, and vectors are used where keyword, optional, and rest parameters would be used in other Lisp-like programming languages.
 
-It is impossible to return multiple values.  I find multiple return values to be confusing and aesthetically offensive.  Evaluation should reduce a tree of expressions to a single value.  If you want easy destructuring, return a dictionary.  If that is too verbose, use macros.
+Partial application is supported.  If you call a fixed-arity function with less than the number of arguments it expects, it will return a closure that will accept the remaining arguments and has the closed-over arguments in its environment.  Parameters should appear in order from the most to least likely to be reused.  This makes using closures much more convenient.  Calling a fixed-arity function with the expected number of arguments causes it to run normally.  Calling a function with too many arguments is a defect.
+
+Without optional parameters a second "def" form would have to be provided, or a sentinel value used, to cope with some variables not having docstrings.
+
+Without variadic functions and macros defining forms that work like control flow sequences (e.g. function bodies) would require wrapping the control flow sequence in an extra pair of parentheses, which would be inconsistent with built-in sequences.
+
+A "fix-arity" form can create a fixed-arity copy of a variadic function to make it easier to build closures with.
+
+If you want to leave out values in the middle of a function's arguments, instead of only at the end, you can use "_" in their place.  The resulting closure will expect the remaining arguments in the same order.  To prevent confusion "_" (along with other reserved words) is not a valid variable name.
+
+I would like to allow function parameters to be rearranged to ease closure creation, but I have yet to come up with anything shorter than "(fn (x y) (bad-fn y x))".
+
+Delimited continuations are supported.  Undelimited continuations are not.  Only delimited continuations compose.
+
+Everything always returns a single value.  Forms that perform definition or mutation return the value that they used.  Forms that involve a block of code return the value returned by the last expression in the block.  This should prevent undefined values from entering the program.
+
+It is impossible to return multiple values.  I find multiple return values to be confusing and aesthetically offensive.  Evaluation should reduce a tree of expressions to a single value.
 
 
 Inspiration:
@@ -169,6 +227,7 @@ Scheme
   Chicken Scheme and Picrin Scheme
   Racket
 ML
+Shen
 Common Lisp
 Emacs Lisp
 Python
