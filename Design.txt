@@ -206,17 +206,17 @@ Partial application is supported.  If you call a fixed-arity function with less 
 
 Without optional parameters a second "def" form would have to be provided, or a sentinel value used, to cope with some variables not having docstrings.
 
-Without variadic functions and macros defining forms that work like control flow sequences (e.g. function bodies) would require wrapping the control flow sequence in an extra pair of parentheses, which would be inconsistent with built-in sequences.
+Without rest parameters defining forms that use control flow sequences (e.g. function bodies) would require wrapping the control flow sequence in an extra pair of parentheses, which would be inconsistent with built-in forms that use control flow sequences.
 
-A "fix-arity" form can create a fixed-arity copy of a variadic function to make it easier to build closures with.
+"fix-arity" creates a fixed-arity copy of a variadic function to make it easier to build closures with.
 
 If you want to leave out values in the middle of a function's arguments, instead of only at the end, you can use "_" in their place.  The resulting closure will expect the remaining arguments in the same order.  To prevent confusion "_" (along with other reserved words) is not a valid variable name.
 
-I would like to allow function parameters to be rearranged to ease closure creation, but I have yet to come up with anything shorter than "(fn (x y) (bad-fn y x))".
+Function parameters can be rearranged to ease closure creation like so "(fn (x y) (bad-fn y x))".  I have yet to come up with anything shorter.
 
 Delimited continuations are supported.  Undelimited continuations are not.  Only delimited continuations compose.
 
-Everything always returns a single value.  Forms that perform definition or mutation return the value that they used.  Forms that involve a block of code return the value returned by the last expression in the block.  This should prevent undefined values from entering the program.
+Everything always returns a single value.  Forms that perform definition or mutation return the value that they used.  Forms that involve a control flow sequence return the value returned by the last expression in the control flow sequence.  This should prevent undefined values from entering the program.
 
 It is impossible to return multiple values.  I find multiple return values to be confusing and aesthetically offensive.  Evaluation should reduce a tree of expressions to a single value.
 
