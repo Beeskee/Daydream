@@ -139,6 +139,14 @@ Non-Goals:
 
   This does raise the question of what the "first" and "rest" of the empty list is.  In my programming language they are defects, as in Scheme and most Lisp-like languages other than Common Lisp (where they are the empty list).  This is consistent with trying to access a vector out of bounds.  The "rest" of a 1 element list is the empty list, and "null?" can be used to test for that.
 
+* implement Scheme's numerical tower
+
+  This would be very nice, but it is a lot of work.
+
+  While system administration may involve complex data structures (it certainly involves a lot of parsing), it rarely involves complex mathematics.
+
+  I may support it eventually.
+
 * parallelism support
 
   AutoHotkey does not support multithreading, making this difficult to implement.
