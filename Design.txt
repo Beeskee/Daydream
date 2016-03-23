@@ -141,9 +141,9 @@ Non-Goals:
 
 * implement Scheme's numerical tower
 
-  This would be very nice, but it is a lot of work.
+  This would be nice, but it is a lot of work.
 
-  While system administration may involve complex data structures (it certainly involves a lot of parsing), it rarely involves complex mathematics.
+  While system administration may involve complex data structures (it certainly involves a lot of parsing), it rarely involves complex numerical math.
 
   I may support it eventually.
 
