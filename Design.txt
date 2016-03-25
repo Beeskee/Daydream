@@ -224,7 +224,7 @@ Function parameters can be rearranged to ease closure creation like so "(fn (x y
 
 Delimited continuations and dynamic-wind are supported.  Undelimited continuations are not.  Delimited continuations compose.  Undelimited continuations do not.
 
-Everything always returns a single value.  Forms that perform definition or mutation return the value that they used.  Forms that involve a control flow sequence return the value returned by the last expression in the control flow sequence.  This should prevent undefined values from entering the program.
+Everything always returns a single value.  Forms that perform definition or mutation return the value that they used.  Forms that involve a control flow sequence return the value returned by the last expression in the control flow sequence.  This, along with combining allocation and initialization, prevents uninitialized values.
 
 It is impossible to return multiple values.  I find multiple return values to be confusing and aesthetically offensive.  Evaluation should reduce a tree of expressions to a single value.
 
