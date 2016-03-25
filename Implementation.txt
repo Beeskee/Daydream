@@ -1,3 +1,5 @@
 Most unreadable things should be printed between #< and > but uninterned symbols should look like #:G123
 
 Be sure tail call elimination doesn't mess up dynamic-wind and similar things.
+
+Stack traces should look like a stack of plates.  This minimizes wasted vertical/horizontal space and scrolling.
