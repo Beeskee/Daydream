@@ -1,5 +1,13 @@
 Most unreadable things should be printed between #< and > but uninterned symbols should look like #:G123
 
-Be sure tail call elimination doesn't mess up dynamic-wind and similar things.
+Stack traces should look like a stack of plates.  This wastes less horizontal space, and requires less scrolling, than a tree depiction, or showing the newest call stack frame at the bottom.
 
-Stack traces should look like a stack of plates.  This minimizes wasted vertical/horizontal space and scrolling.
+All entry points from AutoHotkey must be wrapped in "Critical" sections.  Otherwise multiple "threads" running at once can corrupt the state of the interpreter.
+
+The parse tree will have to be garbage collected.  It may appear that reference cycles cannot exist in it, but that is no longer true when data structure literals can describe reference cycles.
+
+The garbage collector should close and free files that are no longer referenced.  In most programming languages, depending on this is considered bad taste.  The issue is garbage collectors often put off freeing objects for a long time, and file handles are finite on some operating systems.  Ours doesn't do that, so it should be okay.  It seems opening a file can fail for a variety of reasons (e.g. it doesn't exist, it's locked, it's read only and you tried to open it for writing, etc.) but it seems to be impossible to fail closing it, and closing one file handle does not seem to effect the others.  Actually, AutoHotkey will do this for us when we remove the last reference.
+
+GUI elements require special handling, because they can maintain references that are invisible to our programming language.  So far the best idea I have is to have a surrogate object that is associated with a window, that you use as a handle to work with elements inside the window, which keeps a reference to all event handlers.  That would keep the garbage collector from collecting event handlers that were still in use.  The surrogate object must be freed when the window is closed.  These surrogate objects need to be garbage collector roots.  Java's Swing seems to work the same way.
+
+Be sure tail call elimination doesn't mess up dynamic-wind and similar things.

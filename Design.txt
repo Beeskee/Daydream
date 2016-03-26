@@ -159,7 +159,7 @@ Non-Goals:
 
   While I agree that heavy use of mutation causes maintainability problems, limited use of mutation occasionally results in more maintainable code.
 
-  Functions that mutate their local variables, but not their arguments or global variables, are just as safe as those written in programming languages with mandatory immutability, and are sometimes shorter, easier to understand, and more efficient.
+  Functions that mutate their local variables, but not their arguments or global variables, are just as maintainable as those written in programming languages with mandatory immutability, and are sometimes shorter, easier to understand, and more efficient.
 
   Without multithreading there is little motivation to enforce immutability.
 
