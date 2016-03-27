@@ -20,11 +20,15 @@ Goals:
 
   If the program does not handle an error, the programming language implementation should immediately halt execution, display what expectation was violated, where the error occurred, and the relevant values.
 
-  Errors should be classified such that errors due to defects are separate from errors that are not the programmer's fault.  Only the latter should normally be handled.  This prevents defects from being hidden by accident.
+  Errors should be classified such that errors due to defects are separate from input/output errors.  Only input/output errors should normally be handled.  This prevents defects from being hidden by accident.
 
   It should be possible, though normally discouraged, to handle all errors.  This makes writing interpreters possible.
 
-  Mechanism should be separated from policy.  Code that can experience errors should provide one or more ways to recover from those errors (mechanisms).  Code that calls code that can experience errors should be what chooses the way to handle the error (the policy).
+  Mechanism should be separated from policy.  Code that can experience errors should provide one or more ways to recover from those errors (mechanisms).  Code that calls code that can experience errors should be what chooses the way to handle an error (the policy).  This eliminates the need to hard-code the policy, a high-level concern, in low-level code, while allowing mechanisms to make use of state that is only present near the point where an error occurs.
+
+* avoid surprising behavior where possible
+
+  Surprising behavior is the mother of all defects.
 
 * be consistent
 
@@ -72,26 +76,34 @@ Goals:
 
     Where practical, inverse functions should be provided.  Other forms of symmetry may also be of practical value.
 
-* do not restrict those programming in our language
+* do not unnecessarily restrict those programming in the language
 
-  If the programming language is too limited, it will be unpleasant to work in.
+  If the programming language is too restrictive, it will be unpleasant to work in.
 
   As much as practical should be implemented in the programming language itself.  This has more to do with me finding it very hard to write anything reliable in AutoHotkey than aesthetics.  The lack of error handling, introspection, and recursion support makes programming difficult.
 
-  It should be possible to implement a metacircular evaluator in our programming language without much effort or loss in efficiency.  This assures the programming language's implementation is exposed in a useful way to programs written in it.
+  It should be possible to implement a metacircular evaluator in the programming language without much effort or loss in efficiency.  This assures the programming language's implementation is exposed in a useful way to programs written in it.
 
 
 Non-Goals:
 
 * familiarity or ease of learning by novice programmers
 
-  The syntax used in Lisp-like programming languages is not familiar to the average person.  Many concepts, like closures, are also unfamiliar.  This makes Lisp-like programming languages more difficult to learn than most popular programming languages.
+  The syntax used in Lisp-like programming languages is not familiar to the average person.  Writing Lisp source code is almost impossible without an editor that helps with matching parentheses, and non-Lisp-programmers are unlikely to be familiar with one.  Many concepts, like closures, are also unfamiliar.  This makes Lisp-like programming languages more difficult to learn than most popular programming languages, because there is more to learn.
+
+  The same features that make Lisp-like programming languages difficult to learn for novice programmers are what makes them superior to popular programming languages.  The syntax makes macros practical.  It makes macro calls look and act like built-in parts of the programming language, without a lot of effort on the part of the macro author.  If macro authors had to avoid conflicting with syntax reserved for built-in constructs, and define custom mixfix syntax for their macros, almost nobody would bother.  The unfamiliar concepts make it easier to build abstractions that are difficult to express in other programming languages.  For example, object-oriented programming support is usually built-in to popular programming languages, but is usually derived from mutable closures in Lisp-like programming languages.
+
+  When a design must choose whether to favor novices or experts, favoring experts is almost always the correct decision.  You are only a novice once, and spend more time as an expert than a novice.
 
   However, I do not intend to go out of my way to make it difficult to learn for novice programmers.
 
 * compatibility with any existing Lisp-like programming languages
 
-  Being compatible with an existing Lisp-like programming language means accepting all their design decisions.  I am unaware of any Lisp-like programming languages where I agree with all of their design decisions.
+  Being compatible with an existing Lisp-like programming language means accepting all of their design decisions.  I am unaware of any Lisp-like programming languages where I agree with all of their design decisions.
+
+  I am also unaware of any Lisp-like programming languages that are intended for automating other programs.  It would not be surprising if one that was made different (but not worse) design decisions.
+
+  If I am going to go to the trouble of writing my own Lisp-like programming language implementation, I am going to try to improve upon existing designs as much as possible in the process.
 
 * syntactic innovation
 
@@ -111,7 +123,7 @@ Non-Goals:
 
   I can still provide special forms that mutate each of those kinds of places, but the programmer will have to use the right one.
 
-  If it was possible to correct this, it would still reduce the efficiency of our garbage collector, since it currently does not have to set every reference in a collection to null when freeing it to cope with AutoHotkey's reference counting.  If you could refer to locations inside collections, instead of just to the collection, this would not work.
+  If it was possible to correct this, it would still reduce the efficiency of the garbage collector, since it currently does not have to set every reference in a collection to null when freeing it to cope with AutoHotkey's reference counting.  If you could refer to locations inside collections, instead of just to the collection, this would not work.
 
   The absence of this feature should not be very annoying if you are doing mostly-functional programming.
 
@@ -121,7 +133,7 @@ Non-Goals:
 
 * static type checking
 
-  I am not a fan of static type systems, despite them being trendy at the moment.  They are rarely sufficient to prove a program is free of defects.  They ossify a program, making it take more effort to change.
+  I am not a fan of static type systems, despite them being trendy at the moment.  They are rarely sufficient to prove a program is free of defects.  They ossify a program, making it take more effort to change.  Trendy static type systems (like Haskell's) are very complex, and the complexity is continually increasing, making them difficult to learn and use.
 
   To prove a program is free of defects a dependent type system is required, and the specification of the program's types is equivalent to a program (the Curry-Howard correspondence).  That means type checking can suffer from all the problems that programs can have.  The good news is that if your program type checks in a system like this, it is highly unlikely it has any defects you thought to prove it free of, because to go unnoticed it would require that the proof and program have compatible defects.  There is still a risk of forgetting to prove something important.  Writing a program to construct correct code for your task is likely to be easier than using a general-purpose dependent type system.
 
@@ -153,7 +165,7 @@ Non-Goals:
 
   To this day most C and C++ code is not thread-safe, so many programming languages with easy integration with C and C++ do not support it.  AutoHotkey may never do so.
 
-  There are hacks abusing inter-process communication for this purpose in the forums, similar to Python's multiprocessing and concurrent.futures implementations.  I may eventually add support for thread pools and futures this way.
+  There are hacks abusing inter-process communication for this purpose in the forums, similar to Python's multiprocessing and concurrent.futures implementations.  I may eventually add support for thread pools and futures that way.
 
 * mandatory immutability
 
@@ -161,7 +173,15 @@ Non-Goals:
 
   Functions that mutate their local variables, but not their arguments or global variables, are just as maintainable as those written in programming languages with mandatory immutability, and are sometimes shorter, easier to understand, and more efficient.
 
-  Without multithreading there is little motivation to enforce immutability.
+  Some (non-local) mutation /must/ occur to share state between event handlers, and event handling is what this programming language is about.
+
+* object-oriented programming support
+
+  I believe object-oriented programming usually does more harm than good.  The difficulty in maintaining code that uses mutable global variables is widely recognized.  When a global variable becomes corrupt, it is hard to tell what code was responsible.  Mutable objects are mutable global variables.  Implementation inheritance is also, recently, widely recognized as a source of maintainability problems.  Changing a method's implementation can break anything that inherits it.  Of course you can use immutable objects, and only inherit vinterfaces and use composition, but then objects are no more useful than records or dictionaries.
+
+  I intend to provide mutable closures, and it should be possible to implement a CLOS-like system using them, which is more powerful than popular programming languages' object-oriented programming support, but I do not plan to write that myself.
+
+  That does imply that the programming language will have a fixed set of types.  It is better to have a small number of types and a large number of procedures that operate on each, than to have a large number of types and a small number of procedures that operate on each, because more code can be reused.  Dictionaries will be used in place of new types.
 
 * implicit lazy evaluation
 
@@ -169,32 +189,50 @@ Non-Goals:
 
   Optimizing compilers for Haskell spend a lot of effort to eliminate implicit lazy evaluation.  We should avoid the same trap.
 
-* object-oriented programming support
-
-  I believe object-oriented programming usually does more harm than good.  The difficulty in maintaining code that uses mutable global variables is widely recognized.  When a global variable becomes corrupt, it is very hard to tell what code was responsible.  Mutable objects are mutable global variables.  Implementation inheritance is also, recently, widely recognized as a source of maintainability problems.  Changing a method's implementation can break anything that inherits it.  Of course you can use immutable objects, and only inherit interfaces and use composition, but then objects are no more useful than records or dictionaries.
-
-  I intend to provide mutable closures, and it should be possible to implement a CLOS-like system using them, which is far more powerful than popular programming languages' object-oriented programming support, but I do not plan to write that myself.
-
-  That does imply that the programming language will have a fixed set of types.  It is better to have a small number of types and a large number of procedures that operate on each, than to have a large number of types and a small number of procedures that operate on each, because more code can be reused.  Dictionaries will be used in place of new types.
-
 * transparent (as in Smalltalk) or non-transparent (as in Lisp Machine Lisp) persistence
 
   Transparent persistence is a marvelous feature, so long as you do not try to use it to replace the file system (as Smalltalk did).  Hardware and software are likely to fail eventually, and if that occurs it is important to be able to recover programs and data, which is almost impossible if they are only stored in a, likely corrupted, core dump.
 
   Unfortunately, it is very difficult to implement, and very inefficient, if you do not implement your own allocator.  Running on top of AutoHotkey makes that impossible.
 
+* networking support
+
+  AutoHotkey does not support networking, making this difficult to implement.
+
+  There are some libraries that use DLL calls for this purpose in the forums.  I may eventually add support for networking that way.
+
+* high security
+
+  There is not much point in having sandboxing, taint or trademark checking, or similar security features when the programming language does not support networking.
+
+  I think sandboxing would be practical to implement.  Built-in definitions for calling foreign functions would not be imported to the namespace used by untrusted code, import and debugging hooks would be disabled, and imports would be restricted to a fixed set.  It would still be trivial to crash the interpreter by exhausting memory, but the same can be said of most sandbox implementations.  It would be sufficient to keep untrusted code from performing harmful input/output operations.
+
+  I will consider implementing sandboxing after networking is implemented.
+
+  I do not expect security features to be relevant to most uses of this programming language.  It is not intended for writing web apps.
+
 * high efficiency
 
-  Running on top of AutoHotkey makes high efficiency impossible.  It was never designed with efficiency in mind.  It uses string interpolation of code, which is roughly equivalent to parsing and evaluating lines repeatedly.  The current implementation uses reference counting, which we cannot avoid even on objects that have to be traced to be garbage collected (e.g. environments).  It makes no attempt at optimization.  Code written on one line, using commas to separate statements, is up to 35% faster than properly formatted code, for some unfathomable reason.
+  Running on top of AutoHotkey makes high efficiency impossible.  It was never designed with efficiency in mind.  It uses string interpolation of code, which is roughly equivalent to parsing and evaluating lines repeatedly.  It uses reference counting, which we cannot avoid even on objects that have to be traced to be garbage collected (e.g. environments).  It makes no attempt at optimization.  Code written on one line, using commas to separate statements, is up to 35% faster than properly formatted code, for some unfathomable reason.
 
-  So long as our implementation is not too wasteful it should still be usable.
+  So long as the implementation is not too wasteful it should still be usable.
 
   While I do not plan to write an optimizing compiler for my programming language, I have attempted to avoid design decisions that would make that harder.
 
 
 Unconventional Features:
 
+My programming language is designed to be easy to embed in another programming language, make it easy to call foreign functions, and to be used for event handling.
+
+The same name in the same scope always refers to the same value, barring mutation.  Any other behavior is confusing.  This implies that variables and functions are not in separate namespaces, which is not unconventional now, but Common Lisp does not work that way.  It also implies that the programming language is case-insensitive, which is unconventional now.  To prevent the use of symbols that jangle like bad typography, uppercase letters in symbols are a defect.
+
+A symbol always looks like a symbol.  This is also to prevent confusion.  Any characters that have special meaning to the reader, such as whitespace or parentheses, cannot be included in a symbol.
+
 Some aspects of the programming language behave differently when they are used interactively.  This allows both good exploratory programming and good error handling.  At the REPL "def" and "set!" are equivalent, because not being able to redefine an erroneous definition while doing exploratory programming would be a problem, but redefining something, or mutating a variable that has not been defined, is a defect in code loaded from a file.  In a file, redefining something indicates you did not know it was already in use.  In a file, mutating a variable that has not been defined indicates you typoed the name.  Mutating an imported variable is allowed at the REPL, but forbidden in files, because it should never be necessary to violate encapsulation in correct code.
+
+Docstrings can be associated with modules, and variables, macros, and functions in the outermost scope.  Functions are provided for searching for combinations of patterns in module paths and names, patterns in variable names, patterns in docstrings, types, and values.  While this was common in the past, modern Lisp-like languages seem to be becoming more static, and less useful interactively, thus losing one of the main advantages over other programming languages.  Functions are provided to load all source code in a directory, or in a directory hierarchy, to make searching easier.
+
+There are some definitions that are imported into every namespace by default.  Without forms to perform arithmetic, logic, manipulate the built-in data structures, and call foreign functions it would be impossible to define much else.  While redefining something in a file is normally forbidden, most built-in forms can be redefined in a file with only a warning.  This allows new built-in forms to be defined without breaking existing source code.
 
 The syntax for Booleans ("true" and "false") and integers in bases other than 10 ("0b101" and "0xF00") is similar to popular programming languages.
 
@@ -203,6 +241,8 @@ Only "true" and "false" are true and false.  Integers can be converted to (0 is 
 Improper lists are not supported.  The second argument to "cons" must be a list.  Improper lists seem to be inferior to proper lists or vectors for all purposes, and the infix syntax they use is unlike everything else in Lisp.
 
 There is no character type.  Strings are effectively immutable vectors of strings of 1 character.  Strings can be indexed like a vector.  Strings of 1 character can be converted to and from integers.  This may result in more code reuse.
+
+Vectors are dynamic arrays.  Values can be 'pushed' to, or 'popped' from, the highest index, allowing them to double as stacks.  Singly-linked lists support efficient pushing to, and popping from, the beginning, but not efficient indexing.  This makes vectors more versatile, and since bounds are still checked, they are just as safe.  Like singly-linked lists, dynamic arrays are used in most hash table implementations, which are used in most environment implementations, so it makes sense to expose them in the programming language.  It takes little effort and is consistent with the goal of not unnecessarily restricting those programming in the language.
 
 Equality is much simpler than in most Lisp-likes.  Most equality tests are performed with "=", which compares values for immutable types, and identity (i.e. address) for mutable types, like "==" in most popular programming languages.  Dictionaries always use this form of equality.  "equal?" is also provided, which compares values even for mutable types, and correctly handles reference cycles.  The behavior of "=" is almost always what is desired, and "equal?" covers when it is not.  The complexity of equality in most Lisp-likes is neither necessary nor helpful.
 
@@ -222,11 +262,25 @@ If you want to leave out values in the middle of a function's arguments, instead
 
 Function parameters can be rearranged to ease closure creation like so "(fn (x y) (bad-fn y x))".  I have yet to come up with anything shorter.
 
+Arguments are evaluated once, from left to right, as in Common Lisp.  It is bad style to depend on that, but it seems better to standardize it than to have it be implementation-defined as it is in so many programming languages.  Optimizing compilers are free to evaluate arguments without side effects in any order, of course.
+
 Delimited continuations and dynamic-wind are supported.  Undelimited continuations are not.  Delimited continuations compose.  Undelimited continuations do not.
 
 Everything always returns a single value.  Forms that perform definition or mutation return the value that they used.  Forms that involve a control flow sequence return the value returned by the last expression in the control flow sequence.  This, along with combining allocation and initialization, prevents uninitialized values.
 
-It is impossible to return multiple values.  I find multiple return values to be confusing and aesthetically offensive.  Evaluation should reduce a tree of expressions to a single value.
+It is impossible to return multiple values.  I find multiple return values to be confusing.  Evaluation should reduce a tree of expressions to a single value.
+
+The macro system is similar to the one in Common Lisp and most other Lisp-like programming languages, only with the wrong defaults corrected.  Bindings inserted by macros are "gensym"ed implicitly, while capturing is explicit.  Macros use the environment from where they were defined, rather than where they were called, like functions.  This is called implicit renaming macros.  It solves the macro hygiene problem while still allowing macros to work with lists of normal values.  Requiring macros to work with syntax objects instead of normal values, like most hygienic macro systems, prevents the use of normal functions in macro expansion, which is one of the main advantages Lisp macro systems have over other code generators, or requires the syntax objects to be converted to normal values, which defeats the purpose in using syntax objects.  The extra information included in syntax objects is preserved in the abstract syntax tree in my implementation, and is used by the condition system for reporting warnings and errors.
+
+There is a condition system that is similar to the one in Common Lisp.  It is used to handle defects, input/output errors, and warnings.  Using it as a general-purpose communication mechanism is discouraged, because invisible paths of communication make maintenance difficult.  Condition systems seem to be the only way to satisfy our error handling design goals.
+
+Warnings are issued when code needs maintenance but still works.  For example, it might use a depreciated construct, or a bad practice that was previously tolerated.  Warnings are shown by default, since that is the only responsible way to design a programming language.  History has shown most programmers will not exert any effort to find problems in their code.  Condition handlers can choose other ways to handle warnings, such as logging or discarding them.
+
+I have attempted to keep the module system as simple as possible while still enforcing good modularity.  A module is similar to a lexical environment.  They can be linked to look the value of a imported variable up in another module.  You can associate the value of a imported variable with a different name in the module it is imported into.  Mutating across module boundaries is forbidden outside interactive use.  Modules must explicitly state what variables they export, and other modules can only import those variables.  Cyclical dependencies are not supported.  Everything defined within a module, or imported into it, is accessible at both macro expansion and run time.  All state, except for the abstract syntax tree, is discarded after each module is macro expanded.  The abstract syntax tree is re-evaluated as needed to create the necessary state for the macro expansion of other modules or run time.  This prevents the state within a module at macro expansion time from influencing the macro expansion of other modules, or from influencing run time.  There is no phase separation or other unnecessary complexity.  This design could support incremental compilation (with the abstract syntax trees corresponding to binaries, and re-evaluation corresponding to (re)loading the binaries), but I chose it due to the lack of surprising behavior.
+
+Modules can be reloaded, both in and out of interactive mode, to update their definitions.  This is useful for exploratory programming, or hot swapping to correct a defect in, or add features to, a running system.
+
+The garbage collector is continuous, generational, and incremental (i.e. marking and sweeping are broken down into multiple steps).  This should result in low, and fairly steady, latency.  While, past a point, a trade-off must be made between low-latency and high-throughput, generational garbage collection improves both.  Favoring low-latency over high-throughput seems like the right decision for interactive programs, like those most likely to be written in this programming language.  It is possible to disable garbage collection, perform increments only when the program is idle, and force non-incremental full garbage collections.  These features are often desired by those writing software intended for use in short bursts or video games.  AutoHotkey scripts are often used in short bursts, and used with video games.  In all cases a non-incremental full garbage collection will still occur if memory is almost exhausted, because a pause is less disruptive than crashing.  The interface is inspired by Lua's garbage collector.
 
 
 Inspiration:
