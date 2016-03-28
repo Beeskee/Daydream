@@ -26,7 +26,7 @@ Goals:
 
   Mechanism should be separated from policy.  Code that can experience errors should provide one or more ways to recover from those errors (mechanisms).  Code that calls code that can experience errors should be what chooses the way to handle an error (the policy).  This eliminates the need to hard-code the policy, a high-level concern, in low-level code, while allowing mechanisms to make use of state that is only present near the point where an error occurs.
 
-* avoid surprising behavior where possible
+* avoid surprising behavior
 
   Surprising behavior is the mother of all defects.
 
@@ -289,6 +289,7 @@ Scheme
   Chicken Scheme and Picrin Scheme
   Racket
 ML
+Caml
 Shen
 Common Lisp
 Emacs Lisp
