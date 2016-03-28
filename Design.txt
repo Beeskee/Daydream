@@ -205,7 +205,7 @@ Non-Goals:
 
   There is not much point in having sandboxing, taint or trademark checking, or similar security features when the programming language does not support networking.
 
-  I think sandboxing would be practical to implement.  Built-in definitions for calling foreign functions would not be imported to the namespace used by untrusted code, import and debugging hooks would be disabled, and imports would be restricted to a fixed set.  It would still be trivial to crash the interpreter by exhausting memory, but the same can be said of most sandbox implementations.  It would be sufficient to keep untrusted code from performing harmful input/output operations.
+  I think sandboxing would be practical to implement.  Built-in definitions for calling foreign functions and manipulating the interpreter would not be imported to the namespace used by untrusted code, and imports would be restricted to a fixed set.  It would still be trivial to crash the interpreter by exhausting memory, but the same can be said of most sandbox implementations.  It would be sufficient to keep untrusted code from performing harmful input/output operations.
 
   I will consider implementing sandboxing after networking is implemented.
 

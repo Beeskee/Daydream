@@ -1,3 +1,7 @@
 Automation objects can contain: integers, floating point numbers, strings, arrays, other Automation objects, and some things that have no equivalent in AutoHotkey.  That's it.  AutoHotkey apparently converts arrays to its internal format directly so I guess we can use that.
 
 AutoHotkey makes you tell it what the return type of a DLL call will be (which is always scalar), so you can know what to treat it as based on that.
+
+You will probably have to use type specifiers for functions you intend to expose to AutoHotkey, since it is otherwise ambiguous what a AutoHotkey value should be boxed as.  We might as well also use this for detecting defects within our programming language.
+
+Unboxing is not ambiguous, and therefore can be done automatically.
