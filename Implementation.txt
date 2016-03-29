@@ -11,3 +11,5 @@ The garbage collector should close and free files that are no longer referenced.
 GUI elements require special handling, because they can maintain references that are invisible to our programming language.  So far the best idea I have is to have a surrogate object that is associated with a window, that you use as a handle to work with elements inside the window, which keeps a reference to all event handlers.  That would keep the garbage collector from collecting event handlers that were still in use.  The surrogate object must be freed when the window is closed.  These surrogate objects need to be garbage collector roots.  Java's Swing seems to work the same way.
 
 Be sure tail call elimination doesn't mess up dynamic-wind and similar things.
+
+The mapping between imported names and their source must be retained, so their values get updated when their source is reloaded.
