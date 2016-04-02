@@ -32,7 +32,7 @@ Goals:
 
 * be consistent
 
-  Consistency means not having to remember, and abstract over, differences that should not exist.
+  Consistency means not having to learn, remember, and abstract over, differences that should not exist.
 
   Constructs should always compose with any construct that can satisfy its requirements.
 
@@ -42,7 +42,7 @@ Goals:
 
 * distinguish unrelated concepts
 
-  Conflation means having to remember, and abstract over, similarities that should not exist.  For example, many vector (array) operations only have useful semantics when sequential integer indices are assumed, and therefore vectors and dictionaries should not be the same type.
+  Conflation means having to learn, remember, and abstract over, similarities that should not exist.  For example, many vector (array) operations only have useful semantics when sequential integer indices are assumed, and therefore vectors and dictionaries should not be the same type.
 
   Constructs should never compose with any construct that cannot satisfy its requirements.
 
@@ -89,27 +89,27 @@ Non-Goals:
 
 * familiarity or ease of learning by novice programmers
 
-  The syntax used in Lisp-like programming languages is not familiar to the average person.  Writing Lisp source code is almost impossible without an editor that helps with matching parentheses, and non-Lisp-programmers are unlikely to be familiar with one.  Many concepts, like closures, are also unfamiliar.  This makes Lisp-like programming languages more difficult to learn than most popular programming languages, because there is more to learn.
+  The syntax used in Lisp-like languages is not familiar to the average person.  Writing Lisp source code is almost impossible without an editor that helps with matching parentheses, and non-Lisp-programmers are unlikely to be familiar with one.  Many concepts, like closures, are also unfamiliar.  This makes Lisp-like languages more difficult to learn than most popular programming languages, because there is more to learn.
 
-  The same features that make Lisp-like programming languages difficult to learn for novice programmers are what makes them superior to popular programming languages.  The syntax makes macros practical.  It makes macro calls look and act like built-in parts of the programming language, without a lot of effort on the part of the macro author.  If macro authors had to avoid conflicting with syntax reserved for built-in constructs, and define custom mixfix syntax for their macros, almost nobody would bother.  The unfamiliar concepts make it easier to build abstractions that are difficult to express in other programming languages.  For example, object-oriented programming support is usually built-in to popular programming languages, but is usually derived from mutable closures in Lisp-like programming languages.
+  The same features that make Lisp-like languages difficult to learn are what makes them superior to popular programming languages.  The syntax makes macros practical.  It makes macro calls look and act like built-in constructs without a lot of effort on the part of the macro author.  If macro authors had to avoid conflicting with syntax reserved for built-in constructs, and define custom mixfix syntax for their macros, almost nobody would bother.  The unfamiliar concepts make it easier to build abstractions that are difficult to express in other programming languages.  For example, object-oriented programming support is usually built into popular programming languages, but is usually derived from mutable closures in Lisp-like languages.
 
-  When a design must choose whether to favor novices or experts, favoring experts is almost always the correct decision.  You are only a novice once, and spend more time as an expert than a novice.
+  When a designer must choose whether to favor novices or experts, favoring experts is almost always the correct decision.  You are only a novice once, and spend more time as an expert than a novice.
 
   However, I do not intend to go out of my way to make it difficult to learn for novice programmers.
 
-* compatibility with any existing Lisp-like programming languages
+* compatibility with any existing Lisp-like languages
 
-  Being compatible with an existing Lisp-like programming language means accepting all of their design decisions.  I am unaware of any Lisp-like programming languages where I agree with all of their design decisions.
+  Being compatible with an existing Lisp-like language means accepting all of their design decisions.  I am unaware of any Lisp-like languages where I agree with all of their design decisions.
 
-  I am also unaware of any Lisp-like programming languages that are intended for automating other programs.  It would not be surprising if one that was made different (but not worse) design decisions.
+  I am also unaware of any Lisp-like languages that are intended for automating other programs.  It would not be surprising if one that was made different design decisions.
 
-  If I am going to go to the trouble of writing my own Lisp-like programming language implementation, I am going to try to improve upon existing designs as much as possible in the process.
+  If I am going to go to the trouble of writing my own Lisp-like language implementation, I am going to try to improve upon existing designs as much as possible in the process.
 
 * syntactic innovation
 
-  I hope to take all my syntax from existing Lisp-like programming languages.  I want to keep the amount of punctuation very low.  I /like/ the simple, regular, appearance of Lisp source code.
+  I hope to take all my syntax from existing Lisp-like languages.  I want to keep the amount of punctuation very low.  I /like/ the simple, regular, appearance of Lisp source code.
 
-  I might use "%" for modulo, as in popular programming languages, even though I cannot find a Lisp-like programming language that does that.
+  I might use "%" for modulo, as in popular programming languages, even though I cannot find a Lisp-like language that does that.
 
   I might use some original names for things if I cannot find something acceptable.  I want frequently used constructs to have very short, but very readable, names, so expressions remain readable.
 
@@ -117,7 +117,7 @@ Non-Goals:
 
   I have no strong objection to reader macros, they just do not seem helpful to me.  Their scope is unlimited, making them hard to use safely.  Without the ability to extend the type system and "printer" there is little motivation for new literal notations.
 
-* generalized variable support
+* generalized variables support
 
   While I can see the appeal of having a single "set!" special form that can accept any mutable place (variables, those referred to by a dictionary and key, the return values of "first" and "rest", or a vector and index), I cannot imagine how to implement this in AutoHotkey.  AutoHotkey's "byref" only works with some variables, not Objects.  Pointer hacks are likely to break when AutoHotkey's implementation changes.
 
@@ -133,7 +133,7 @@ Non-Goals:
 
 * static type checking
 
-  I am not a fan of static type systems, despite them being trendy at the moment.  They are rarely sufficient to prove a program is free of defects.  They ossify a program, making it take more effort to change.  Trendy static type systems (like Haskell's) are very complex, and the complexity is continually increasing, making them difficult to learn and use.
+  I am not fond of static type systems.  They are rarely sufficient to prove a program is free of defects.  They ossify a program, making it take more effort to change.  Modern static type systems are very complex, and the complexity is continually increasing, making them difficult to learn and use.
 
   To prove a program is free of defects a dependent type system is required, and the specification of the program's types is equivalent to a program (the Curry-Howard correspondence).  That means type checking can suffer from all the problems that programs can have.  The good news is that if your program type checks in a system like this, it is highly unlikely it has any defects you thought to prove it free of, because to go unnoticed it would require that the proof and program have compatible defects.  There is still a risk of forgetting to prove something important.  Writing a program to construct correct code for your task is likely to be easier than using a general-purpose dependent type system.
 
@@ -238,23 +238,29 @@ The syntax for Booleans ("true" and "false") and integers in bases other than 10
 
 Only "true" and "false" are true and false.  Integers can be converted to (0 is false, anything else is true) and from (true is 1, false is 0) Booleans, explicitly.  All type conversions are explicit.  This should make debugging easier, and I have always found treating non-Boolean values as Boolean confusing.
 
+Dictionary literals are supported.  Dictionaries are surrounded in curly brackets, with key-value pairs grouped by parentheses, like so "{("x" 1) ("y" 2)}".  Other Lisp-like languages that support dictionary literals usually use curly brackets to demarcate them, so I adopted that practice.  Most other Lisp-like languages that support dictionary literals restrict keys to keywords, or use improper lists to group key-value pairs, neither of which are supported in this programming language.  Some Lisp-like languages do not group key-value pairs, but I find that harder to read.
+
 Improper lists are not supported.  The second argument to "cons" must be a list.  Improper lists seem to be inferior to proper lists or vectors for all purposes, and the infix syntax they use is unlike everything else in Lisp.
 
 There is no character type.  Strings are effectively immutable vectors of strings of 1 character.  Strings can be indexed like a vector.  Strings of 1 character can be converted to and from integers.  This may result in more code reuse.
 
+Vector literals are supported.  Vectors are surrounded in square brackets, like so "[0 1 2]".  Other Lisp-like languages that support vector literals usually use this syntax.
+
 Vectors are dynamic arrays.  Values can be 'pushed' to, or 'popped' from, the highest index, allowing them to double as stacks.  Singly-linked lists support efficient pushing to, and popping from, the beginning, but not efficient indexing.  This makes vectors more versatile, and since bounds are still checked, they are just as safe.  Like singly-linked lists, dynamic arrays are used in most hash table implementations, which are used in most environment implementations, so it makes sense to expose them in the programming language.  It takes little effort and is consistent with the goal of not unnecessarily restricting those programming in the language.
 
-Equality is much simpler than in most Lisp-likes.  Most equality tests are performed with "=", which compares values for immutable types, and identity (i.e. address) for mutable types, like "==" in most popular programming languages.  Dictionaries always use this form of equality.  "equal?" is also provided, which compares values even for mutable types, and correctly handles reference cycles.  The behavior of "=" is almost always what is desired, and "equal?" covers when it is not.  The complexity of equality in most Lisp-likes is neither necessary nor helpful.
+The built-in forms are as generic as possible.  For example, there is only one "ref" for all collection types.  This should allow more code reuse, and minimize what programmers must learn and remember to use the programming language.  "set!" is not generalized for reasons already explained (in Non-Goals: generalized variables support).
+
+Equality is much simpler than in most Lisp-like languages.  Most equality tests are performed with "=", which compares values for immutable types, and identities (i.e. addresses) for mutable types, like "==" in most popular programming languages.  Dictionaries always use this form of equality.  "equal?" is also provided, which compares values even for mutable types, and correctly handles reference cycles.  The behavior of "=" is almost always what is desired, and "equal?" covers when it is not.  The complexity of equality in most Lisp-like languages is neither necessary nor helpful.
 
 Only lexical scope is supported.  Dynamic scope prevents composition and makes understanding code more difficult.  Closures and partial application are a composable, understandable, alternative to dynamic scope for avoiding repeatedly specifying an argument.
 
-While (trailing) optional and rest parameters are supported, they are rarely used.  Keyword parameters are not supported.  They interact in confusing ways with optional and rest parameters.  Data structures like dictionaries, lists, and vectors are used where keyword, optional, and rest parameters would be used in other Lisp-like programming languages.
+While (trailing) optional and rest parameters are supported, they are rarely used.  Keyword parameters are not supported.  They interact in confusing ways with optional and rest parameters.  Data structures like dictionaries, lists, and vectors are used where keyword, optional, and rest parameters would be used in other Lisp-like languages.
 
 Without optional parameters a second "def" form would have to be provided, or a sentinel value used, to cope with some variables not having docstrings.
 
 Without rest parameters defining forms that use control flow sequences (e.g. function bodies) would require wrapping the control flow sequence in an extra pair of parentheses, which would be inconsistent with built-in forms that use control flow sequences.
 
-Arguments are evaluated once, from left to right, as in Common Lisp.  It is bad style to depend on that, but it seems better to standardize it than to have it be implementation-defined as it is in so many programming languages.  Optimizing compilers are free to evaluate arguments without side effects in any order, of course.
+Function arguments are evaluated once, from left to right, as in Common Lisp.  It is bad style to depend on that, but it seems better to standardize it than to have it be implementation-defined as it is in so many programming languages.  Optimizing compilers are free to evaluate arguments without side effects however they please, so long as the results are correct.
 
 Partial application is supported.  If you call a fixed-arity function with less than the number of arguments it expects, it will return a closure that will accept the remaining arguments and has the closed-over arguments in its environment.  Parameters should appear in order from the most to least likely to be reused.  This makes using closures much more convenient.  Calling a fixed-arity function with the expected number of arguments causes it to run normally.  Calling a function with too many arguments is a defect.
 
@@ -270,7 +276,9 @@ Everything returns a value.  Forms that perform definition or mutation return th
 
 Multiple return values are not supported.  I find them confusing.  Evaluation should reduce a tree of expressions to a single value.  Pattern matching makes binding multiple values inside a data structure trivial.
 
-The macro system is similar to the one in Common Lisp and most other Lisp-like programming languages, only with the wrong defaults corrected.  Bindings inserted by macros are "gensym"ed implicitly, while capturing is explicit.  Macros use the environment from where they were defined, rather than where they were called, like functions.  This is called implicit renaming macros.  It solves the macro hygiene problem while still allowing macros to work with lists of normal values.  Requiring macros to work with syntax objects instead of normal values, like most hygienic macro systems, prevents the use of normal functions in macro expansion, which is one of the main advantages Lisp macro systems have over other code generators, or requires the syntax objects to be converted to normal values, which defeats the purpose of using syntax objects.  The extra information included in syntax objects is preserved in the abstract syntax tree in my implementation, and is used by the condition system for reporting errors and warnings.
+Recursion is properly supported.  Call stack frames are heap allocated, so non-tail recursion will succeed unless memory is exhausted.  Tail call elimination is performed, so loops can be defined recursively.
+
+The macro system is similar to the one in Common Lisp and most other Lisp-like languages, only with the wrong defaults corrected.  Bindings inserted by macros are "gensym"ed implicitly, while capturing is explicit.  Code generated by a macro uses the environment from where the macro was defined, rather than where it was called, which is consistent with the behavior of functions.  This is called implicit renaming macros.  It solves the macro hygiene problem while still allowing macros to work with lists of normal values.  Requiring macros to work with syntax objects instead of normal values, like most hygienic macro systems, prevents the use of normal functions in macro expansion, which is one of the main advantages Lisp macro systems have over other code generators, or requires the syntax objects to be converted to normal values, which defeats the purpose of using syntax objects.  The extra information included in syntax objects is preserved in the abstract syntax tree in my implementation, and is used by the condition system for reporting errors and warnings.
 
 There is a condition system that is similar to the one in Common Lisp.  It is used to handle defects, input/output errors, and warnings.  Using it as a general-purpose communication mechanism is discouraged, because invisible paths of communication make maintenance difficult.  A condition system seems to be the only way to satisfy our error handling design goals.
 
