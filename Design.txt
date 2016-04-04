@@ -89,9 +89,9 @@ Non-Goals:
 
 * familiarity or ease of learning by novice programmers
 
-  The syntax used in Lisp-like languages is not familiar to the average person.  Writing Lisp source code is almost impossible without an editor that helps with matching parentheses, and non-Lisp-programmers are unlikely to be familiar with one.  Many concepts, like closures, are also unfamiliar.  This makes Lisp-like languages more difficult to learn than most popular programming languages, because there is more to learn.
+  The syntax used in Lisp-like languages is not familiar to the average person.  Writing Lisp source code is difficult without an editor that helps with matching parentheses, and non-Lisp-programmers are unlikely to be familiar with one.  Many concepts, like closures, are also unfamiliar.  This makes Lisp-like languages more difficult to learn than most popular programming languages, because there is more to learn.
 
-  The same features that make Lisp-like languages difficult to learn are what makes them superior to popular programming languages.  The syntax makes macros practical.  It makes macro calls look and act like built-in constructs without a lot of effort on the part of the macro author.  If macro authors had to avoid conflicting with syntax reserved for built-in constructs, and define custom mixfix syntax for their macros, almost nobody would bother.  The unfamiliar concepts make it easier to build abstractions that are difficult to express in other programming languages.  For example, object-oriented programming support is usually built into popular programming languages, but is usually derived from mutable closures in Lisp-like languages.
+  The same features that make Lisp-like languages difficult to learn are what makes them superior to popular programming languages.  The syntax makes macros practical.  It makes macro calls look and act like built-in constructs without a lot of effort on the part of the macro author.  If macro authors had to avoid conflicting with syntax reserved for built-in constructs, and define custom mixfix syntax for their macros, almost nobody would bother.  Fully parenthesized syntax prevents defects due to forgetting operator precedence and associativity.  The unfamiliar concepts make it easier to build abstractions that are difficult to express in other programming languages.  For example, object-oriented programming support is usually built into popular programming languages, but is usually derived from mutable closures in Lisp-like languages.
 
   When a designer must choose whether to favor novices or experts, favoring experts is almost always the correct decision.  You are only a novice once, and spend more time as an expert than a novice.
 
@@ -115,7 +115,7 @@ Non-Goals:
 
 * reader macro support
 
-  I have no strong objection to reader macros, they just do not seem helpful to me.  Their scope is unlimited, making them hard to use safely.  Without the ability to extend the type system and "printer" there is little motivation for new literal notations.
+  I have no strong objection to reader macros, they just do not seem helpful to me.  Their scope is unlimited, making them hard to use safely.  Without the ability to create new types and new 'print'ed representations there is little motivation for new literal syntax.
 
 * generalized variables support
 
@@ -131,15 +131,27 @@ Non-Goals:
 
   Symbol macros are only useful for generalized variables, which is a feature I do not plan to support.  Since they have no parameters, they cannot perform any useful processing.
 
-* static type checking
+* mandatory static type checking
 
-  I am not fond of static type systems.  They are rarely sufficient to prove a program is free of defects.  They ossify a program, making it take more effort to change.  Modern static type systems are very complex, and the complexity is continually increasing, making them difficult to learn and use.
+  Programmers often worry too much about whether their programming language is dynamically or statically type checked, and do not worry enough about whether their code is very dynamic or static.  The more general code is, the more dynamic it must be, because it must handle more possibilities at run time.  The more safe and efficient code is, the more static it must be, because it must prevent more possibilities at run time.  Since generality, safety, and efficiency are all desirable properties, the question should be which is more important for your code's intended use, not which is always superior.  It is easier to write dynamic code with dynamic type checking, and static code with static type checking, but either kind of code can be written with either kind of type checking.
 
-  To prove a program is free of defects a dependent type system is required, and the specification of the program's types is equivalent to a program (the Curry-Howard correspondence).  That means type checking can suffer from all the problems that programs can have.  The good news is that if your program type checks in a system like this, it is highly unlikely it has any defects you thought to prove it free of, because to go unnoticed it would require that the proof and program have compatible defects.  There is still a risk of forgetting to prove something important.  Writing a program to construct correct code for your task is likely to be easier than using a general-purpose dependent type system.
+  A mandatory static type system causes several problems.
 
-  If performance is the concern, most variables in a program written in a dynamically type checked programming language will be of a single type, and type inference will be able to determine it statically.  There are Lisp implementations that have performed type inference as part of their optimization for over a decade (e.g. SBCL).
+  Programmers define an excess of types, and a small number of functions to work with each type, because using a separate type for each purpose minimizes the chance of operating on an invalid value.  It also minimizes code reuse.
 
-  However, it should be possible to implement a static type system on top of my programming language without having to reimplement anything.
+  Type annotations make code more verbose.  Theoretically type inference, combined with a programming language design that assures type inference is always possible, can eliminate the need for type annotations.  In practice, even in programming languages with type inference, most variables and functions in the outermost scope must have type annotations, because most will be exported and code in other modules would break if their type changed.
+
+  Making changes requires more effort, because you must change the type annotations everywhere a value is used when you want to change its type.
+
+  Generic static type systems often have poor payoff per effort ratios for improving safety and efficiency.
+
+  Simple static type systems are not sufficient to prove code correct.  Dependent type systems are sufficient, but require heavy annotation.  It is often easier to write a program to derive correct efficient code from your specification than to annotate correct hand-written code enough to satisfy a dependent type system.
+
+  A static type system is not necessary nor sufficient to eliminate run time type checks.  Most variables in code written in dynamically type checked languages are used with a single type of value, and compilers can use type inference to eliminate most run time type checks.  Lisp compilers have been doing that for decades.  When disjoint unions (a.k.a. tagged unions) are used in statically type checked languages, run time type checks (reading the tag) determine what code to run.
+
+  What features should be included in a static type system?  Most are primarily or exclusively concerned with type specifiers; what type a value is.  I rarely make mistakes involving operating on the wrong type of value, and when I do it is almost always easy to detect and correct.  Making mistakes with units of measure is an exception.  I consider unit and dimensional analysis, especially with safe coercion, very helpful.  I would prefer a static type system to be more concerned with type qualifiers; what qualities a value has.  For example, checking and inferring constancy of variables, immutability of values, taint and trademark checking, and typestate checking.  Mistakes involving those are often much harder to detect and correct.  Preventing referentially transparent functions from being able to call non-referentially transparent functions can encourage code structure that is easier to understand and optimize.  Something like checked exceptions, but for a condition system, is probably the right way to assure input/output conditions are handled.  Whatever you decide, if you include a mandatory static type system, everyone that uses your programming language is forced to learn and use it, even if it does not help solve their problems.  Trying to solve everyone's problems in a mandatory static type system results in steadily increasing complexity.
+
+  For all these reasons, and more, a dynamically type checked language with a Lisp macro system is "the right thing".  Macros can describe any static type system you want, if you want one.  Static type checking becomes optional and pluggable.  Dynamically and statically type checked code can call each other effortlessly.
 
 * introducing a null type
 
@@ -171,9 +183,9 @@ Non-Goals:
 
   While I agree that heavy use of mutation causes maintainability problems, limited use of mutation occasionally results in more maintainable code.
 
-  Functions that mutate their local variables, but not their arguments or global variables, are just as maintainable as those written in programming languages with mandatory immutability, and are sometimes shorter, easier to understand, and more efficient.
+  Functions that mutate their local variables, but not their arguments or free variables, are just as maintainable as those written in programming languages with mandatory immutability, and are sometimes shorter, easier to understand, and more efficient.
 
-  Some (non-local) mutation /must/ occur to share state between event handlers, and event handling is what this programming language is about.
+  Some (non-local) mutation /must/ occur to share state between event handlers, and this programming language is meant for event handling.
 
 * object-oriented programming support
 
@@ -236,7 +248,7 @@ There are some definitions that are imported into every namespace by default.  W
 
 The syntax for Booleans ("true" and "false") and integers in bases other than 10 ("0b101" and "0xF00") is similar to popular programming languages.
 
-Only "true" and "false" are true and false.  Integers can be converted to (0 is false, anything else is true) and from (true is 1, false is 0) Booleans, explicitly.  All type conversions are explicit.  This should make debugging easier, and I have always found treating non-Boolean values as Boolean confusing.
+Only "true" and "false" are true and false.  Integers can be converted to (0 is false, anything else is true) and from (true is 1, false is 0) Booleans, explicitly.  This should make debugging easier, and I have always found treating non-Boolean values as Boolean confusing.
 
 Dictionary literals are supported.  Dictionaries are surrounded in curly brackets, with key-value pairs grouped by parentheses, like so "{("x" 1) ("y" 2)}".  Other Lisp-like languages that support dictionary literals usually use curly brackets to demarcate them, so I adopted that practice.  Most other Lisp-like languages that support dictionary literals restrict keys to keywords, or use improper lists to group key-value pairs, neither of which are supported in this programming language.  Some Lisp-like languages do not group key-value pairs, but I find that harder to read.
 
@@ -248,7 +260,7 @@ Vector literals are supported.  Vectors are surrounded in square brackets, like 
 
 Vectors are dynamic arrays.  Values can be 'pushed' to, or 'popped' from, the highest index, allowing them to double as stacks.  Singly-linked lists support efficient pushing to, and popping from, the beginning, but not efficient indexing.  This makes vectors more versatile, and since bounds are still checked, they are just as safe.  Like singly-linked lists, dynamic arrays are used in most hash table implementations, which are used in most environment implementations, so it makes sense to expose them in the programming language.  It takes little effort and is consistent with the goal of not unnecessarily restricting those programming in the language.
 
-The built-in forms are as generic as possible.  For example, there is only one "ref" for all collection types.  This should allow more code reuse, and minimize what programmers must learn and remember to use the programming language.  "set!" is not generalized for reasons already explained (in Non-Goals: generalized variables support).
+The built-in forms are as general as possible.  For example, there is only one "ref" for all collection types.  This should allow more code reuse, and minimize what programmers must learn and remember to use the programming language.  "set!" is not generalized for reasons already explained (in Non-Goals: generalized variables support).
 
 Equality is much simpler than in most Lisp-like languages.  Most equality tests are performed with "=", which compares values for immutable types, and identities (i.e. addresses) for mutable types, like "==" in most popular programming languages.  Dictionaries always use this form of equality.  "equal?" is also provided, which compares values even for mutable types, and correctly handles reference cycles.  The behavior of "=" is almost always what is desired, and "equal?" covers when it is not.  The complexity of equality in most Lisp-like languages is neither necessary nor helpful.
 
