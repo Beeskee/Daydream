@@ -115,7 +115,7 @@ Non-Goals:
 
 * reader macro support
 
-  I have no strong objection to reader macros, they just do not seem helpful to me.  Their scope is unlimited, making them hard to use safely.  Without the ability to create new types and new 'print'ed representations there is little motivation for new literal syntax.
+  I have no strong objection to reader macros, they just do not seem helpful to me.  Their scope is unlimited, making them hard to use safely.  Without the ability to create new types and new "print"ed representations there is little motivation for new literal syntax.
 
 * generalized variables support
 
@@ -240,13 +240,15 @@ The same name in the same scope always refers to the same value, barring mutatio
 
 A symbol always looks like a symbol.  This is also to prevent confusion.  Any characters that have special meaning to the reader, such as whitespace or parentheses, cannot be included in a symbol.
 
+The syntax for Booleans ("true" and "false") and integers in bases other than 10 ("0b101" and "0xF00") is similar to popular programming languages.
+
 Some aspects of the programming language behave differently when they are used interactively.  This allows both good exploratory programming and good error handling.  At the REPL "def" and "set!" are equivalent, because not being able to redefine an erroneous definition while doing exploratory programming would be a problem, but redefining something, or mutating a variable that has not been defined, is a defect in code loaded from a file.  In a file, redefining something indicates you did not know it was already in use.  In a file, mutating a variable that has not been defined indicates you typoed the name.  Mutating an imported variable is allowed at the REPL, but forbidden in files, because it should never be necessary to violate encapsulation in correct code.
 
 Docstrings can be associated with modules, and variables, macros, and functions in the outermost scope.  Functions are provided for searching for combinations of patterns in module paths and names, patterns in variable names, patterns in docstrings, types, and values.  While this was common in the past, modern Lisp-like languages seem to be becoming more static, and less useful interactively, thus losing one of the main advantages over other programming languages.  Functions are provided to load all source code in a directory, or in a directory hierarchy, to make searching easier.
 
 There are some definitions that are imported into every namespace by default.  Without forms to perform arithmetic, logic, manipulate the built-in data structures, and call foreign functions it would be impossible to define much else.  While redefining something in a file is normally forbidden, most built-in forms can be redefined in a file with only a warning.  This allows new built-in forms to be defined without breaking existing source code.
 
-The syntax for Booleans ("true" and "false") and integers in bases other than 10 ("0b101" and "0xF00") is similar to popular programming languages.
+Types are rarely converted implicitly, and never when it could be surprising.  This is typical of Lisp-like languages, but surprising type coercion is the norm for most programming languages.
 
 Only "true" and "false" are true and false.  Integers can be converted to (0 is false, anything else is true) and from (true is 1, false is 0) Booleans, explicitly.  This should make debugging easier, and I have always found treating non-Boolean values as Boolean confusing.
 
