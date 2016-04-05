@@ -70,7 +70,7 @@ Goals:
 
   * be relevant
 
-    The amount of code for input/output and resource management should be minimized.  The majority of the code should relate to solving the problem.
+    The majority of the code should relate to solving the problem.  The amount of code for input/output and resource management should be minimized.
 
   * seek symmetry
 
