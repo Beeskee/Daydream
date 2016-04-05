@@ -42,7 +42,7 @@ Goals:
 
 * distinguish unrelated concepts
 
-  Conflation means having to learn, remember, and abstract over, similarities that should not exist.  For example, many vector (array) operations only have useful semantics when sequential integer indices are assumed, and therefore vectors and dictionaries should not be the same type.
+  Conflation means having to learn, remember, and abstract over, similarities that should not exist.  For example, many vector (array) operations only have useful semantics when sequential integer indexes are assumed, and therefore vectors and dictionaries should not be the same type.
 
   Constructs should never compose with any construct that cannot satisfy its requirements.
 
@@ -54,23 +54,23 @@ Goals:
 
   * be simple
 
-    Minimize the number of primitive constructs.
+    The number of primitive constructs should be minimized.
 
   * be general
 
-    Constructs should be useful for many different purposes.
+    Most constructs should be useful for many different purposes.
 
   * be composable
 
-    It should be possible to combine most constructs to produce new, useful, constructs.  Non-composable constructs should be minimized.
+    It should be possible to combine most constructs to produce new, useful, constructs.  The number of non-composable constructs should be minimized.
 
   * be brief
 
-    It should require little code to achieve the programmer's goal.
+    The amount of code should be minimized.  This refers to the number of tokens, not the token length.
 
   * be relevant
 
-    The majority of the code should relate to solving the problem.  Code to manage resources should be minimized.
+    The amount of code for input/output and resource management should be minimized.  The majority of the code should relate to solving the problem.
 
   * seek symmetry
 
@@ -80,9 +80,9 @@ Goals:
 
   If the programming language is too restrictive, it will be unpleasant to work in.
 
-  As much as practical should be implemented in the programming language itself.  This has more to do with me finding it very hard to write anything reliable in AutoHotkey than aesthetics.  The lack of error handling, introspection, and recursion support makes programming difficult.
+  As much as practical should be implemented in the programming language itself.  If it is too restrictive, this will reveal it.
 
-  It should be possible to implement a metacircular evaluator in the programming language without much effort or loss in efficiency.  This assures the programming language's implementation is exposed in a useful way to programs written in it.
+  It should be possible to implement a metacircular evaluator in the programming language, with a small amount of code, without much loss in efficiency.  This assures the programming language's implementation is exposed in a useful way to programs written in it.
 
 
 Non-Goals:
@@ -149,7 +149,7 @@ Non-Goals:
 
   A static type system is not necessary nor sufficient to eliminate run time type checks.  Most variables in code written in dynamically type checked languages are used with a single type of value, and compilers can use type inference to eliminate most run time type checks.  Lisp compilers have been doing that for decades.  When disjoint unions (a.k.a. tagged unions) are used in statically type checked languages, run time type checks (reading the tag) determine what code to run.
 
-  What features should be included in a static type system?  Most are primarily or exclusively concerned with type specifiers; what type a value is.  I rarely make mistakes involving operating on the wrong type of value, and when I do it is almost always easy to detect and correct.  Making mistakes with units of measure is an exception.  I consider unit and dimensional analysis, especially with safe coercion, very helpful.  I would prefer a static type system to be more concerned with type qualifiers; what qualities a value has.  For example, checking and inferring constancy of variables, immutability of values, taint and trademark checking, and typestate checking.  Mistakes involving those are often much harder to detect and correct.  Preventing referentially transparent functions from being able to call non-referentially transparent functions can encourage code structure that is easier to understand and optimize.  Something like checked exceptions, but for a condition system, is probably the right way to assure input/output conditions are handled.  Whatever you decide, if you include a mandatory static type system, everyone that uses your programming language is forced to learn and use it, even if it does not help solve their problems.  Trying to solve everyone's problems in a mandatory static type system results in steadily increasing complexity.
+  What features should be included in a static type system?  Most are primarily or exclusively concerned with type specifiers; what type a value is.  I rarely make mistakes involving operating on the wrong type of value, and when I do it is almost always easy to detect and correct.  Making mistakes with units of measure is an exception.  I consider unit and dimensional analysis, especially with safe coercion, very helpful.  I would prefer a static type system to be more concerned with type qualifiers; what qualities a value has.  For example, checking and inferring constancy of variables, immutability of values, taint and trademark checking, and typestate checking.  Mistakes involving those are often much harder to detect and correct.  Preventing referentially transparent functions, which should be the majority, from being able to call non-referentially transparent functions (e.g. via a closure passed as an argument) can encourage code structure that is easier to understand and optimize.  Something like checked exceptions, but for a condition system, is probably the right way to assure input/output conditions are handled.  Whatever you decide, if you include a mandatory static type system, everyone that uses your programming language is forced to learn and use it, even if it does not help solve their problems.  Trying to solve everyone's problems in a mandatory static type system results in steadily increasing complexity.
 
   For all these reasons, and more, a dynamically type checked language with a Lisp macro system is "the right thing".  Macros can describe any static type system you want, if you want one.  Static type checking becomes optional and pluggable.  Dynamically and statically type checked code can call each other effortlessly.
 
@@ -181,11 +181,9 @@ Non-Goals:
 
 * mandatory immutability
 
-  While I agree that heavy use of mutation causes maintainability problems, limited use of mutation occasionally results in more maintainable code.
+  Functions that mutate their local variables, but not their arguments or free variables, are as composable and maintainable as those written in programming languages with mandatory immutability, and are sometimes shorter, easier to understand, and more efficient.
 
-  Functions that mutate their local variables, but not their arguments or free variables, are just as maintainable as those written in programming languages with mandatory immutability, and are sometimes shorter, easier to understand, and more efficient.
-
-  Some (non-local) mutation /must/ occur to share state between event handlers, and this programming language is meant for event handling.
+  At least one free variable /must/ be mutated to share state between event handlers.
 
 * object-oriented programming support
 
