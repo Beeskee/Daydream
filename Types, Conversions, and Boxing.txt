@@ -2,8 +2,8 @@ Automation objects can contain: integers, floating point numbers, strings, array
 
 AutoHotkey makes you tell it what the return type of a DLL call will be (which is always scalar), so you can know what to treat it as based on that.
 
-You will probably have to use type specifiers for functions you intend to expose to AutoHotkey, since it is otherwise ambiguous what a AutoHotkey value should be boxed as.  We might as well also use this for detecting defects within our programming language.
+We will have to specify the type of arguments of functions we expose to AutoHotkey, since it is otherwise ambiguous what a AutoHotkey value should be boxed as.
 
 Unboxing is not ambiguous, and therefore can be done automatically.
 
-Since we cannot know the type of something from AutoHotkey, it is impossible to use disjoint unions, and therefore all type specifications will be of fixed depth.  They could be of unlimited /length/ though (in the case of variadic functions).
+Since we cannot know the type of something from AutoHotkey, it is impossible to use sum types, and therefore all type specifications will be of fixed depth.  They could be of unlimited /length/ though (in the case of variadic functions).
