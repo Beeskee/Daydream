@@ -173,11 +173,11 @@ Non-Goals:
 
 * mandatory referential transparency
 
-  To implement a programming language that enforces global referential transparency you can:
-  * Lie.  For example, claim to only generate a sequence of actions, and that the runtime performs the side effects the actions instruct it to.  If you believe that, then C also enforces global referential transparency in exactly the same way (the runtime is the operating system kernel and drivers), it just has very convenient syntax for the IO and state monads.
-  * Limit your programming language to behaving like a fancy calculator, where all variables and data structures are immutable, and no input/output is possible.  Code written in a more capable programming language could display the return values of your non-interactive programs.
+  A programming language that enforces global referential transparency can:
+  * Lie.  For example, claim to only generate a sequence of actions, and that the runtime performs the side effects the actions instruct it to.  If you believe that, then C also enforces global referential transparency in exactly the same way.  The actions are system calls.  The runtime is the operating system kernel and drivers.  It just has very convenient syntax for the IO and state monads.
+  * Be limited to behaving like a fancy calculator, where all variables and data structures are immutable, and no input/output is possible.  Code written in a more capable programming language could display the return values of the non-interactive programs.
 
-  Since I want this programming language to be as useful as possible, I want it to be able to describe most input/output operations.  I feel no shame in implementing an "impure" functional programming language.
+  Since I want this programming language to be as useful as possible, I want it to be able to describe most input/output operations.
 
 * mandatory immutability
 
