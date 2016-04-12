@@ -199,11 +199,23 @@ Non-Goals:
 
   Unfortunately, it is very difficult to implement, and very inefficient, if you do not implement your own allocator.  Running on top of AutoHotkey makes that impossible.
 
-* implicit lazy evaluation
+* implicit control flow
 
-  Implicit lazy evaluation makes it difficult to determine when, and in what order, side effects will occur, and side effects are required for a program to be useful.
+  Declarative programming is said to be specifying what to do, not how to do it.  In practice you always have to specify how to do it, because there are too many possibilities, and most are too inefficient or would have negative side effects.
 
-  Optimizing compilers for Haskell spend a lot of effort to eliminate implicit lazy evaluation.  We should avoid the same trap.
+  Most programming languages considered to be declarative have implicit control flow, which allows you to avoid specifying how to do control flow, so long as the implicit control flow is what you need.
+
+  Some people consider functional programming languages with strict evaluation to be declarative, but they require specifying how to do everything like imperative programming languages.  Programming languages with lazy- or speculative evaluation, or goal-directed evaluation (like Icon), are more deserving of the title, but still require specifying how to do most control flow.  Good examples include constraint, pull- and push dataflow, deductive-, inductive-, and abductive logic, and string-, term-, and graph rewriting programming languages.
+
+  Which implicit control flow algorithm should be included?  Whatever you decide, if you include implicit control flow, everyone that uses your programming language is forced to learn and use it, even if it does not help solve their problems.
+
+  When the implicit control flow is /not/ what you need, you spend a lot of effort working around it.
+
+  Other than push dataflow, implicit control flow is unsafe to use with code that has side effects.  It becomes difficult to determine if or when each side effect will occur.
+
+  Implicit control flow makes it difficult to predict the time and space efficiency of code.  Optimizing compilers for programming languages with implicit control flow spend a lot of effort working around it.
+
+  For all these reasons, and more, a strictly evaluated language with a Lisp macro system is "the right thing".  Macros can describe any implicit control flow algorithm you want, if you want one.  Implicit control flow becomes optional and pluggable.  Code written with different implicit control flow algorithms can call each other effortlessly.
 
 * parallelism support
 
