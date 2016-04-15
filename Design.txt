@@ -1,14 +1,14 @@
 Goals:
 
-* be good for automating Windows and Windows programs that were not designed with automation in mind
+* good for automating Windows and Windows programs
 
-  It should be good for automating installation, upgrading, uninstallation, and reconfiguration of software that provides no support for automation.  These are among the worst problems for Windows system administrators.
+  It should be good for automating installation, upgrading, uninstallation, and reconfiguration of software.  These are among the worst problems for Windows system administrators.
 
   It should be able to run arbitrary code when a button or button combination is pressed, globally or only when a certain window is active.  Infrequently used key combinations can be used to launch programs.  It is useful for adding some automation while using a particular program.  For example, quickly filling in fields in a badly-designed database interface.  It is also useful for video games which did not bother to provide rapid fire.
 
   It should be good for remapping buttons, globally or only when a certain window is active.  This is useful for temporarily changing the keyboard layout.  For example, a computer technician who has switched to the Dvorak keyboard layout to treat their repetitive strain injury could use it while repairing the computer of someone that uses the QWERTY keyboard layout.  It is also useful for programs that did not bother to provide proper button remapping.  3-D modelers and video games frequently do not provide button remapping, and may have a very awkward default mapping, especially if you use an alternative keyboard layout.
 
-* have good error handling
+* good error handling
 
   Good error handling makes writing safe code and debugging easier.
 
@@ -30,7 +30,7 @@ Goals:
 
   Surprising behavior is the mother of all defects.
 
-* be consistent
+* consistent
 
   Consistency means not having to learn, remember, and abstract over, differences that should not exist.
 
@@ -40,7 +40,7 @@ Goals:
 
   Related functions and macros should have similar parameters, and parameter order.
 
-* distinguish unrelated concepts
+* avoid conflation
 
   Conflation means having to learn, remember, and abstract over, similarities that should not exist.  For example, many vector (array) operations only have useful semantics when sequential integer indexes are assumed, and therefore vectors and dictionaries should not be the same type.
 
@@ -48,27 +48,27 @@ Goals:
 
   Unrelated constructs should have different names.
 
-* be elegant
+* elegant
 
   Elegance usually results in less code to write, test, document, and maintain.
 
-  * be simple
+  * simple
 
     The number of primitive constructs should be minimized.
 
-  * be general
+  * general
 
     Most constructs should be useful for many different purposes.
 
-  * be composable
+  * composable
 
     It should be possible to combine most constructs to produce new, useful, constructs.  The number of non-composable constructs should be minimized.
 
-  * be brief
+  * brief
 
     The amount of code should be minimized.  This refers to the number of tokens, not the token length.
 
-  * be relevant
+  * relevant
 
     The majority of the code should relate to solving the problem.  The amount of code for input/output and resource management should be minimized.
 
@@ -76,7 +76,7 @@ Goals:
 
     Where practical, inverse functions should be provided.  Other forms of symmetry may also be of practical value.
 
-* do not unnecessarily restrict those programming in the language
+* avoid unnecessary restrictions
 
   If the programming language is too restrictive, it will be unpleasant to work in.
 
@@ -113,11 +113,11 @@ Non-Goals:
 
   I might use some original names for things if I cannot find something acceptable.  I want frequently used constructs to have very short, but very readable, names, so expressions remain readable.
 
-* reader macro support
+* reader macros
 
   I have no strong objection to reader macros, they just do not seem helpful to me.  Their scope is unlimited, making them hard to use safely.  Without the ability to create new types and new "print"ed representations there is little motivation for new literal syntax.
 
-* generalized variables support
+* generalized variables
 
   While I can see the appeal of having a single "set!" special form that can accept any mutable place (variables, those referred to by a dictionary and key, the return values of "first" and "rest", or a vector and index), I cannot imagine how to implement this in AutoHotkey.  AutoHotkey's "byref" only works with some variables, not Objects.  Pointer hacks are likely to break when AutoHotkey's implementation changes.
 
@@ -127,7 +127,7 @@ Non-Goals:
 
   The absence of this feature should not be very annoying if you are doing mostly-functional programming.
 
-* symbol macro support
+* symbol macros
 
   Symbol macros are only useful for generalized variables, which is a feature I do not plan to support.  Since they have no parameters, they cannot perform any useful processing.
 
@@ -153,9 +153,9 @@ Non-Goals:
 
   For all these reasons, and more, a dynamically type checked language with a Lisp macro system is "the right thing".  Macros can describe any static type system you want, if you want one.  Static type checking becomes optional and pluggable.  Functions and macros written with different type systems can call each other effortlessly.
 
-* introducing a null type
+* introduce a null type
 
-  Do not confuse this with Scheme's terminology for the empty list.  The empty list will still exist in my programming language, and will probably be called "null".
+  Do not confuse this with Scheme's terminology for the empty list.  The empty list will still exist in my programming language, and will be called "null".
 
   The absence of an equivalent to the null type in most Lisp-like languages results in abusing other types or values as sentinel values.  The empty list is the most common choice, but false is usually chosen when an empty list could be confused with a meaningful value.  This feels like a kludge, but it is the cleanest solution.
 
@@ -185,7 +185,7 @@ Non-Goals:
 
   At least one free variable /must/ be mutated to share state between event handlers.
 
-* object-oriented programming support
+* object-oriented programming
 
   I believe object-oriented programming usually does more harm than good.  The difficulty in maintaining code that uses mutable global variables is widely recognized.  When a global variable becomes corrupt, it is hard to tell what code was responsible.  Mutable objects are mutable global variables.  Implementation inheritance is also, recently, widely recognized as a source of maintainability problems.  Changing a method's implementation can break anything that inherits it.  Of course you can use immutable objects, and only inherit interfaces and use composition, but then objects are no more useful than records or dictionaries.
 
@@ -217,7 +217,19 @@ Non-Goals:
 
   For all these reasons, and more, a strictly evaluated language with a Lisp macro system is "the right thing".  Macros can describe any implicit control flow algorithm you want, if you want one.  Implicit control flow becomes optional and pluggable.  Functions and macros written with different implicit control flow algorithms can call each other effortlessly.
 
-* parallelism support
+* pattern guards and views
+
+  Do not confuse this with when guards, like those in OCaml, which are supported.
+
+  Pattern guards, like those in Haskell, are qualifiers (expressions) that any in-scope values can be passed to before pattern matching.  If the pattern match on the value of the qualifier succeeds, then its bindings can be used by qualifiers that follow, else qualifiers and patterns that follow are skipped, and pattern matching proceeds with the next equation (sequence of qualifiers and patterns).
+
+  Views, like those in Haskell, are similar, but less powerful.  They are equivalent to a qualifier preprocessing a single value before pattern matching.
+
+  My objection to pattern guards and views is that they encourage bad code.  If you could use them, it probably indicates that your data structure or function decomposition needs to change.  If you usually need to preprocess values from a data structure in the same way, the data structure is the problem.  The data structure should be changed to match the parameters of the functions that process the data.  If you usually need to preprocess values from a data structure in different ways, the function decomposition is the problem.  The preprocessing code should be moved into separate functions, and the return values of those functions should be used as the arguments of the functions that process the data.
+
+  The only advantage pattern guards have (views have none) over fixing the code is short-circuit evaluation.  That is an optimization for a situation that is too rare to justify its inclusion in a programming language design.
+
+* parallelism
 
   AutoHotkey does not support multithreading, making this difficult to implement.
 
@@ -225,7 +237,7 @@ Non-Goals:
 
   There are hacks abusing inter-process communication for this purpose in the forums, similar to Python's multiprocessing and concurrent.futures implementations.  I may eventually add support for thread pools and futures that way.
 
-* networking support
+* networking
 
   AutoHotkey does not support networking, making this difficult to implement.
 
