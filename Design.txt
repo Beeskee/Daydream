@@ -326,7 +326,7 @@ Function arguments are evaluated once, from left to right, as in Common Lisp.  I
 
 Partial application is supported.  If you call a fixed-arity function with less than the number of arguments it expects, it will return a closure that will accept the remaining arguments and has the closed-over arguments in its environment.  Parameters should appear in order from the most to least likely to be reused.  This makes using closures much more convenient.  Calling a fixed-arity function with the expected number of arguments causes it to run normally.  Calling a function with too many arguments is a defect.
 
-"fix-arity" creates a fixed-arity copy of a variadic function to make it easier to build closures with.
+"fix-arity" creates a fixed-arity copy of a variadic form to make it easier to build closures with.
 
 If you want to leave out values in the middle of a function's arguments, instead of only at the end, you can use "_" in their place.  The resulting closure will expect the remaining arguments in the same order.  To prevent surprising behavior, "_" (along with other reserved words) is not a valid variable name.
 
