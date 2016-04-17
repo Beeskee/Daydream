@@ -219,7 +219,7 @@ Non-Goals:
 
 * pattern guards and views
 
-  Do not confuse this with when guards, like those in OCaml, which are supported.
+  Do not confuse this with "when" guards, like those in OCaml, which are supported.
 
   Pattern guards, like those in Haskell, are qualifiers (expressions) that any in-scope values can be passed to before pattern matching.  If the pattern match on the value of the qualifier succeeds, then its bindings can be used by qualifiers that follow, else qualifiers and patterns that follow are skipped, and pattern matching proceeds with the next equation (sequence of qualifiers and patterns).
 
@@ -227,7 +227,23 @@ Non-Goals:
 
   My objection to pattern guards and views is that they encourage bad code.  If you could use them, it probably indicates that your data structure or function decomposition needs to change.  If you usually need to preprocess values from a data structure in the same way, the data structure is the problem.  The data structure should be changed to match the parameters of the functions that process the data.  If you usually need to preprocess values from a data structure in different ways, the function decomposition is the problem.  The preprocessing code should be moved into separate functions, and the return values of those functions should be used as the arguments of the functions that process the data.
 
-  The only advantage pattern guards have (views have none) over fixing the code is short-circuit evaluation.  That is an optimization for a situation that is too rare to justify its inclusion in a programming language design.
+  The only advantage pattern guards have (views have none) over fixing the code is short-circuit evaluation.  That is an optimization for a situation that is too rare to justify its inclusion in a programming language.
+
+* comprehensions
+
+  Comprehensions are inspired by set-builder notation from mathematics.
+
+  Comprehensions conflate "filter" and "map".
+
+  To avoid the construction and traversal of intermediate data structures, use streams.
+
+* transducers
+
+  Transducers are transformations from one reducing (folding) function to another.
+
+  Transducers are unnecessarily restrictive, since they are limited to one order of traversal (usually "foldl1").  They have surprising behavior in a programming language with partial application, because it is ambiguous whether functions that can return transducers return a transducer or partially applied function when they are passed less than the maximum number of arguments.
+
+  To avoid the construction and traversal of intermediate data structures, use streams.
 
 * parallelism
 
@@ -266,9 +282,9 @@ Unconventional Features:
 
 My programming language is designed to be easy to embed in another programming language, make it easy to call foreign functions, and to be used for event handling.
 
-The same name in the same scope always refers to the same value, barring mutation.  Any other behavior is confusing.  This implies that variables and functions are not in separate namespaces, which is not unconventional now, but Common Lisp does not work that way.  It also implies that the programming language is case-insensitive, which is unconventional now.  To prevent the use of symbols that jangle like bad typography, uppercase letters in symbols are a defect.
+The same name in the same scope always refers to the same value, barring mutation.  That prevents surprising behavior.  This implies that variables and functions are not in separate namespaces, which is not unconventional now, but Common Lisp does not work that way.  It also implies that the programming language is case-insensitive, which is unconventional now.  To prevent the use of symbols that jangle like bad typography, uppercase letters in symbols are a defect.
 
-A symbol always looks like a symbol.  This is also to prevent confusion.  Any characters that have special meaning to the reader, such as whitespace or parentheses, cannot be included in a symbol.
+A symbol always looks like a symbol.  That prevents surprising behavior.  Any characters that have special meaning to the reader, such as whitespace or parentheses, cannot be included in a symbol.
 
 The syntax for Booleans ("true" and "false") and integers in bases other than 10 ("0b101" and "0xF00") is similar to popular programming languages.
 
@@ -280,7 +296,7 @@ There are some definitions that are imported into every namespace by default.  W
 
 Types are rarely converted implicitly, and never when it could be surprising.  This is typical of Lisp-like languages, but surprising type coercion is the norm for most programming languages.
 
-Only "true" and "false" are true and false.  Integers can be converted to (0 is false, anything else is true) and from (true is 1, false is 0) Booleans, explicitly.  This should make debugging easier, and I have always found treating non-Boolean values as Boolean confusing.
+Only "true" and "false" are true and false.  Integers can be converted to (0 is false, anything else is true) and from (true is 1, false is 0) Booleans, explicitly.  This should make debugging easier, and I have always found treating non-Boolean values as Boolean surprising.
 
 Dictionary literals are supported.  Dictionaries are surrounded in curly brackets, with key-value pairs grouped by parentheses, like so "{("x" 1) ("y" 2)}".  Other Lisp-like languages that support dictionary literals usually use curly brackets to demarcate them, so I adopted that practice.  Most other Lisp-like languages that support dictionary literals restrict keys to keywords, or use improper lists to group key-value pairs, neither of which are supported in this programming language.  Some Lisp-like languages do not group key-value pairs, but I find that harder to read.
 
@@ -298,7 +314,7 @@ Equality is much simpler than in most Lisp-like languages.  Most equality tests 
 
 Only lexical scope is supported.  Dynamic scope prevents composition and makes understanding code more difficult.  Closures and partial application are a composable, understandable, alternative to dynamic scope for avoiding repeatedly specifying an argument.
 
-While (trailing) optional and rest parameters are supported, they are rarely used.  Keyword parameters are not supported.  They interact in confusing ways with optional and rest parameters.  Data structures like dictionaries, lists, and vectors are used where keyword, optional, and rest parameters would be used in other Lisp-like languages.
+While (trailing) optional and rest parameters are supported, they are rarely used.  Keyword parameters are not supported.  They interact in surprising ways with optional and rest parameters.  Data structures like dictionaries, lists, and vectors are used where keyword, optional, and rest parameters would be used in other Lisp-like languages.
 
 Without optional parameters a second "def" form would have to be provided, or a sentinel value used, to cope with some variables not having docstrings.
 
@@ -310,7 +326,7 @@ Partial application is supported.  If you call a fixed-arity function with less 
 
 "fix-arity" creates a fixed-arity copy of a variadic function to make it easier to build closures with.
 
-If you want to leave out values in the middle of a function's arguments, instead of only at the end, you can use "_" in their place.  The resulting closure will expect the remaining arguments in the same order.  To prevent confusion "_" (along with other reserved words) is not a valid variable name.
+If you want to leave out values in the middle of a function's arguments, instead of only at the end, you can use "_" in their place.  The resulting closure will expect the remaining arguments in the same order.  To prevent surprising behavior, "_" (along with other reserved words) is not a valid variable name.
 
 Function parameters can be rearranged to ease closure creation like so "(fn (x y) (bad-fn y x))".  I have yet to come up with anything shorter.
 
@@ -318,7 +334,7 @@ Delimited continuations and dynamic-wind are supported.  Undelimited continuatio
 
 Everything returns a value.  Forms that perform definition or mutation return the value that they used.  Forms that involve a control flow sequence return the value returned by the last expression in the control flow sequence.  This, along with combining allocation and initialization, prevents uninitialized values.
 
-Multiple return values are not supported.  I find them confusing.  Evaluation should reduce a tree of expressions to a single value.  Pattern matching makes binding multiple values inside a data structure trivial.
+Multiple return values are not supported.  Programming languages that allow them must provide constructs to bind them, which are less general than destructuring constructs.  Evaluation should reduce a tree of expressions to a single value.  Pattern matching makes binding multiple values inside a data structure trivial.
 
 Recursion is properly supported.  Call stack frames are heap allocated, so non-tail recursion will succeed unless memory is exhausted.  Tail call elimination is performed, so loops can be defined recursively.
 
