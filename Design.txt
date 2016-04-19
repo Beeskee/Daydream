@@ -4,9 +4,9 @@ Goals:
 
   It should be good for automating installation, upgrading, uninstallation, and reconfiguration of software.  These are among the worst problems for Windows system administrators.
 
-  It should be able to run arbitrary code when a button or button combination is pressed, globally or only when a certain window is active.  Infrequently used key combinations can be used to launch programs.  It is useful for adding some automation while using a particular program.  For example, quickly filling in fields in a badly-designed database interface.  It is also useful for video games which did not bother to provide rapid fire.
+  It should be able to run arbitrary code when a button or button combination is pressed, globally or only when a certain window is active.  Infrequently used key combinations can be used to launch programs.  It is useful for adding some automation while using a particular program.  For example, quickly filling in fields in a badly-designed database interface.  It is useful for video games which did not bother to provide rapid fire.
 
-  It should be good for remapping buttons, globally or only when a certain window is active.  This is useful for temporarily changing the keyboard layout.  For example, a computer technician who has switched to the Dvorak keyboard layout to treat their repetitive strain injury could use it while repairing the computer of someone that uses the QWERTY keyboard layout.  It is also useful for programs that did not bother to provide proper button remapping.  3-D modelers and video games frequently do not provide button remapping, and may have a very awkward default mapping, especially if you use an alternative keyboard layout.
+  It should be good for remapping buttons, globally or only when a certain window is active.  This is useful for temporarily changing the keyboard layout.  For example, a computer technician who has switched to the Dvorak keyboard layout to treat their repetitive strain injury could use it while repairing the computer of someone that uses the QWERTY keyboard layout.  It is useful for programs that did not bother to provide proper button remapping.  3-D modelers and video games frequently do not provide button remapping, and may have a very awkward default mapping, especially if you use an alternative keyboard layout.
 
 * good error handling
 
@@ -91,7 +91,7 @@ Non-Goals:
 
   The syntax used in Lisp-like languages is not familiar to the average person.  Writing Lisp source code is difficult without an editor that helps with matching parentheses, and non-Lisp-programmers are unlikely to be familiar with one.  Many concepts, like closures, are also unfamiliar.  This makes Lisp-like languages more difficult to learn than most popular programming languages, because there is more to learn.
 
-  The same features that make Lisp-like languages difficult to learn are what makes them superior to popular programming languages.  The syntax makes macros practical.  It makes macro calls look and act like built-in constructs without a lot of effort on the part of the macro author.  If macro authors had to avoid conflicting with syntax reserved for built-in constructs, and define custom mixfix syntax for their macros, almost nobody would bother.  Fully parenthesized syntax prevents defects due to forgetting operator precedence and associativity.  The unfamiliar concepts make it easier to build abstractions that are difficult to express in other programming languages.  For example, object-oriented programming support is usually built into popular programming languages, but is usually derived from mutable closures in Lisp-like languages.
+  The same features that make Lisp-like languages difficult to learn are what makes them superior to popular programming languages.  The syntax makes macros practical.  It makes macro calls look and act like built-in constructs without a lot of effort on the part of the macro author.  If macro authors had to avoid conflicting with syntax reserved for built-in constructs, and define custom mixfix syntax for their macros, few would bother.  Fully parenthesized syntax prevents defects due to forgetting operator precedence and associativity.  The unfamiliar concepts make it easier to build abstractions that are difficult to express in other programming languages.  For example, object-oriented programming support is usually built into popular programming languages, but is usually derived from mutable closures in Lisp-like languages.
 
   When a designer must choose whether to favor novices or experts, favoring experts is almost always the correct decision.  You are only a novice once, and spend more time as an expert than a novice.
 
@@ -101,7 +101,7 @@ Non-Goals:
 
   Being compatible with an existing Lisp-like language means accepting all of their design decisions.  I am unaware of any Lisp-like languages where I agree with all of their design decisions.
 
-  I am also unaware of any Lisp-like languages that are intended for automating other programs.  It would not be surprising if one that was made different design decisions.
+  I am unaware of any Lisp-like languages that are intended for automating other programs.  It would not be surprising if one that was made different design decisions.
 
   If I am going to go to the trouble of writing my own Lisp-like language implementation, I am going to try to improve upon existing designs as much as possible in the process.
 
@@ -294,7 +294,7 @@ My programming language is designed to be easy to embed in another programming l
 
 Lisp parachronisms have been replaced or removed, since we use IBM PC compatibles instead of IBM 704s, and monitors instead of teleprinters.  "car" is replaced with "first", "cdr" is replaced with "rest", and "car" and "cdr" compositions (like "caddar") have been removed.  You "show" things on the monitor, not "print" them.  For example, you wrestle with your code in the RESL, not the REPL.
 
-The same name in the same scope always refers to the same value, barring mutation.  That prevents surprising behavior.  This implies that variables and functions are not in separate namespaces, which is not unconventional now, but Common Lisp does not work that way.  It also implies that the programming language is case-insensitive, which is unconventional now.  To prevent the use of symbols that jangle like bad typography, uppercase letters in symbols are a defect.
+The same name in the same scope always refers to the same value, barring mutation.  That prevents surprising behavior.  This implies that variables and functions are not in separate namespaces, which is not unconventional now, but Common Lisp does not work that way.  It implies that the programming language is case-insensitive, which is unconventional now.  To prevent the use of symbols that jangle like bad typography, uppercase letters in symbols are a defect.
 
 A symbol always looks like a symbol.  That prevents surprising behavior.  Any characters that have special meaning to the reader, such as whitespace or parentheses, cannot be included in a symbol.
 
@@ -309,6 +309,8 @@ There are some definitions that are imported into every namespace by default.  W
 Types are rarely converted implicitly, and never when it could be surprising.  This is typical of Lisp-like languages, but surprising type coercion is the norm for most programming languages.
 
 Only "true" and "false" are true and false.  Integers can be converted to (0 is false, anything else is true) and from (true is 1, false is 0) Booleans, explicitly.  This should make debugging easier, and I have always found treating non-Boolean values as Boolean surprising.
+
+Data structures can be called with an argument to access elements.  Like 'normal' functions they map their domain to their range.  Dictionaries map keys to values.  Lists map the symbols "first" and "rest" to values.  Strings map 0-based integer indexes to single-character strings.  Vectors map 0-based integer indexes to values.  This is more consistent and brief than most Lisp-like programming languages.
 
 Dictionary literals are supported.  Dictionaries are surrounded in curly brackets, with key-value pairs grouped by parentheses, like so "{("x" 1) ("y" 2)}".  Other Lisp-like languages that support dictionary literals usually use curly brackets to demarcate them, so I adopted that practice.  Other Lisp-like languages that support dictionary literals usually use keywords for keys, or use improper lists to group key-value pairs, neither of which are supported in this programming language.  Some Lisp-like languages do not group key-value pairs, but mine does for the sake of structure editors, pretty printing, and understanding.
 
