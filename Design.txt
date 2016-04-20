@@ -235,7 +235,7 @@ Non-Goals:
 
   Views, like those in Haskell, are similar, but less powerful.  They are equivalent to a qualifier preprocessing a single value before pattern matching.
 
-  My objection to pattern guards and views is that they encourage bad code.  If you could use them, it probably indicates that your data structure or function decomposition needs to change.  If you usually need to preprocess values from a data structure in the same way, the data structure is the problem.  The data structure should be changed to match the parameters of the functions that process the data.  If you usually need to preprocess values from a data structure in different ways, the function decomposition is the problem.  The preprocessing code should be moved into separate functions, and the return values of those functions should be used as the arguments of the functions that process the data.
+  Pattern guards and views encourage bad code.  If you could use them, it probably indicates that your data structure or function decomposition needs to change.  If you usually need to preprocess values from a data structure in the same way, the data structure is the problem.  The data structure should be changed to match the parameters of the functions that process the data.  If you usually need to preprocess values from a data structure in different ways, the function decomposition is the problem.  The preprocessing code should be moved into separate functions, and the return values of those functions should be used as the arguments of the functions that process the data.
 
   The only advantage pattern guards have (views have none) over fixing the code is short-circuit evaluation.  That is an optimization for a situation that is too rare to justify its inclusion in a programming language.
 
@@ -326,9 +326,11 @@ The built-in forms are as general as possible.  For example, there is only one "
 
 Equality is much simpler than in most Lisp-like languages.  Most equality tests are performed with "=", which compares values for immutable types, and identities (i.e. addresses) for mutable types, like "==" in most popular programming languages.  Dictionaries always use this form of equality, because it is the only way to assure keys remain associated with their values.  "equal?" is also provided, which compares values even for mutable types, and correctly handles reference cycles.  The behavior of "=" is almost always what is desired, and "equal?" covers when it is not.  The complexity of equality in most Lisp-like languages is neither necessary nor helpful.
 
+"do" evaluates a sequence of forms in order and returns the value of the last expression.  An empty "do" is a defect, because the value is uninitialized.  Control flow sequences are implicit in most places where you might want to use them, except for "if".
+
 One-armed "if" is a defect, because the value is uninitialized when the test expression is false.  Equivalents which return "null" when the test expression is false, "when" and "unless", are supported for side effects.  Programmers are often wrong when they believe nothing needs to be done when the test expression is false.  "when" and "unless" act as warning signs of potential defects.
 
-Non-exhaustive "cond" clauses is a defect, because the value is uninitialized when all test expressions are false.
+Non-exhaustive "cond" clauses is a defect, because the value is uninitialized when all test expressions are false.  This implies an empty "cond" is a defect.
 
 Only lexical scope is supported.  Dynamic scope prevents composition and makes understanding code more difficult.  Closures and partial application are a composable, understandable, alternative to dynamic scope for avoiding repeatedly specifying an argument.
 
