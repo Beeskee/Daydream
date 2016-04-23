@@ -123,6 +123,16 @@ Non-Goals:
 
   Lisp programmers should not mutilate their programming language in an attempt to please programmers that reject Lisp syntax.  They will not like it any more with less parentheses.  They will only be satisfied when it looks like C.
 
+* dictionary and vector literals
+
+  Not having dictionary and vector literals prevents questions about whether their elements should be evaluated or not, and defects caused by incorrectly assuming they are or are not.
+
+  It is necessary to use 'constructor syntax' (e.g. "(list x y z)") for lists to prevent ambiguity in pattern matching.  Otherwise it is impossible to tell the difference between a pattern construct and trying to bind a variable with the same name as a pattern construct.
+
+  While the ambiguity problem is limited to lists, using a different syntax in pattern matching for everything but lists is not consistent.
+
+  Having two syntaxes for the same thing is not simple.
+
 * reader macros
 
   I have no strong objection to reader macros, they just do not seem helpful to me.  Their scope is unlimited, making them hard to use safely.  Without the ability to create new types and new "print"ed representations there is little motivation for new literal syntax.
@@ -314,13 +324,9 @@ Only "true" and "false" are true and false.  Integers can be converted to (0 is 
 
 Data structures can be called with an argument to access elements.  Like 'normal' functions they map their domain to their range.  Dictionaries map keys to values.  Lists map the symbols "first" and "rest" to values.  Strings map 0-based integer indexes to single-character strings.  Vectors map 0-based integer indexes to values.  This is more consistent and brief than most Lisp-like programming languages.
 
-Dictionary literals are supported.  Dictionaries are surrounded in curly brackets, with key-value pairs grouped by parentheses, like so "{("x" 1) ("y" 2)}".  Other Lisp-like languages that support dictionary literals usually use curly brackets to demarcate them, so I adopted that practice.  Other Lisp-like languages that support dictionary literals usually use keywords for keys, or use improper lists to group key-value pairs, neither of which are supported in this programming language.  Some Lisp-like languages do not group key-value pairs, but mine does for the sake of structure editors, pretty printing, and understanding.
-
 Improper lists are not supported.  The second argument to "cons" must be a list.  Improper lists seem to be inferior to proper lists or vectors for all purposes, and the infix syntax they use is unlike everything else in Lisp.
 
 There is no character type.  Strings are effectively immutable vectors of strings of 1 character.  Strings can be indexed like a vector.  Strings of 1 character can be converted to and from integers.  This may result in more code reuse.
-
-Vector literals are supported.  Vectors are surrounded in square brackets, like so "[0 1 2]".  Other Lisp-like languages that support vector literals usually use this syntax.
 
 Vectors are dynamic arrays.  Values can be 'pushed' to, or 'popped' from, the highest index, allowing them to double as stacks.  Singly-linked lists support efficient pushing to, and popping from, the beginning, but not efficient indexing.  This makes vectors more versatile, and since bounds are still checked, they are just as safe.  Like singly-linked lists, dynamic arrays are used in most hash table implementations, which are used in most environment implementations, so it makes sense to expose them in the programming language.  It takes little effort and is consistent with the goal of not unnecessarily restricting those programming in the language.
 
