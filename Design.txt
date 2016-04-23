@@ -298,7 +298,7 @@ The same name in the same scope always refers to the same value, barring mutatio
 
 A symbol always looks like a symbol.  That prevents surprising behavior.  Any characters that have special meaning to the reader, such as whitespace or parentheses, cannot be included in a symbol.
 
-Binding is much simpler than in most Lisp-like languages.  There is only one "def" form, which can be used in any scope.  There are no "let" forms.  When you want a new scope, use "fn" or "macro".  When you want a new scope for macro expansion that disappears at macro expansion time (like "macrolet" in Common Lisp), instead define auxiliary macros in the outermost scope but do not export them.  The module system is necessary for good function decomposition, and there is no reason not to use it for good macro decomposition.  The complexity of binding in most Lisp-like languages is neither necessary nor helpful.
+Definition is much simpler than in most Lisp-like languages.  There is only one "def" form, which can be used in any scope.  There are no "let" forms.  When you want a new scope, use "fn" or "macro".  When you want a local macro definition for use in the outermost scope (like "macrolet" in Common Lisp), instead define an auxiliary macro in the outermost scope but do not export it.  The module system is necessary to support good function decomposition, and there is no reason not to use it to support good macro decomposition.  The complexity of definition in most Lisp-like languages is neither necessary nor helpful.
 
 The syntax for Booleans ("true" and "false") and integers in bases other than 10 ("0b101" and "0xF00") is similar to popular programming languages.
 
