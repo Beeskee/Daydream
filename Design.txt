@@ -346,6 +346,8 @@ Some aspects of OCaml's, Racket's, and this programming language's pattern match
 
 Non-exhaustive patterns is a defect, because the value is uninitialized when no patterns match.
 
+Not matching every element of a data structure is a defect, because allowing that would prevent defining patterns that match data structures with different numbers of elements.
+
 Not binding the same variables in every pattern in an "or" pattern construct is a defect, because the values of the variables are uninitialized when a pattern matches that does not bind them.
 
 Pattern constructs can be nested.  While recursive functions could be used instead, the inability to describe patterns more than one level deep would prevent a common usage of pattern matching from working; pattern matching function arguments.  You could put the arguments into a data structure to pattern match, but then you could not destructure their contents.  You could pattern match the arguments individually, but then you could not easily dispatch to the appropriate code for the combination of pattern matches.
@@ -354,9 +356,9 @@ Some aspects of this programming language's pattern matching differs from OCaml'
 
 Racket's non-linear pattern matching is supported.  If an identifier is used multiple times within a pattern, the corresponding matches must be the same according to "equal?", except that instances of an identifier in different "or" sub-patterns are independent.
 
-The Haskell pattern matching extension record puns is supported for dictionaries.  It uses syntax like "(dict ("x"))" to bind variables with the same name as string or symbol keys for the mentioned keys.  Using string keys that do not contain valid symbol names with this feature is a defect.
+The Haskell pattern matching extension record puns is supported for dictionaries.  It uses syntax like "("x")" to bind variables with the same name as string or symbol keys for the mentioned keys.  Using string keys that do not contain valid symbol names with this feature is a defect.
 
-The Haskell pattern matching extension record wildcards is supported for dictionaries.  It uses syntax like "(dict (_))" to bind variables with the same name as string or symbol keys for all keys in the dictionary that do not correspond to a variable already bound in the pattern.  Using any type of key other than strings or symbols, or string keys that do not contain valid symbol names, with this feature is a defect.
+The Haskell pattern matching extension record wildcards is supported for dictionaries.  It uses syntax like "(_)" to bind variables with the same name as string or symbol keys for all keys in the dictionary that do not correspond to a variable already bound in the pattern.  Using any type of key other than strings or symbols, or string keys that do not contain valid symbol names, with this feature is a defect.
 
 Normal dictionary pattern matching, dictionary puns, and dictionary wildcards can be combined in the same pattern.  For example, if you matched the dictionary "(dict ('a 1) ('b 2) ('c 3))" with the pattern "(dict ('a x) ('b) (_))" the bindings would be "x" which refers to 1, "b" which refers to 2, and "c" which refers to 3.  The dictionary wildcard must appear last when it is used in combination with other patterns in the same dictionary.
 
