@@ -237,9 +237,11 @@ Non-Goals:
 
   For all these reasons, and more, a strictly evaluated language with a Lisp macro system is "the right thing".  Macros can describe any implicit control flow algorithm you want, if you want one.  Implicit control flow becomes optional and pluggable.  Functions written with different implicit control flow algorithms can call each other effortlessly.
 
-* pattern guards and views
+* overcomplicated pattern matching
 
-  Do not confuse this with "when" guards, like those in OCaml, which are supported.
+  I will limit pattern matching to destructuring and tests for equality in patterns, arbitrary test expressions in "when" guards, and dispatching to code associated with a pattern.  New pattern matching features will not be added unless they help achieve the goals I set for this programming language.
+
+  A discussion of pattern matching features that have been rejected follows.
 
   Pattern guards, like those in Haskell, are qualifiers (expressions) that any in-scope values can be passed to before pattern matching.  If the pattern match on the value of the qualifier succeeds, then its bindings can be used by qualifiers that follow, else qualifiers and patterns that follow are skipped, and pattern matching proceeds with the next equation (sequence of qualifiers and patterns).
 
@@ -248,6 +250,10 @@ Non-Goals:
   Pattern guards and views encourage bad code.  If you could use them, it probably indicates that your data structure or function decomposition needs to change.  If you usually need to preprocess values from a data structure in the same way, the data structure is the problem.  The data structure should be changed to match the parameters of the functions that process the data.  If you usually need to preprocess values from a data structure in different ways, the function decomposition is the problem.  The preprocessing code should be moved into separate functions, and the return values of those functions should be used as the arguments of the functions that process the data.
 
   The only advantage pattern guards have (views have none) over fixing the code is short-circuit evaluation.  That is an optimization for a situation that is too rare to justify its inclusion in a programming language.
+
+  Variable-length patterns, like those in Racket, are redundant.  Processing data structures of variable-depth or -length is best done with recursion.  Recursion is more general, because it can be used for more than pattern matching.  Racket uses variable-length patterns to construct, and sometimes filter, lists and bind them.  Pattern matching should be used for destructuring, not structuring (constructing data structures) or restructuring (transforming data structures).  Structuring and restructuring is best done in the code associated with a pattern.
+
+  Some of Racket's pattern matching features are made redundant by "when" guards, which Racket also supports.  It includes a pattern construct that matches if a function passed the value returns true, which is equivalent to putting the same function call in the "when" guard.  It includes a pattern construct that matches if a regular expression matches the string value, which is equivalent to putting the same test in the "when" guard.  "when" guards are more general, because they can perform tests involving multiple values.
 
 * comprehensions
 
