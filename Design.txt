@@ -119,7 +119,7 @@ Non-Goals:
 
   This reduces the utility of structure editors and code reformatting tools, since parentheses inference is not possible in the general case (e.g. in macro invocations).
 
-  It makes code difficult to understand, because the reader has to infer the parentheses to understand the grouping.
+  It makes code difficult to understand, because the human has to infer the parentheses to understand the grouping.
 
   Lisp programmers should not mutilate their programming language in an attempt to please programmers that reject Lisp syntax.  They will not like it any more with less parentheses.  They will only be satisfied when it looks like C.
 
@@ -314,7 +314,7 @@ Lisp parachronisms have been replaced or removed, since we use IBM PC compatible
 
 The same name in the same scope always refers to the same value, barring mutation.  That prevents surprising behavior.  This implies that variables and functions are not in separate namespaces, which is not unconventional now, but Common Lisp does not work that way.  It implies that the programming language is case-insensitive, which is unconventional now.  To prevent the use of symbols that jangle like bad typography, uppercase letters in symbols are a defect.
 
-A symbol always looks like a symbol.  That prevents surprising behavior.  Any characters that have special meaning to the reader, such as whitespace or parentheses, cannot be included in a symbol.
+A symbol always looks like a symbol.  That prevents surprising behavior.  Any characters that have special meaning to the parser, such as whitespace or parentheses, cannot be included in a symbol.
 
 Definition is much simpler than in most Lisp-like languages.  There is only one "def" form, which can be used in any scope.  There are no "let" forms.  When you want a new scope, use "fn" or "macro".  When you want a local macro definition for use in the outermost scope (like "macrolet" in Common Lisp), instead define an auxiliary macro in the outermost scope and do not export it.  The module system is necessary to support good function decomposition, and there is no reason not to use it to support good macro decomposition.  The complexity of definition in most Lisp-like languages is neither necessary nor helpful.
 
