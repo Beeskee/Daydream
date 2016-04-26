@@ -133,6 +133,8 @@ Non-Goals:
 
   Having two syntaxes for the same thing is not simple.
 
+  Dictionaries and vectors are shown as the function calls that would create them.
+
 * reader macros
 
   I have no strong objection to reader macros, they just do not seem helpful to me.  Their scope is unlimited, making them hard to use safely.  Without the ability to create new types and new "print"ed representations there is little motivation for new literal syntax.
