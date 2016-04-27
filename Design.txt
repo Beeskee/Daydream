@@ -123,6 +123,14 @@ Non-Goals:
 
   Lisp programmers should not mutilate their programming language in an attempt to please programmers that reject Lisp syntax.  They will not like it any more with less parentheses.  They will only be satisfied when it looks like C.
 
+* raw strings
+
+  Raw strings are only useful for Windows paths and regular expressions.
+
+  Windows paths are easy to write by hand, but if they did become a problem, they would be easy to construct with functions or macros.
+
+  SREs are the best solution for regular expressions.  I plan to support them.
+
 * dictionary and vector literals
 
   Not having dictionary and vector literals prevents questions about whether their elements should be evaluated or not, and defects caused by incorrectly assuming they are or are not.
@@ -377,6 +385,8 @@ Racket's "and" pattern construct is supported.  It is more general than the "as"
 OCaml's closed interval pattern construct is supported, and named "interval".  It has two parameters, the first for the low bound, the second for the high bound.  It is more convenient than specifying each element of a closed interval of numbers or single-character strings in an "or" pattern construct.
 
 "when" guards use s-expression prefix syntax, since this programming language does not support keyword parameters.  They cannot appear inside a pattern, because all variables must be bound before a "when" guard can be evaluated.  They are useful for testing individual variables for something more complex than equality, or testing relationships between variables.
+
+SREs (s-expression regular expressions) are supported.  They may be missing features the host programming language's regular expression implementation does not support, since I plan to reuse that.  I do not plan to support features the host programming language does, but Schs's SREs do not.
 
 Only lexical scope is supported.  Dynamic scope prevents composition and makes understanding code more difficult.  Closures and partial application are a composable, understandable, alternative to dynamic scope for avoiding repeatedly specifying an argument.
 
