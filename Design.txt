@@ -109,8 +109,6 @@ Non-Goals:
 
   I hope to take all syntax from existing Lisp-like languages.  I want to keep the amount of punctuation very low.  I /like/ the simple, regular, appearance of Lisp source code.
 
-  I might use "%" for modulo, as in popular programming languages, even though I cannot find a Lisp-like language that does that.
-
   I might use some original names for things if I cannot find something acceptable.  I want frequently used constructs to have very short, but meaningful, names, so expressions remain readable.
 
 * parentheses reduction
@@ -326,150 +324,202 @@ Non-Goals:
 
 Unconventional Features:
 
-This programming language is designed to be easy to embed in another programming language, make it easy to call foreign functions, and to be used for event handling.
+* intended use
 
-Lisp parachronisms have been replaced or removed, since we use IBM PC compatibles instead of IBM 704s, and monitors instead of teleprinters.  "car" is replaced with "first", "cdr" is replaced with "rest", and "car" and "cdr" compositions (like "caddar") have been removed.  You "show" things on the monitor, not "print" them.
+  This programming language is designed to be easy to embed in another programming language, make it easy to call foreign functions, and to be used for event handling.
 
-The same name in the same scope always refers to the same value, barring mutation.  That prevents surprising behavior.  This implies that variables and functions are not in separate namespaces, which is not unconventional now, but Common Lisp does not work that way.  It implies that the programming language is case-insensitive, which is unconventional now.  To prevent the use of symbols that jangle like bad typography, uppercase letters in symbols are a defect.
+* exploratory programming and good error handling
 
-A symbol always looks like a symbol.  That prevents surprising behavior.  Any characters that have special meaning to the parser, such as whitespace or parentheses, cannot be included in a symbol.
+  Some aspects of the programming language behave differently when they are used at the prompt instead of in a module.  This allows both good exploratory programming and good error handling.  At the prompt "def" and "set!" are equivalent, because not being able to redefine an erroneous definition while doing exploratory programming would be a problem, but redefining a variable, or mutating a variable that has not been defined, is a defect in a module.  In a module, redefining a variable indicates you did not know it was already in use.  In a module, mutating a variable that has not been defined indicates you typoed the name.  Mutating an imported variable is allowed at the prompt, but forbidden in modules, because it should never be necessary to violate encapsulation in correct code.
 
-Definition is much simpler than in most Lisp-like languages.  There is only one "def" form, which can be used in any scope.  There are no "let" forms.  When you want a new scope, use "fn" or "macro".  When you want a local macro definition for use in the outermost scope (like "macrolet" in Common Lisp), instead define an auxiliary macro in the outermost scope and do not export it.  The module system is necessary to support good function decomposition, and there is no reason not to use it to support good macro decomposition.  The complexity of definition in most Lisp-like languages is neither necessary nor helpful.
+* modernization
 
-The syntax for Booleans ("true" and "false") and integers in bases other than 10 ("0b101" and "0xF00") is similar to popular programming languages.
+  Lisp parachronisms have been replaced or removed, since we use IBM PC compatibles instead of IBM 704s, and monitors instead of teleprinters.  "car" is replaced with "first", "cdr" is replaced with "rest", and "car" and "cdr" compositions (like "caddar") have been removed.  You "show" things on the monitor, not "print" them.
 
-Some aspects of the programming language behave differently when they are used at the prompt.  This allows both good exploratory programming and good error handling.  At the prompt "def" and "set!" are equivalent, because not being able to redefine an erroneous definition while doing exploratory programming would be a problem, but redefining a variable, or mutating a variable that has not been defined, is a defect in a module.  In a module, redefining a variable indicates you did not know it was already in use.  In a module, mutating a variable that has not been defined indicates you typoed the name.  Mutating an imported variable is allowed at the prompt, but forbidden in modules, because it should never be necessary to violate encapsulation in correct code.
+* syntax
 
-Docstrings can be associated with modules, and variables, macros, and functions in the outermost scope.  Functions are provided for searching for combinations of patterns in module paths and names, patterns in variable names, patterns in docstrings, types, and values.  While this was common in the past, modern Lisp-like languages seem to be becoming more static, and less useful interactively, thus losing one of their advantages over other programming languages.  Functions are provided to load all source code in a directory, or in a directory hierarchy, to make searching easier.
+  The syntax for Booleans ("true" and "false") and integers in bases other than 10 ("0b101" and "0xF00") is similar to popular programming languages.
 
-There are some definitions that are imported into every namespace by default.  Without forms to perform arithmetic, logic, manipulate the built-in data structures, and call foreign functions it would be impossible to define much else.  While redefining a variable in a module is normally forbidden, most built-in forms can be redefined in a module with only a warning.  This allows new built-in forms to be defined without breaking existing source code.
+* definition
 
-Types are rarely converted implicitly, and never when it could be surprising.  This is typical of Lisp-like languages, but surprising type coercion is the norm for most programming languages.
+  Definition is much simpler than in most Lisp-like languages.  There is only one "def" form, which can be used in any scope.  There are no "let" forms.  When you want a new scope, use "fn" or "macro".  When you want a local macro definition (like "macrolet" in Common Lisp), instead define an auxiliary macro and do not export it.  The module system is necessary to support good function decomposition, and there is no reason not to use it to support good macro decomposition.
 
-Only "true" and "false" are true and false.  Integers can be converted to (0 is false, anything else is true) and from (true is 1, false is 0) Booleans, explicitly.  This should make debugging easier, and I have always found treating non-Boolean values as Boolean surprising.
+* documentation
 
-Data structures can be called with an argument to access elements.  Like 'normal' functions they map their domain to their range.  Dictionaries map keys to values.  Lists map the symbols "first" and "rest" to values.  Strings map 0-based integer indexes to single-character strings.  Vectors map 0-based integer indexes to values.  This is more consistent and brief than most Lisp-like programming languages.
+  Docstrings can be associated with modules, variables in the outermost scope, functions, and macros.  Functions are provided for searching for combinations of patterns in module names, variable names (including parameters), and docstrings, types, and values.  While this was common in the past, modern Lisp-like languages seem to be becoming more static, and less useful interactively, thus losing one of their advantages over other programming languages.  Functions are provided to load all source code in a directory, or in a directory hierarchy, to make searching easier.
 
-Improper lists are not supported.  The second argument to "cons" must be a list.  Improper lists seem to be inferior to proper lists or vectors for all purposes, and the infix syntax they use is unlike everything else in Lisp.
+* symbols
 
-There is no character type.  Strings are effectively immutable vectors of strings of 1 character.  Strings can be indexed like a vector.  Strings of 1 character can be converted to and from integers.  This may result in more code reuse.
+  The same name in the same scope always refers to the same value, barring mutation.  That prevents surprising behavior.  This implies that variables and functions are not in separate namespaces, which is not unconventional now, but Common Lisp does not work that way.  It implies that the programming language is case-insensitive, which is unconventional now.  To prevent the use of symbols that jangle like bad typography, uppercase letters in symbols are a defect.
 
-Vectors are dynamic arrays.  Values can be 'pushed' to, or 'popped' from, the highest index, allowing them to double as stacks.  Singly-linked lists support efficient pushing to, and popping from, the beginning, but not efficient indexing.  This makes vectors more versatile, and since bounds are still checked, they are just as safe.  Like singly-linked lists, dynamic arrays are used in most hash table implementations, which are used in most environment implementations, so it makes sense to expose them in the programming language.  It takes little effort and is consistent with the goal of not unnecessarily restricting those programming in the language.
+  A symbol always looks like a symbol.  That prevents surprising behavior.  Any characters that have special meaning to the parser, such as whitespace or parentheses, cannot be included in a symbol.
 
-The built-in forms are as general as possible.  For example, there is only one "map" for all sequence collection types (list, string, and vector).  To avoid surprising type coercion, the collection returned is of the same type as the collection argument.  This should allow more code reuse, and minimize what programmers must learn and remember to use the programming language.  "set!" is not generalized for reasons already explained (in Non-Goals: generalized variables).
+* types
 
-Equality is much simpler than in most Lisp-like languages.  Most equality tests are performed with "=", which compares values for immutable types, and identities (i.e. addresses) for mutable types, like "==" in most popular programming languages.  Dictionaries always use this form of equality, because it is the only way to assure keys remain associated with their values.  "equal?" is also provided, which compares values even for mutable data structures, and correctly handles reference cycles.  Pattern matching always uses this form of equality, because it handles immutable types and mutable data structures consistently.  The behavior of "=" is almost always what is desired, and "equal?" covers when it is not.  The complexity of equality in most Lisp-like languages is neither necessary nor helpful.
+  Types are rarely converted implicitly, and never when it could be surprising.  This is typical of Lisp-like languages, but surprising type coercion is the norm for most programming languages.
 
-"do" evaluates a sequence of forms in order and returns the value of the last expression.  An empty "do" is a defect, because the value is uninitialized.  Control flow sequences are implicit in most places where you might want to use them, except for "if".  "do" can be used by macros to generate multiple definitions and expressions in the same scope, since it does not create a new scope.
+  Only "true" and "false" are true and false.  Integers can be converted to (0 is false, anything else is true) and from (true is 1, false is 0) Booleans, explicitly.  This should make debugging easier, and I have always found treating non-Boolean values as Boolean surprising.
 
-One-armed "if" is a defect, because the value is uninitialized when the test expression is false.  Equivalents which return "null" when the test expression is false, "when" and "unless", are supported for side effects.  Programmers are often wrong when they believe nothing needs to be done when the test expression is false.  "when" and "unless" act as warning signs of potential defects.
+  Data structures can be called with an argument to access elements.  Like 'normal' functions they map their domain to their range.  Dictionaries map keys to values.  Lists map the symbols "first" and "rest" to values.  Strings map 0-based integer indexes to single-character strings.  Vectors map 0-based integer indexes to values.  This is more consistent and brief than most Lisp-like programming languages.
 
-Non-exhaustive "cond" clauses is a defect, because the value is uninitialized when all test expressions are false.  This implies an empty "cond" is a defect.
+  Improper lists are not supported.  The second argument to "cons" must be a list.  Improper lists seem to be inferior to proper lists or vectors for all purposes, and the infix syntax they use is unlike everything else in Lisp.
 
-Pattern matching is used for destructuring.  The features supported are very similar to OCaml's.  The syntax is very similar to Racket's.
+  There is no character type.  Strings are effectively immutable vectors of strings of 1 character.  Strings can be indexed like a vector.  Strings of 1 character can be converted to and from integers.  This may result in more code reuse.
 
-Some aspects of OCaml's, Racket's, and this programming language's pattern matching are the same, but should still be mentioned.
+  Vectors are dynamic arrays.  Values can be 'pushed' to, or 'popped' from, the highest index, allowing them to double as stacks.  Singly-linked lists support efficient pushing to, and popping from, the beginning, but not efficient indexing.  This makes vectors more versatile, and since bounds are still checked, they are just as safe.  Like singly-linked lists, dynamic arrays are used in most hash table implementations, which are used in most environment implementations, so it makes sense to expose them in the programming language.  It takes little effort and is consistent with the goal of not unnecessarily restricting those programming in the language.
 
-Non-exhaustive patterns is a defect, because the value is uninitialized when no patterns match.
+* built-ins
 
-Not matching every element of a data structure is a defect, because allowing that would prevent defining patterns that match data structures with different numbers of elements.
+  There are some definitions that are imported into every namespace by default.  Without forms to perform definition, arithmetic, logic, manipulate the built-in data structures, and call foreign functions it would be impossible to define much else.
 
-Not binding the same variables in every pattern in an "or" pattern construct is a defect, because the values of the variables are uninitialized when a pattern matches that does not bind them.
+  While redefining a variable in a module is normally forbidden, most built-in forms can be redefined in a module with only a warning.  This allows new built-in forms to be defined without breaking existing source code.
 
-Pattern constructs can be nested.  While recursive functions could be used instead, the inability to describe patterns more than one level deep would prevent a common usage of pattern matching from working; pattern matching function arguments.  You could put the arguments into a data structure to pattern match, but then you could not destructure their contents.  You could pattern match the arguments individually, but then you could not easily dispatch to the appropriate code for the combination of pattern matches.
+  The built-in forms are as general as possible.  For example, there is only one "map" for all sequence collection types (list, string, and vector).  To avoid surprising type coercion, the collection returned is of the same type as the collection argument.  This should allow more code reuse, and minimize what programmers must learn and remember to use the programming language.  "set!" is not generalized for reasons already explained (in Non-Goals: generalized variables).
 
-Some aspects of this programming language's pattern matching differs from OCaml's, Racket's, or both, and should be mentioned.
+* equality
 
-Racket's non-linear pattern matching is supported.  If an identifier is used multiple times within a pattern, the corresponding matches must be the same according to "equal?", except that instances of an identifier in different "or" sub-patterns are independent.
+  Equality is much simpler than in most Lisp-like languages.  Most equality tests are performed with "=", which compares values for immutable types, and identities (i.e. addresses) for mutable types, like "==" in most popular programming languages.  Dictionaries always use this form of equality, because it is the only way to assure keys remain associated with their values.  "equal?" is also provided, which compares values even for mutable data structures, and correctly handles reference cycles.  Pattern matching always uses this form of equality, because it handles immutable types and mutable data structures consistently.  The behavior of "=" is almost always what is desired, and "equal?" covers when it is not.
 
-The Haskell pattern matching extension record puns is supported for dictionaries.  It uses syntax like "("x")" to bind variables with the same name as string or symbol keys for the mentioned keys.  Using string keys that do not contain valid symbol names with this feature is a defect.
+* regular expressions
 
-The Haskell pattern matching extension record wildcards is supported for dictionaries.  It uses syntax like "(_)" to bind variables with the same name as string or symbol keys for all keys that have not already been bound.  Using any type of key other than strings or symbols, or string keys that do not contain valid symbol names, with this feature is a defect.
+  SREs (s-expression regular expressions) are supported.  They may be missing features the host programming language's regular expression implementation does not support, since I plan to reuse that.  I do not plan to support features the host programming language does, but Schs's SREs do not.
 
-Normal dictionary pattern matching, dictionary puns, and dictionary wildcards can be combined in the same pattern.  For example, if you matched the dictionary "(dict ('a 1) ('b 2) ('c 3))" with the pattern "(dict ('a x) ('b) (_))" the bindings would be "x" which refers to 1, "b" which refers to 2, and "c" which refers to 3.  The dictionary wildcard must appear last when it is used in combination with other patterns in the same dictionary.
+* control flow
 
-Racket's "cons" pattern construct refers to mutable cons cells in this programming language.  This programming language only has mutable cons cells.
+  * sequence
 
-Racket's "and" pattern construct is supported.  It is more general than the "as" pattern construct in other programming languages.  It is handy for binding "or" and "interval" pattern matches, in addition to destructuring and equality testing.
+    "do" evaluates a sequence of forms in order and returns the value of the last expression.  An empty "do" is a defect, because the value is uninitialized.  Control flow sequences are implicit in most places where you might want to use them, except for "if".  "do" can be used by macros to generate multiple definitions and expressions in the same scope, since it does not create a new scope.
 
-OCaml's closed interval pattern construct is supported, and named "interval".  It has two parameters, the first for the low bound, the second for the high bound.  It is more convenient than specifying each element of a closed interval of numbers or single-character strings in an "or" pattern construct.
+  * branch
 
-"when" guards use s-expression prefix syntax, since this programming language does not support keyword parameters.  They cannot appear inside a pattern, because all variables must be bound before a "when" guard can be evaluated.  They are useful for testing individual variables for something more complex than equality, or testing relationships between variables.
+    * if
 
-SREs (s-expression regular expressions) are supported.  They may be missing features the host programming language's regular expression implementation does not support, since I plan to reuse that.  I do not plan to support features the host programming language does, but Schs's SREs do not.
+      One-armed "if" is a defect, because the value is uninitialized when the test expression is false.  Equivalents which return "null" when the test expression is false, "when" and "unless", are supported for side effects.  Programmers are often wrong when they believe nothing needs to be done when the test expression is false.  "when" and "unless" act as warning signs of potential defects.
 
-Only lexical scope is supported.  Dynamic scope prevents composition and makes understanding code more difficult.  Closures and partial application are a composable, understandable, alternative to dynamic scope for avoiding repeatedly specifying an argument.
+    * cond
 
-While (trailing) optional and rest parameters are supported, most forms are of fixed-arity.  Partial application only works with fixed-arity forms.  If a form cannot be used with partial application (e.g. special forms that do not evaluate all their arguments in order and macros), and variable-arity could be useful, it is used.  Most constructors (e.g. "dict", "list", and "vector") are variadic, because if they were not it would be impossible to create data structures with different numbers of elements.  "do" (explicit and implicit) is variadic, because if it was not it would be impossible to create control flow sequences with different numbers of expressions.  Keyword parameters are not supported.  They interact in surprising ways with optional and rest parameters, and cannot be used with partial application.  Data structures are often used where keyword, optional, and rest parameters would be used in other Lisp-like languages.
+      Non-exhaustive "cond" clauses is a defect, because the value is uninitialized when all test expressions are false.  This implies an empty "cond" is a defect.
 
-Function arguments are evaluated once, from left to right, as in Common Lisp.  It is bad style to depend on that, but it seems better to standardize it than to have it be implementation-defined as it is in so many programming languages.  Optimizing compilers are free to evaluate arguments without side effects however they please, so long as the results are correct.
+    * pattern matching
 
-Partial application is supported.  If you call a fixed-arity function with less than the number of arguments it expects, it will return a closure that will accept the remaining arguments and has the closed-over arguments in its environment.  Parameters should appear in order from the most to least likely to be reused.  This makes using closures much more convenient.  Calling a fixed-arity function with the expected number of arguments causes it to run normally.  Calling a function with too many arguments is a defect.
+      Pattern matching is used for destructuring.  The features supported are very similar to OCaml's.  The syntax is very similar to Racket's.
 
-"fix-arity" creates a fixed-arity copy of a variadic form to make it easier to build closures with.
+      Some aspects of OCaml's, Racket's, and this programming language's pattern matching are the same, but should still be mentioned.
 
-If you want to leave out values in the middle of a function's arguments, instead of only at the end, you can use "_" in their place.  The resulting closure will expect the remaining arguments in the same order.  To prevent surprising behavior, "_" (along with other reserved words) is not a valid variable name.
+      Non-exhaustive patterns is a defect, because the value is uninitialized when no patterns match.
 
-Function parameters can be rearranged to ease closure creation like so "(fn (x y) (bad-fn y x))".  I have yet to come up with anything shorter.
+      Not matching every element of a data structure is a defect, because allowing that would prevent defining patterns that match data structures with different numbers of elements.
 
-Delimited continuations and dynamic-wind are supported.  Undelimited continuations are not.  Delimited continuations compose.  Undelimited continuations do not.
+      Not binding the same variables in every pattern in an "or" pattern construct is a defect, because the values of the variables are uninitialized when a pattern matches that does not bind them.
 
-Everything returns a value.  Forms that perform definition or mutation return the value that they used.  Forms that involve a control flow sequence return the value returned by the last expression in the control flow sequence.  This, along with combining allocation and initialization, prevents uninitialized values.
+      Pattern constructs can be nested.  While recursive functions could be used instead, the inability to describe patterns more than one level deep would prevent a common usage of pattern matching from working; pattern matching function arguments.  You could put the arguments into a data structure to pattern match, but then you could not destructure their contents.  You could pattern match the arguments individually, but then you could not easily dispatch to the appropriate code for the combination of pattern matches.
 
-Multiple return values are not supported.  Programming languages that allow them must provide constructs to bind them, which are less general than destructuring constructs.  Evaluation should reduce a tree of expressions to a single value.  Pattern matching makes binding multiple values inside a data structure trivial.
+      Some aspects of this programming language's pattern matching differs from OCaml's, Racket's, or both, and should be mentioned.
 
-Recursion is properly supported.  Call stack frames are heap allocated, so non-tail recursion will succeed unless memory is exhausted.  Tail call elimination is performed, so loops can be defined recursively.
+      Racket's non-linear pattern matching is supported.  If an identifier is used multiple times within a pattern, the corresponding matches must be the same according to "equal?", except that instances of an identifier in different "or" sub-patterns are independent.
 
-Quote, quasiquote, unquote, and unquote-splicing work like they do in Common Lisp (e.g. when nested).  Destructive unquote-splicing is not supported, since it seems to be only useful for causing defects.
+      The Haskell pattern matching extension record puns is supported for dictionaries.  It uses syntax like "("x")" to bind variables with the same name as string or symbol keys for the mentioned keys.  Using string keys that do not contain valid symbol names with this feature is a defect.
 
-The macro system is similar to the one in Common Lisp and most other Lisp-like languages, but with the wrong defaults corrected.  Capturing is explicit, not implicit.  Macros, and code generated by them, use the environment from where the macro was defined (except for their arguments or when capturing), not where it was called.  Macro arguments and captured variables use the environment they came from, which could be from handwritten code or code from another macro expansion.  Captured variables are effectively implicit arguments.  This behavior is consistent with the lexical scope functions use.  It solves the macro hygiene problem while still allowing macros to work with lists of normal values.  Requiring macros to work with syntax objects instead of normal values, like most hygienic macro systems, prevents the use of normal functions in macro expansion, which is one of the main advantages Lisp macro systems have over other code generators, or requires the syntax objects to be converted to normal values, which defeats the purpose of using syntax objects.  The extra information included in syntax objects is preserved in the abstract syntax tree, and used by the condition system.
+      Racket's "cons" pattern construct refers to mutable cons cells in this programming language.  This programming language only has mutable cons cells.
 
-There is a condition system that is similar to the one in Common Lisp.  It is used to handle defects, input/output errors, and warnings.  Using it as a general-purpose communication mechanism is discouraged, because invisible paths of communication make maintenance difficult.  A condition system seems to be the only way to satisfy our error handling design goals.
+      Racket's "and" pattern construct is supported.  It is more general than the "as" pattern construct in other programming languages.  It is handy for binding "or" and "interval" pattern matches, in addition to destructuring and equality testing.
 
-Warnings are issued when code needs maintenance but still works.  For example, it might use a depreciated construct, or a bad practice that was previously tolerated.  Warnings are shown by default, since that is the only responsible way to design a programming language.  History has shown most programmers will not exert any effort to find problems in their code.  Condition handlers can choose other ways to handle warnings, such as logging or discarding them.
+      OCaml's closed interval pattern construct is supported, and named "interval".  It has two parameters, the first for the low bound, the second for the high bound.  It is more convenient than specifying each element of a closed interval of numbers or single-character strings in an "or" pattern construct.
 
-Sometimes the condition system cannot report the exact location of a problem, because the code with the problem was generated instead of parsed.  In these cases it reports the closest location possible, which is usually an "eval" or macro call.  This is usually the expected and desired behavior.
+      "when" guards use s-expression prefix syntax, since this programming language does not support keyword parameters.  They cannot appear inside a pattern, because all variables must be bound before a "when" guard can be evaluated.  They are useful for testing individual variables for something more complex than equality, or testing relationships between variables.
 
-I have attempted to keep the module system as simple as possible while still enforcing good modularity.
+* functions
 
-The module system serves multiple purposes:
-* libraries                              - supports code reuse
-* swapping implementations of interfaces - supports maintenance
+  * scope
 
-The module system features solve practical problems:
-* selective import - prevents namespace pollution
-* renaming imports - resolves name collisions
-* selective export - prevents dependence on implementation details
+    Only lexical scope is supported.  Dynamic scope prevents composition and makes understanding code more difficult.  Closures and partial application are a composable, understandable, alternative to dynamic scope for avoiding repeatedly specifying an argument.
 
-A module essentially encapsulates part of the outermost scope.  Only one instance of a module exists at a time, which is observable via mutation.  Modules do not nest, but they do compose.
+  * calls
 
-The module system works with /variables/, not /values/, in the outermost scope.  If an exported variable is mutated, other modules that import it can read the current value.
+    While (trailing) optional and rest parameters are supported, most forms are of fixed-arity.  Optional parameters follow "?", while the rest parameter follows "&", and to prevent surprising behavior, "?" and "&" are not valid variable names.  Partial application only works with fixed-arity forms.  If a form cannot be used with partial application (e.g. special forms that do not evaluate all their arguments in order and macros), and variable-arity could be useful, it is used.  Most constructors (e.g. "dict", "list", and "vector") are variadic, because if they were not it would be impossible to create data structures with different numbers of elements.  "do" (explicit and implicit) is variadic, because if it was not it would be impossible to create control flow sequences with different numbers of expressions.  Keyword parameters are not supported.  They interact in surprising ways with optional and rest parameters, and cannot be used with partial application.  Data structures are often used where keyword, optional, and rest parameters would be used in other Lisp-like languages.
 
-Imported variables can be mutated at the prompt, but not in a module.  This enforces encapsulation while supporting exploratory programming.
+    Function arguments are evaluated once, from left to right, as in Common Lisp.  It is bad style to depend on that, but it seems better to standardize it than to have it be implementation-defined as it is in so many programming languages.  Optimizing compilers are free to evaluate arguments without side effects however they please, so long as the results are correct.
 
-Modules do not implicitly import or export anything.  The programmer must explicitly specify the interface.  This encourages encapsulation, planning interfaces, and conscious interface change.
+    Partial application is supported.  If you call a fixed-arity function with less than the number of arguments it expects, it will return a closure that will accept the remaining arguments and has the closed-over arguments in its environment.  Parameters should appear in order from the most to least likely to be reused.  This makes using closures much more convenient.  Calling a fixed-arity function with the expected number of arguments causes it to run normally.  Calling a function with too many arguments is a defect.
 
-Dependency cycles are a defect.  They indicate two or more modules are badly decomposed.  Some definitions need to be combined into a single module to eliminate the cycle.  Others probably need to be separated into other modules.
+    "fix-arity" creates a fixed-arity copy of a variadic form to make it easier to build closures with.
 
-Redefinition, by importing a variable to the same name as a definition, or importing two or more variables to the same name, is a defect.  It indicates you did not know the name was already in use.
+    If you want to leave out values in the middle of a function's arguments, instead of only at the end, you can use "_" in their place.  The resulting closure will expect the remaining arguments in the same order.  To prevent surprising behavior, "_" is not a valid variable name.
 
-A module can have any number of import- and export specifications mingled with definitions and expressions.  Import- and export specifications are cumulative.  They never remove an import or export.  The only restriction on order is that variables must be initialized by definition or importing before they are read.  This flexibility makes macro use easier.
+    Function parameters can be rearranged to ease closure creation like so "#(bad-fn %2 %1)".  The rest parameter can be passed with "%&".
 
-Import- and export specifications inside definitions or expressions, except for (potentially nested) "do" forms, is a defect.  Module interfaces should not vary.  Macros may expand into import- and export specifications, which is sufficient to allow module implementations to vary at macro expansion time.  Import- and export specifications are allowed in "do" forms so a single macro call can expand into a combination of import- and export specifications, definitions, and expressions.  The value of an import- or export specification is "null".
+    Recursion is properly supported.  Call stack frames are heap allocated, so non-tail recursion will succeed unless memory is exhausted.  Tail call elimination is performed, so loops can be defined recursively.
 
-All state, except for the abstract syntax tree, is discarded after each module is macro expanded.  The abstract syntax tree is reevaluated as needed to create the necessary state for the macro expansion of other modules or run time.  This prevents the state within a module at macro expansion time from influencing the macro expansion of other modules, or from influencing run time.
+  * continuations
 
-There is a one-to-one relationship between files and modules.
+    Delimited continuations and dynamic-wind are supported.  Undelimited continuations are not.  Delimited continuations compose.  Undelimited continuations do not.
 
-Modules may be versioned.  Unversioned modules are usually used to ease maintenance.  Versioned modules are usually used for code reuse.  A versioned module's filename contains the module name, followed by a hyphen, then the version in Semantic Versioning format.  A version number consists of non-negative integers for major-, minor-, and patch numbers, in that order, separated by periods.  The major version number is 0 before release, and incremented to 1 at release, then incremented by 1 each time backwards incompatible changes are made.  The minor version number is incremented by 1 each time features are added or depreciated.  The patch version number is incremented by 1 each time defects are corrected.  When the previous number is incremented by 1, the following numbers are reset to 0 (e.g. 1.2.15 to 1.3.0).
+  * returns
 
-Modules are imported from by specifying a relative path and filename, and what you want to import.  The programming language attempts to look up the module relative to the program's working directory, but if that fails it tries a central repository.  If the module is versioned, the major version number must match exactly, and the minor and patch version numbers must be >= the requested numbers.  The programming language will use the most recent version that matches the requirements.
+    Everything returns a value.  Forms that perform definition or mutation return the value that they used.  Forms that involve a control flow sequence return the value returned by the last expression in the control flow sequence.  This, along with combining allocation and initialization, prevents uninitialized values.
 
-This module system could support incremental compilation (with the abstract syntax trees corresponding to binaries, and reevaluation corresponding to reloading the binaries), but I chose it due to the lack of surprising behavior.
+    Multiple return values are not supported.  Programming languages that allow them must provide constructs to bind them, which are less general than destructuring constructs.  Evaluation should reduce a tree of expressions to a single value.  Pattern matching makes binding multiple values inside a data structure trivial.
 
-Modules can be reloaded, both at the prompt and in modules, to update their definitions.  This is useful for exploratory programming, or hot swapping to correct a defect in, or add features to, a running program.  Be aware that this only updates the values of the imported variables.  References to out-of-date values may still exist.  You should therefore prefer to access imported values through the variables you imported them into.
+* quoting
 
-The garbage collector is continuous, generational, and incremental (i.e. marking and sweeping are broken down into multiple steps).  This should result in low, and fairly steady, latency.  While, past a point, a trade-off must be made between low-latency and high-throughput, generational garbage collection improves both.  Favoring low-latency over high-throughput seems like the right decision for interactive programs, like those most likely to be written in this programming language.  It is possible to disable garbage collection, perform increments only when the program is idle, and force non-incremental full garbage collections.  These features are often desired by those writing software intended for use in short bursts or video games.  AutoHotkey scripts are often used in short bursts, and often used with video games.  In all cases a non-incremental full garbage collection will still occur if memory is almost exhausted, because a pause is less disruptive than crashing.  The interface is inspired by Lua's garbage collector.
+  Quote, quasiquote, unquote, and unquote-splicing work like they do in Common Lisp (e.g. when nested).  Destructive unquote-splicing is not supported, since it seems to be only useful for causing defects.
+
+* macros
+
+  The macro system is similar to the one in Common Lisp and most other Lisp-like languages, but with the wrong defaults corrected.  Capturing is explicit, not implicit.  Macros, and code generated by them, use the environment from where the macro was defined (except for their arguments or when capturing), not where it was called.  Macro arguments and captured variables use the environment they came from, which could be from handwritten code or code from another macro expansion.  Captured variables are effectively implicit arguments.  This behavior is consistent with the lexical scope functions use.  It solves the macro hygiene problem while still allowing macros to work with lists of normal values.  Requiring macros to work with syntax objects instead of normal values, like most hygienic macro systems, prevents the use of normal functions in macro expansion, which is one of the main advantages Lisp macro systems have over other code generators, or requires the syntax objects to be converted to normal values, which defeats the purpose of using syntax objects.  The extra information included in syntax objects is preserved in the abstract syntax tree, and used by the condition system.
+
+* condition system
+
+  There is a condition system that is similar to the one in Common Lisp.  It is used to handle defects, input/output errors, and warnings.  Using it as a general-purpose communication mechanism is discouraged, because invisible paths of communication make maintenance difficult.  A condition system seems to be the only way to satisfy our error handling design goals.
+
+  Warnings are issued when code needs maintenance but still works.  For example, it might use a depreciated construct, or a bad practice that was previously tolerated.  Warnings are shown by default, since that is the only responsible way to design a programming language.  History has shown most programmers will not exert any effort to find problems in their code.  Condition handlers can choose other ways to handle warnings, such as logging or discarding them.
+
+  Sometimes the condition system cannot report the exact location of a problem, because the code with the problem was generated instead of parsed.  In these cases it reports the closest location possible, which is usually an "eval" or macro call.  This is usually the expected and desired behavior.
+
+* module system
+
+  I have attempted to keep the module system as simple as possible while still enforcing good modularity.
+
+  The module system serves multiple purposes:
+  * libraries                              - supports code reuse
+  * swapping implementations of interfaces - supports maintenance
+
+  The module system features solve practical problems:
+  * selective import - prevents namespace pollution
+  * renaming imports - resolves name collisions
+  * selective export - prevents dependence on implementation details
+
+  A module essentially encapsulates part of the outermost scope.  Only one instance of a module exists at a time, which is observable via mutation.  Modules do not nest, but they do compose.
+
+  The module system works with /variables/, not /values/, in the outermost scope.  If an exported variable is mutated, other modules that import it can read the current value.
+
+  Imported variables can be mutated at the prompt, but not in a module.  This enforces encapsulation while supporting exploratory programming.
+
+  Modules do not implicitly import or export anything.  The programmer must explicitly specify the interface.  This encourages encapsulation, planning interfaces, and conscious interface change.
+
+  Dependency cycles are a defect.  They indicate two or more modules are badly decomposed.  Some definitions need to be combined into a single module to eliminate the cycle.  Others probably need to be separated into other modules.
+
+  Redefinition, by importing a variable to the same name as a definition, or importing two or more variables to the same name, is a defect.  It indicates you did not know the name was already in use.
+
+  A module can have any number of import- and export specifications mingled with definitions and expressions.  Import- and export specifications are cumulative.  They never remove an import or export.  The only restriction on order is that variables must be initialized by definition or importing before they are read.  This flexibility makes macro use easier.
+
+  Import- and export specifications inside definitions or expressions, except for (potentially nested) "do" forms, is a defect.  Module interfaces should not vary.  Macros may expand into import- and export specifications, which is sufficient to allow module implementations to vary at macro expansion time.  Import- and export specifications are allowed in "do" forms so a single macro call can expand into a combination of import- and export specifications, definitions, and expressions.  The value of an import- or export specification is "null".
+
+  All state, except for the abstract syntax tree, is discarded after each module is macro expanded.  The abstract syntax tree is reevaluated as needed to create the necessary state for the macro expansion of other modules or run time.  This prevents the state within a module at macro expansion time from influencing the macro expansion of other modules, or from influencing run time.
+
+  There is a one-to-one relationship between files and modules.
+
+  Modules may be versioned.  Unversioned modules are usually used to ease maintenance.  Versioned modules are usually used for code reuse.  A versioned module's filename contains the module name, followed by a hyphen, then the version in Semantic Versioning format.  A version number consists of non-negative integers for major-, minor-, and patch numbers, in that order, separated by periods.  The major version number is 0 before release, and incremented to 1 at release, then incremented by 1 each time backwards incompatible changes are made.  The minor version number is incremented by 1 each time features are added or depreciated.  The patch version number is incremented by 1 each time defects are corrected.  When the previous number is incremented by 1, the following numbers are reset to 0 (e.g. 1.2.15 to 1.3.0).
+
+  Modules are imported from by specifying a relative path and filename, and what you want to import.  The programming language attempts to look up the module relative to the program's working directory, but if that fails it tries a central repository.  If the module is versioned, the major version number must match exactly, and the minor and patch version numbers must be >= the requested numbers.  The programming language will use the most recent version that matches the requirements.
+
+  This module system could support incremental compilation (with the abstract syntax trees corresponding to binaries, and reevaluation corresponding to reloading the binaries), but I chose it due to the lack of surprising behavior.
+
+  Modules can be reloaded, both at the prompt and in modules, to update their definitions.  This is useful for exploratory programming, or hot swapping to correct a defect in, or add features to, a running program.  Be aware that this only updates the values of the imported variables.  References to out-of-date values may still exist.  You should therefore prefer to access imported values through the variables you imported them into.
+
+* garbage collector
+
+  The garbage collector is continuous, generational, and incremental (i.e. marking and sweeping are broken down into multiple steps).  This should result in low, and fairly steady, latency.  While, past a point, a trade-off must be made between low-latency and high-throughput, generational garbage collection improves both.  Favoring low-latency over high-throughput seems like the right decision for interactive programs, like those most likely to be written in this programming language.  It is possible to disable garbage collection, perform increments only when the program is idle, and force non-incremental full garbage collections.  These features are often desired by those writing software intended for use in short bursts or video games.  AutoHotkey scripts are often used in short bursts, and often used with video games.  In all cases a non-incremental full garbage collection will still occur if memory is almost exhausted, because a pause is less disruptive than crashing.  The interface is inspired by Lua's garbage collector.
 
 
 Inspiration:
