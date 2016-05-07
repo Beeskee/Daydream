@@ -89,7 +89,7 @@ Non-Goals:
 
 * familiarity or ease of learning by novice programmers
 
-  The syntax used in Lisp-like languages is not familiar to the average person.  Writing Lisp source code is difficult without an editor that helps with matching parentheses, and non-Lisp-programmers are unlikely to be familiar with one.  Many concepts, like closures, are also unfamiliar.  This makes Lisp-like languages more difficult to learn than most popular programming languages, because there is more to learn.
+  The syntax used in Lisp-like languages is not familiar to the average person.  Writing Lisp source code is difficult without an editor that helps with matching parentheses, and only Lisp programmers are likely to be familiar with one.  Many concepts, like closures, are also unfamiliar.  This makes Lisp-like languages more difficult to learn than most popular programming languages, because there is more to learn.
 
   The same features that make Lisp-like languages difficult to learn are what makes them superior to popular programming languages.  The syntax makes macros practical.  It makes macro calls look and act like built-in constructs without a lot of effort on the part of the macro author.  If macro authors had to avoid conflicting with syntax reserved for built-in constructs, and define custom mixfix syntax for their macros, few would bother.  Fully parenthesized syntax prevents defects due to forgetting operator precedence and associativity.  The unfamiliar concepts make it easier to build abstractions that are difficult to express in other programming languages.  For example, object-oriented programming support is usually built into popular programming languages, but is usually derived from mutable closures in Lisp-like languages.
 
@@ -115,7 +115,7 @@ Non-Goals:
 
   Parentheses shaming (e.g. "Lisp stands for Lots of Irritating Superfluous Parentheses") has inspired the authors of several Lisp-like languages (e.g. Arc and Clojure) to remove parentheses anywhere they could be inferred (e.g. around "cond" clauses, because test and result expressions always appear in pairs).
 
-  This reduces the utility of structure editors and code reformatting tools, since parentheses inference is not possible in the general case (e.g. in macro invocations).
+  This reduces the utility of structure editors and code reformatting tools, since parentheses inference is not possible in the general case (e.g. in macro calls).
 
   It makes code difficult to understand, because the human has to infer the parentheses to understand the grouping.
 
@@ -131,7 +131,7 @@ Non-Goals:
 
 * dictionary and vector literals
 
-  Not having dictionary and vector literals prevents questions about whether their elements should be evaluated or not, and defects caused by incorrectly assuming they are or are not.
+  Having dictionary and vector literals raises questions about whether their elements should be evaluated or not, and causes defects by programmers incorrectly assuming they are or are not.
 
   It is necessary to use 'constructor syntax' (e.g. "(list x y z)") for lists to prevent ambiguity in pattern matching.  Otherwise it is impossible to tell the difference between a pattern construct and trying to bind a variable with the same name as a pattern construct.
 
@@ -143,7 +143,7 @@ Non-Goals:
 
 * reader macros
 
-  I have no strong objection to reader macros, they just do not seem helpful to me.  Their scope is unlimited, making them hard to use safely.  Without the ability to create new types and new human-readable representations there is little motivation for new literal syntax.
+  Reader macros do not seem useful to me.  Their scope is unlimited, making them hard to use safely.  Without the ability to create new types and new human-readable representations there is little motivation for new literal syntax.
 
 * overcomplicated macros
 
@@ -155,13 +155,13 @@ Non-Goals:
 
 * generalized variables
 
-  While I can see the appeal of having a single "set!" special form that can accept any mutable place (variables, those referred to by a dictionary and key, a list's "first" and "rest", or a vector and index), I cannot imagine how to implement this in AutoHotkey.  AutoHotkey's "byref" only works with some variables, not Objects.  Pointer hacks are likely to break when AutoHotkey's implementation changes.
+  While having a single "set!" special form that can accept any mutable place (variables, those referred to by a dictionary and key, a list's "first" and "rest", or a vector and index) is appealing, I cannot imagine how to implement this in AutoHotkey.  AutoHotkey's "byref" only works with some variables, not Objects.  Pointer hacks are likely to break when AutoHotkey's implementation changes.
 
   I can still provide special forms that mutate each of those kinds of places, but the programmer will have to use the right one.
 
-  If it was possible to correct this, it would still reduce the efficiency of the garbage collector, since it currently does not have to set every reference in a collection to null when freeing it to cope with AutoHotkey's reference counting.  If it was possible to refer to locations inside collections, instead of just to the collection, this would not work.
+  If it was possible to correct this, it would still reduce the efficiency of the garbage collector, since it currently does not have to set every reference in a collection to null when freeing it to cope with AutoHotkey's reference counting.  If it was possible to refer to places inside collections, instead of just to the collection, this would not work.
 
-  The absence of this feature should not be very annoying if you are doing mostly-functional programming.
+  The absence of this feature should not be annoying if you are doing mostly functional programming.
 
 * symbol macros
 
@@ -223,11 +223,11 @@ Non-Goals:
 
 * object-oriented programming
 
-  I believe object-oriented programming usually does more harm than good.  The difficulty in maintaining code that uses mutable global variables is widely recognized.  When a global variable becomes corrupt, it is hard to tell what code was responsible.  Mutable objects are mutable global variables.  Implementation inheritance is also, recently, widely recognized as a source of maintainability problems.  Changing a method's implementation can break anything that inherits it.  Of course you can use immutable objects, and only inherit interfaces and use composition, but then objects are no more useful than records or dictionaries.
+  I believe object-oriented programming usually does more harm than good.  The difficulty of maintaining code that uses mutable global variables is widely recognized.  When a global variable becomes corrupt, it is hard to tell what code was responsible.  Mutable objects are mutable global variables.  Implementation inheritance is also, recently, widely recognized as a source of maintainability problems.  Changing a method's implementation can break anything that inherits it.  Of course you can use immutable objects, and only inherit interfaces and use composition, but then objects are no improvement over records or dictionaries.
 
   This programming language has mutable closures, and it should be possible to implement a CLOS-like system using them, which is more powerful than popular programming languages' object-oriented programming support, but I do not plan to write that myself.
 
-  That does imply that the programming language will have a fixed set of types.  It is better to have a small number of types and a large number of procedures that operate on each, than to have a large number of types and a small number of procedures that operate on each, because more code can be reused.  Dictionaries are used in place of new types.
+  That does imply that this programming language will have a fixed set of types.  It is better to have a small number of types and a large number of procedures that operate on each, than to have a large number of types and a small number of procedures that operate on each, because more code can be reused.  Dictionaries are used in place of new types.
 
 * transparent (as in Smalltalk) or non-transparent (as in Lisp Machine Lisp) persistence
 
@@ -247,7 +247,7 @@ Non-Goals:
 
   When the implicit control flow is /not/ what you need, you spend a lot of effort working around it.
 
-  Other than push dataflow, implicit control flow is unsafe to use with code that has side effects.  It becomes difficult to determine if or when each side effect will occur.
+  Other than push dataflow, implicit control flow is unsafe to use with code that has side effects.  It becomes difficult to determine if, or in what order, each side effect will occur.
 
   Implicit control flow makes it difficult to predict the time and space efficiency of code.  Optimizing compilers for programming languages with implicit control flow spend a lot of effort working around it.
 
@@ -291,7 +291,7 @@ Non-Goals:
 
   AutoHotkey does not support multithreading, making this difficult to implement.
 
-  To this day most C and C++ code is not thread-safe, so many programming languages with easy integration with C and C++ do not support it.  AutoHotkey may never do so.
+  To this day most C and C++ code is not thread-safe, so many programming languages with easy integration with C and C++ do not support multithreading.  AutoHotkey may never do so.
 
   There are hacks abusing inter-process communication for this purpose in the forums, similar to Python's multiprocessing and concurrent.futures implementations.  I may eventually add support for thread pools and futures that way.
 
@@ -509,9 +509,9 @@ Unconventional Features:
 
   There is a one-to-one relationship between files and modules.
 
-  Modules may be versioned.  Unversioned modules are usually used to ease maintenance.  Versioned modules are usually used for code reuse.  A versioned module's filename contains the module name, followed by a hyphen, then the version in Semantic Versioning format.  A version number consists of non-negative integers for major-, minor-, and patch numbers, in that order, separated by periods.  The major version number is 0 before release, and incremented to 1 at release, then incremented by 1 each time backwards incompatible changes are made.  The minor version number is incremented by 1 each time features are added or depreciated.  The patch version number is incremented by 1 each time defects are corrected.  When the previous number is incremented by 1, the following numbers are reset to 0 (e.g. 1.2.15 to 1.3.0).
+  Modules may be versioned.  Unversioned modules are usually used to ease maintenance.  Versioned modules are usually used for code reuse.  A versioned module's file name contains the module name, followed by a hyphen, then the version in Semantic Versioning format.  A version number consists of non-negative integers for major-, minor-, and patch numbers, in that order, separated by periods.  The major version number is 0 before release, and incremented to 1 at release, then incremented by 1 each time backwards incompatible changes are made.  The minor version number is incremented by 1 each time features are added or depreciated.  The patch version number is incremented by 1 each time defects are corrected.  When the previous number is incremented by 1, the following numbers are reset to 0 (e.g. 1.2.15 to 1.3.0).
 
-  Modules are imported from by specifying a relative path and filename, and what you want to import.  The programming language attempts to look up the module relative to the program's working directory, but if that fails it tries a central repository.  If the module is versioned, the major version number must match exactly, and the minor and patch version numbers must be >= the requested numbers.  The programming language will use the most recent version that matches the requirements.
+  Modules are imported from by specifying a relative path and file name, and what you want to import.  The programming language attempts to look up the module relative to the program's working directory, but if that fails it tries a central repository.  If the module is versioned, the major version number must match exactly, and the minor and patch version numbers must be >= the requested numbers.  The programming language will use the most recent version that matches the requirements.
 
   This module system could support incremental compilation (with the abstract syntax trees corresponding to binaries, and reevaluation corresponding to reloading the binaries), but I chose it due to the lack of surprising behavior.
 
