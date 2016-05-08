@@ -328,7 +328,7 @@ Unconventional Features:
 
 * exploratory programming and good error handling
 
-  Some aspects of the programming language behave differently when they are used at the prompt instead of in a module.  This allows both good exploratory programming and good error handling.  At the prompt "def" and "set!" are equivalent, because not being able to redefine an erroneous definition while doing exploratory programming would be a problem, but redefining a variable, or mutating a variable that has not been defined, is a defect in a module.  In a module redefining a variable indicates you did not know it was already in use.  In a module mutating a variable that has not been defined indicates you typoed the name.  Mutating an imported variable is allowed at the prompt, but forbidden in modules, because it should never be necessary to violate encapsulation in correct code.
+  Some aspects of the programming language behave differently when they are used at the prompt instead of in a module.  This allows both good exploratory programming and good error handling.  At the prompt "def" and "set!" are equivalent, because not being able to redefine an erroneous definition while doing exploratory programming would be a problem, but redefining a variable, or mutating a variable that has not been defined, is a defect in a module.  In a module redefining a variable indicates you did not know it was already in use.  In a module mutating a variable that has not been defined indicates you typoed the name.
 
 * modernization
 
@@ -493,17 +493,17 @@ Unconventional Features:
 
   The module system works with /variables/, not /values/, in the outermost scope.  If an exported variable is mutated, other modules that import it can read the current value.
 
-  Imported variables can be mutated at the prompt, but not in a module.  This enforces encapsulation while supporting exploratory programming.
-
   Modules do not implicitly import or export anything.  The programmer must explicitly specify the interface.  This encourages encapsulation, planning interfaces, and conscious interface change.
+
+  A module can have any number of import- and export specifications mingled with definitions and expressions.  Import- and export specifications are cumulative.  They never remove an import or export.  The only restriction on order is that variables must be initialized by definition or importing before they are read.  This makes macro use easier.
+
+  Import- and export specifications inside definitions or expressions, except for (potentially nested) "do" forms, is a defect.  Module interfaces should not vary.  Macros may expand into import- and export specifications, which is sufficient to allow module implementations to vary at macro expansion time.  Import- and export specifications are allowed in "do" forms so a single macro call can expand into a combination of import- and export specifications, definitions, and expressions.  The value of an import- or export specification is "null".
 
   Dependency cycles are a defect.  They indicate two or more modules are badly decomposed.  Some definitions need to be combined into a single module to eliminate the cycle.  Others probably need to be separated into other modules.
 
-  At the prompt redefinition, by importing a variable to the same name as a definition, or importing two or more variables to the same name, causes the most recent definition to be used.  That can be useful for exploratory programming.  In a module it is a defect.  It indicates you did not know the name was already in use.
+  At the prompt redefinition, by importing a variable to the same name as a definition, or importing two or more variables to the same name, causes the most recent definition to be used, because that can be useful for exploratory programming.  In a module it is a defect, because it indicates you did not know the name was already in use.
 
-  A module can have any number of import- and export specifications mingled with definitions and expressions.  Import- and export specifications are cumulative.  They never remove an import or export.  The only restriction on order is that variables must be initialized by definition or importing before they are read.  This flexibility makes macro use easier.
-
-  Import- and export specifications inside definitions or expressions, except for (potentially nested) "do" forms, is a defect.  Module interfaces should not vary.  Macros may expand into import- and export specifications, which is sufficient to allow module implementations to vary at macro expansion time.  Import- and export specifications are allowed in "do" forms so a single macro call can expand into a combination of import- and export specifications, definitions, and expressions.  The value of an import- or export specification is "null".
+  Mutating an imported variable is allowed at the prompt, because that can be useful for exploratory programming.  In a module it is a defect, because it should not be necessary to violate encapsulation in correct code.
 
   All state, except for the abstract syntax tree, is discarded after each module is macro expanded.  The abstract syntax tree is reevaluated as needed to create the necessary state for the macro expansion of other modules or run time.  This prevents the state within a module at macro expansion time from influencing the macro expansion of other modules, or from influencing run time.
 
