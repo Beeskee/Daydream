@@ -125,7 +125,7 @@ Non-Goals:
 
   Raw strings are only useful for Windows paths and regular expressions.
 
-  Windows paths are easy to write by hand, but if they did become a problem, they would be easy to construct with functions or macros.
+  This programming language uses "/" as the path delimiter, even on Windows.
 
   SREs are the best solution for regular expressions.  I plan to support them.
 
