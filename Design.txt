@@ -328,7 +328,7 @@ Unconventional Features:
 
 * exploratory programming and good error handling
 
-  Some aspects of the programming language behave differently when they are used at the prompt instead of in a module.  This allows both good exploratory programming and good error handling.  At the prompt "def" and "set!" are equivalent, because not being able to redefine an erroneous definition while doing exploratory programming would be a problem, but redefining a variable, or mutating a variable that has not been defined, is a defect in a module.  In a module, redefining a variable indicates you did not know it was already in use.  In a module, mutating a variable that has not been defined indicates you typoed the name.  Mutating an imported variable is allowed at the prompt, but forbidden in modules, because it should never be necessary to violate encapsulation in correct code.
+  Some aspects of the programming language behave differently when they are used at the prompt instead of in a module.  This allows both good exploratory programming and good error handling.  At the prompt "def" and "set!" are equivalent, because not being able to redefine an erroneous definition while doing exploratory programming would be a problem, but redefining a variable, or mutating a variable that has not been defined, is a defect in a module.  In a module redefining a variable indicates you did not know it was already in use.  In a module mutating a variable that has not been defined indicates you typoed the name.  Mutating an imported variable is allowed at the prompt, but forbidden in modules, because it should never be necessary to violate encapsulation in correct code.
 
 * modernization
 
@@ -372,7 +372,7 @@ Unconventional Features:
 
   There are some definitions that are imported into every namespace by default.  Without forms to perform definition, arithmetic, logic, manipulate the built-in data structures, and call foreign functions it would be impossible to define much else.
 
-  While redefining a variable in a module is normally forbidden, most built-in forms can be redefined in a module with only a warning.  This allows new built-in forms to be defined without breaking existing source code.
+  While redefining a variable in a module is normally forbidden, built-in forms can be redefined in a module with only a warning.  This allows new built-in forms to be defined without breaking existing code.
 
   The built-in forms are as general as possible.  For example, there is only one "map" for all sequence collection types (list, string, and vector).  To avoid surprising type coercion, the collection returned is of the same type as the collection argument.  This should allow more code reuse, and minimize what programmers must learn and remember to use the programming language.  "set!" is not generalized for reasons already explained (in Non-Goals: generalized variables).
 
@@ -499,7 +499,7 @@ Unconventional Features:
 
   Dependency cycles are a defect.  They indicate two or more modules are badly decomposed.  Some definitions need to be combined into a single module to eliminate the cycle.  Others probably need to be separated into other modules.
 
-  Redefinition, by importing a variable to the same name as a definition, or importing two or more variables to the same name, is a defect.  It indicates you did not know the name was already in use.
+  At the prompt redefinition, by importing a variable to the same name as a definition, or importing two or more variables to the same name, causes the most recent definition to be used.  That can be useful for exploratory programming.  In a module it is a defect.  It indicates you did not know the name was already in use.
 
   A module can have any number of import- and export specifications mingled with definitions and expressions.  Import- and export specifications are cumulative.  They never remove an import or export.  The only restriction on order is that variables must be initialized by definition or importing before they are read.  This flexibility makes macro use easier.
 
