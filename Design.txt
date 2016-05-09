@@ -491,7 +491,7 @@ Unconventional Features:
 
   A module essentially encapsulates part of the outermost scope.  Only one instance of a module exists at a time, which is observable via mutation.  Modules do not nest, but they do compose.
 
-  The module system works with /variables/, not /values/, in the outermost scope.  If an exported variable is mutated, other modules that import it can read the current value.
+  The module system works with /variables/, not values, in the outermost scope.  If an exported variable is mutated, other modules that import it can read the current value.
 
   Modules do not implicitly import or export anything.  The programmer must explicitly specify the interface.  This encourages encapsulation, planning interfaces, and conscious interface change.
 
