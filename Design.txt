@@ -328,7 +328,7 @@ Unconventional Features:
 
 * exploratory programming and good error handling
 
-  Some aspects of the programming language behave differently when they are used at the prompt instead of in a module.  This allows both good exploratory programming and good error handling.  At the prompt "def" and "set!" are equivalent, because not being able to redefine an erroneous definition while doing exploratory programming would be a problem, but redefining a variable, or mutating a variable that has not been defined, is a defect in a module.  In a module redefining a variable indicates you did not know it was already in use.  In a module mutating a variable that has not been defined indicates you typoed the name.
+  Some aspects of the programming language behave differently when they are used at the listener instead of in a module.  This allows both good exploratory programming and good error handling.  At the listener "def" and "set!" are equivalent, because not being able to redefine an erroneous definition while doing exploratory programming would be a problem, but redefining a variable, or mutating a variable that has not been defined, is a defect in a module.  In a module redefining a variable indicates you did not know it was already in use.  In a module mutating a variable that has not been defined indicates you typoed the name.
 
 * modernization
 
@@ -501,9 +501,9 @@ Unconventional Features:
 
   Dependency cycles are a defect.  They indicate two or more modules are badly decomposed.  Some definitions need to be combined into a single module to eliminate the cycle.  Others probably need to be separated into other modules.
 
-  At the prompt redefinition, by importing a variable to the same name as a definition, or importing two or more variables to the same name, causes the most recent definition to be used, because that can be useful for exploratory programming.  In a module it is a defect, because it indicates you did not know the name was already in use.
+  At the listener redefinition, by importing a variable to the same name as a definition, or importing two or more variables to the same name, causes the most recent definition to be used, because that can be useful for exploratory programming.  In a module it is a defect, because it indicates you did not know the name was already in use.
 
-  Mutating an imported variable is allowed at the prompt, because that can be useful for exploratory programming.  In a module it is a defect, because it should not be necessary to violate encapsulation in correct code.
+  Mutating an imported variable is allowed at the listener, because that can be useful for exploratory programming.  In a module it is a defect, because it should not be necessary to violate encapsulation in correct code.
 
   All state, except for the abstract syntax tree, is discarded after each module is macro expanded.  The abstract syntax tree is reevaluated as needed to create the necessary state for the macro expansion of other modules or run time.  This prevents the state within a module at macro expansion time from influencing the macro expansion of other modules, or from influencing run time.
 
@@ -515,7 +515,7 @@ Unconventional Features:
 
   This module system could support incremental compilation (with the abstract syntax trees corresponding to binaries, and reevaluation corresponding to reloading the binaries), but I chose it due to the lack of surprising behavior.
 
-  Modules can be reloaded, both at the prompt and in modules, to update their definitions.  This is useful for exploratory programming, or hot swapping to correct a defect in, or add features to, a running program.  Be aware that this only updates the values of the imported variables.  References to out-of-date values may still exist.  You should therefore prefer to access imported values through the variables you imported them into.
+  Modules can be reloaded, both at the listener and in modules, to update their definitions.  This is useful for exploratory programming, or hot swapping to correct a defect in, or add features to, a running program.  Be aware that this only updates the values of the imported variables.  References to out-of-date values may still exist.  You should therefore prefer to access imported values through the variables you imported them into.
 
 * garbage collector
 
