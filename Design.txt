@@ -338,7 +338,7 @@ Unconventional Features:
 
   The syntax for Booleans ("true" and "false") and integers in bases other than 10 ("0b101" and "0xF00") is similar to popular programming languages.
 
-  "true" and "false" are values, not variables.  To prevent surprising behavior, "true" and "false" are not valid variable names.
+  "true" and "false" are /values/, not variables.  To prevent surprising behavior, "true" and "false" are not valid variable names.
 
 * definition
 
