@@ -115,9 +115,9 @@ Non-Goals:
 
   Parentheses shaming (e.g. "Lisp stands for Lots of Irritating Superfluous Parentheses") has inspired the authors of several Lisp-like languages (e.g. Arc and Clojure) to remove parentheses anywhere they could be inferred (e.g. around "cond" clauses, because test and result expressions always appear in pairs).
 
-  This reduces the utility of structure editors and code reformatting tools, since parentheses inference is not possible in the general case (e.g. in macro calls).
+  This reduces the utility of structure editors and source code formatting tools, since parentheses inference is not possible in the general case (e.g. in macro calls).
 
-  It makes code difficult to understand, because the human has to infer the parentheses to understand the grouping.
+  It makes source code difficult to understand, because the human has to infer the parentheses to understand the grouping.
 
   Lisp programmers should not mutilate their programming language in an attempt to please programmers that reject Lisp syntax.  They will not like it any more with less parentheses.  They will only be satisfied when it looks like C.
 
@@ -175,13 +175,13 @@ Non-Goals:
 
   Programmers define an excess of types, and a small number of functions to work with each type, because using a separate type for each purpose minimizes the chance of operating on an invalid value.  It also minimizes code reuse.
 
-  Type annotations make code more verbose.  Theoretically type inference, combined with a programming language design that assures type inference is always possible, can eliminate the need for type annotations.  In practice, even in programming languages with type inference, most definitions in the outermost scope must have type annotations, because most will be exported and code in other modules would break if their type changed.
+  Type annotations make source code more verbose.  Theoretically type inference, combined with a programming language design that assures type inference is always possible, can eliminate the need for type annotations.  In practice, even in programming languages with type inference, most definitions in the outermost scope must have type annotations, because most will be exported and code in other modules would break if their type changed.
 
   Making changes requires more effort, because you must change the type annotations everywhere a value is used when you want to change its type.
 
   Generic static type systems often have poor payoff per effort ratios for improving safety and efficiency.
 
-  Simple static type systems are not sufficient to prove code correct.  Dependent type systems are sufficient, but require heavy annotation.  It is often easier to write a program to derive correct efficient code from your specification than to annotate correct hand-written code enough to satisfy a dependent type system.
+  Simple static type systems are not sufficient to prove code correct.  Dependent type systems are sufficient, but require heavy annotation.  It is often easier to write a program to derive correct efficient code from your specification than to annotate correct handwritten code enough to satisfy a dependent type system.
 
   A static type system is not necessary nor sufficient to eliminate run time type checks.  Most variables in code written in dynamically type checked languages are used with a single type of value, and compilers can use type inference to eliminate most run time type checks.  Lisp compilers have been doing that for decades.  When sum types (a.k.a. tagged unions) are used in statically type checked languages, run time type checks (reading the tag) determine what code to run.
 
@@ -313,7 +313,7 @@ Non-Goals:
 
 * high efficiency
 
-  Running on top of AutoHotkey makes high efficiency impossible.  It was never designed with efficiency in mind.  It uses string interpolation of code, which is roughly equivalent to parsing and evaluating lines repeatedly.  It uses reference counting, which we cannot avoid even on objects that have to be traced to be garbage collected (e.g. environments).  It makes no attempt at optimization.  Code written on one line, using commas to separate statements, is up to 35% faster than properly formatted code, for some unfathomable reason.
+  Running on top of AutoHotkey makes high efficiency impossible.  It was never designed with efficiency in mind.  It uses string interpolation of code, which is roughly equivalent to parsing and evaluating lines repeatedly.  It uses reference counting, which we cannot avoid even on objects that have to be traced to be garbage collected (e.g. environments).  It makes no attempt at optimization.  Source code written on one line, using commas to separate statements, is up to 35% faster than properly formatted source code, for some unfathomable reason.
 
   So long as the implementation is not too wasteful it should still be usable.
 
@@ -346,7 +346,7 @@ Unconventional Features:
 
 * documentation
 
-  Docstrings can be associated with modules, variables in the outermost scope, functions, and macros.  Functions are provided for searching for combinations of patterns in module names, variable names (including parameters), and docstrings, types, and values.  While this was common in the past, modern Lisp-like languages seem to be becoming more static, and less useful interactively, thus losing one of their advantages over other programming languages.  Functions are provided to load all source code in a directory, or in a directory hierarchy, to make searching easier.
+  Docstrings can be associated with modules, variables in the outermost scope, functions, and macros.  Functions are provided for searching for combinations of patterns in module names, variable names (including parameters), and docstrings, types, and values.  While this was common in the past, modern Lisp-like languages seem to be becoming more static, and less useful interactively, thus losing one of their advantages over other programming languages.  Functions are provided to load all code in a directory, or in a directory hierarchy, to make searching easier.
 
 * symbols
 
