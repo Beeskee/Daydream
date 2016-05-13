@@ -113,7 +113,7 @@ Non-Goals:
 
 * parentheses reduction
 
-  Parentheses shaming (e.g. "Lisp stands for Lots of Irritating Superfluous Parentheses") has inspired the authors of several Lisp-like languages (e.g. Arc and Clojure) to remove parentheses anywhere they could be inferred (e.g. around "cond" clauses, because test and result expressions always appear in pairs).
+  Parentheses shaming (e.g. "Lisp stands for Lots of Irritating Superfluous Parentheses") has inspired the authors of several Lisp-like languages (e.g. Arc and Clojure) to remove parentheses anywhere they could be inferred (e.g. around key-value pairs in a dictionary).
 
   This reduces the utility of structure editors and source code formatting tools, since parentheses inference is not possible in the general case (e.g. in macro calls).
 
