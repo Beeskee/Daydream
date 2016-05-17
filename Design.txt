@@ -422,7 +422,7 @@ Unconventional Features:
 
       Racket's non-linear pattern matching is supported.  If an identifier is used multiple times within a pattern, the corresponding matches must be the same according to "equal?", except that instances of an identifier in different "or" sub-patterns are independent.
 
-      The Haskell pattern matching extension record puns is supported for dictionaries.  It uses syntax like "("x")" to bind variables with the same name as string or symbol keys for the mentioned keys.  Using string keys that do not contain valid symbol names with this feature is a defect.
+      The Haskell pattern matching extension record puns is supported for dictionaries.  It uses syntax like "("x")" to bind variables with the same name as string or symbol keys for the associated keys.  Using string keys that do not contain valid symbol names with this feature is a defect.
 
       Racket's "cons" pattern construct refers to mutable cons cells in this programming language.  This programming language only has mutable cons cells.
 
@@ -495,21 +495,21 @@ Unconventional Features:
 
   Macros differ from functions in that their arguments are not evaluated before their body, and they execute before run time.
 
-  If macros' arguments were evaluated before their body, as in function application, they could not inspect, transform, or selectively evaluate their arguments.  Using a macro with function application (e.g. with "apply", folds, "map", or "filter") is a defect.
+  If macros' arguments were evaluated before their body, as in function application, macros could not inspect, transform, or selectively evaluate their arguments.  Using a macro with function application (e.g. with "apply", folds, "map", or "filter") is a defect.
 
   If macros did not execute before run time, interpreters, compilers, and code analysis tools could not rely on code being reduced to the simpler base language (the programming language without macros) at run time.  That is what makes them superior to fexprs.  Calling a macro at run time is a defect.
 
-  Macros are like functions in all other respects.  They can be constructed inside arbitrary expressions, be defined locally, access lexically scoped free variables, call functions or macros (including themselves), be passed as arguments to functions, and be returned from functions.  Be aware that, like functions, macros cannot be passed as arguments to macros, or be returned from macros, because they do not correspond to source code.  The symbol for a function or macro can be passed as an argument to a macro, or be returned from a macro, however.
+  Macros are like functions in all other respects.  They can be constructed inside arbitrary expressions, be defined locally, use free variables, call functions or macros (including themselves), be passed as arguments to functions, and be returned from functions.  Be aware that, like functions, macros cannot be passed as arguments to macros, or be returned from macros, because they do not correspond to source code.  Symbols for functions and macros can be passed as arguments to macros, or be returned from macros, however.
 
   "def" defines variables in the scope it appears in.  While that is usually desirable, it may not be obvious how to define a local macro to simplify other definitions in the outermost scope.
 
-  You could construct a macro in the outermost scope, with your local macro definition inside it, and a body which would return a "do" form containing your other definitions in the outermost scope, then call it immediately by surrounding the "mac" form in an additional pair of parentheses.  The advantage is this does precisely what you want.  The disadvantage is this is complicated.
+  You could construct a macro in the outermost scope, with your local macro definition inside it, and a body which would return a "do" form containing your other definitions, then call it immediately by surrounding the "mac" form in an additional pair of parentheses.  The advantage is this does precisely what you want.  The disadvantage is this is complicated.
 
-  You could define the macro used to simplify the other definitions in the outermost scope, in the outermost scope, but not export it.  The advantage is this is simple.  The disadvantage is this pollutes the module's outermost scope.
+  You could define the macro used to simplify other definitions in the outermost scope, in the outermost scope, but not export it.  The advantage is this is simple.  The disadvantage is this pollutes the module's outermost scope.
 
   If a macro expansion contains a symbol used as a variable that is not captured or "gensym"ed, and it does not refer to a variable in the outermost scope of the module where the macro was defined, it is a defect.  Only variables in the outermost scope are always defined.
 
-  If a macro is called outside of its home module, and its expansion contains a symbol used as a variable that is not captured or "gensym"ed, and it does not refer to an exported variable, it is a defect.  This restriction prevents dependence on implementation details.  The variable does not necessarily have to be exported from the macro's home module.  The variable only has to be exported from the variable's home module, which may not be the same as the macro's home module.  If modules had to import all variables their macro calls use, module interfaces would be dependent on implementation details of the macros they use.  If modules had to export all variables their macro definitions use, module interfaces would be cluttered (e.g. most modules would reexport most of the "base" and "unsafe" modules).  This encourages encapsulation.
+  If a macro is called outside of its home module, and its expansion contains a symbol used as a variable that is not captured or "gensym"ed, and it does not refer to an exported variable, it is a defect.  This restriction prevents dependence on implementation details.  The variable does not necessarily have to be exported from the macro's home module.  The variable only has to be exported from the variable's home module, which may not be the same as the macro's home module.  If modules had to import all variables their macro calls use, module interfaces would be dependent on implementation details of the macros they use.  If modules had to export all variables their macro expansions use, module interfaces would be cluttered (e.g. most modules would reexport most of the "base" and "unsafe" modules).  This encourages encapsulation.
 
 * conditions
 
@@ -517,7 +517,7 @@ Unconventional Features:
 
   Warnings are issued when code needs maintenance but still works.  For example, it might use a depreciated construct, or a bad practice that was previously tolerated.  Warnings are shown by default, since that is the only responsible way to design a programming language.  History has shown most programmers will not exert any effort to find problems in their code.  Condition handlers can choose other ways to handle warnings, such as logging or discarding them.
 
-  Sometimes the condition system cannot report the exact location of a problem, because the code with the problem was generated instead of parsed.  In these cases it reports the closest location possible, which is usually an "eval" or macro call.  This is usually the expected and desired behavior.
+  Sometimes the condition system cannot report the exact location of a problem, because the code with the problem was generated instead of parsed.  In these cases it reports the closest location possible, which is usually an "eval" or macro call.  That is usually the expected and desired behavior.
 
 * modules
 
