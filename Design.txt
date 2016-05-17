@@ -448,7 +448,7 @@ Unconventional Features:
 
     "fix-arity" creates a fixed-arity copy of a variadic form to make it easier to build closures with.
 
-    If you want to leave out values in the middle of a function's arguments, instead of only at the end, you can use "_" in their place.  The resulting closure will expect the remaining arguments in the same order.  To avoid surprising behavior, "_" is not a valid variable name.
+    If you want to omit values in the middle of a function's arguments, instead of only at the end, you can use "_" in their place.  The resulting closure will expect the remaining arguments in the same order.  To avoid surprising behavior, "_" is not a valid variable name.
 
     Function parameters can be rearranged to ease closure creation like so "#(bad-fn %2 %1)".  The rest parameter can be passed with "%&".
 
