@@ -468,9 +468,9 @@ Unconventional Features:
 
   "quote", "quasiquote", "unquote", and "unquote-splicing" work like they do in Common Lisp (e.g. when nested).
 
-  Destructive unquote-splicing is not supported, since it seems to be only useful for causing defects.
-
   "unquote" or "unquote-splicing" outside of "quasiquote" is a defect.
+
+  Destructive unquote-splicing is not supported, since it seems to be only useful for causing defects.
 
 * macros
 
