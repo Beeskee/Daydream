@@ -153,7 +153,7 @@ Non-Goals:
 
   Some Scheme hygienic macro systems are limited to templates that are impractical to use for computation.
 
-  Others are practical to use for computation but include runaway complexity (e.g. phase level numbering).
+  Others are practical to use for computation but include runaway complexity (e.g. phase separation).
 
   I have attempted to design a macro system that merely solves the problems with Common Lisp's macro system.
 
