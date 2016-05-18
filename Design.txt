@@ -521,19 +521,19 @@ Unconventional Features:
 
   * explicit macro expansion
 
-    This programming language provides several functions to perform macro expansion explicitly.  They can be used to observe a macro expansion.  They can be used by macros that inspect or transform constructs.
+    This programming language provides several special forms to perform macro expansion explicitly.  They can be used to observe a macro expansion.  They can be used by macros that inspect or transform constructs.
 
     "(expand-defs form)" recursively expands macro calls in the form when the macros are defined (not imported) in the current module.  This is primarily useful to reduce clutter when trying to understand your own macro expansions.
 
-    "(expand-once form)" expands macro calls in the form once.  If the form is not a macro call, but contains macro calls, each macro call will be expanded once.  This is primarily useful when trying to understand recursive macro expansions.  It can be used to implement "expand-when".
+    "(expand-once form)" expands macro calls in the form once.  If the form is not a macro call, but contains macro calls, each macro call will be expanded once.  This is primarily useful when trying to understand recursive macro expansions.
 
     "(expand-show form symbols)" recursively expands macro calls in the form when their symbol names match the symbol names in the list.  This is primarily useful to reduce clutter when trying to understand specific macro expansions.
 
     "(expand-hide form symbols)" recursively expands macro calls in the form unless their symbol names match the symbol names in the list.  This is primarily useful to reduce clutter caused by specific macro expansions when trying to understand other macro expansions.
 
-    "(expand-when form fn)" recursively expands macro calls in the form when the predicate function returns true.  The function parameters are "(symbol args)" for the macro call's symbol and arguments.  This is primarily useful when writing code walking macros that inspect or transform constructs (including macro calls).  It can be used to implement the other standard functions to perform macro expansion explicitly, except "expand-once".
+    "(expand-when form fn)" recursively expands macro calls in the form when the predicate function returns true.  The function parameters are "(symbol args)" for the macro call's symbol and arguments.  This is primarily useful when writing code walking macros that inspect or transform constructs (including macro calls).
 
-    These functions determine the macro associated with a symbol the same way macro calls do.  If the symbol is qualified with a module other than the current module, the value of the corresponding variable in the outermost scope of that module is used.  Otherwise, the value of the corresponding variable in the lexical scope where the function was called is used.  That is usually the expected and desired behavior.
+    These special forms determine the macro associated with a symbol the same way macro calls do.  If the symbol is qualified with a module other than the current module, the value of the corresponding variable in the outermost scope of that module is used.  Otherwise, the value of the corresponding variable in the lexical scope where the special form was called is used.  That is usually the expected and desired behavior.
 
 * conditions
 
