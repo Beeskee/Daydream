@@ -509,7 +509,7 @@ Unconventional Features:
 
     If macros did not execute before run time, interpreters, compilers, and code analysis tools could not rely on code being reduced to the simpler base language (the programming language without macros) at run time.  That is what makes them superior to fexprs.  Calling a macro at run time is a defect.
 
-    Macros are like functions in all other respects.  They can be constructed inside arbitrary expressions, be defined locally, use free variables, call functions or macros (including themselves), be passed as arguments to functions, and be returned from functions.  Be aware that, like functions, macros cannot be passed as arguments to macros, or be returned from macros, because they do not correspond to source code.  Symbols for functions and macros can be passed as arguments to macros, or be returned from macros, however.
+    Macros are like functions in all other respects.  They can be constructed inside arbitrary expressions, be defined locally, use free variables, call functions or macros (including themselves), perform input/output operations, be passed as arguments to functions, and be returned from functions.  Be aware that, like functions, macros cannot be passed as arguments to macros, or be returned from macros, because they do not correspond to source code.  Symbols for functions and macros can be passed as arguments to macros, or be returned from macros, however.
 
   * local macro definitions
 
