@@ -495,7 +495,7 @@ Noteworthy Features:
 
   * source code transformation
 
-    This macro system is restricted to operating on data that is equivalent to source code for the reasons given in "Noteworthy Features: modules".  Passing an argument to a macro, or returning a value from a macro, that contains a type that has no literal syntax is a defect.  Passing an argument to a macro, or returning a value from a macro, that contains a list with a reference cycle is a defect.
+    This macro system is restricted to transforming data that is equivalent to source code for the reasons given in "Noteworthy Features: modules".  Passing an argument to a macro, or returning a value from a macro, that contains a type that has no literal syntax is a defect.  Passing an argument to a macro, or returning a value from a macro, that contains a list with a reference cycle is a defect.
 
     If a macro's expansion contains a qualified symbol, and it does not refer to a variable in the outermost scope of the macro's home module, it is a defect.  Only variables in the outermost scope are always defined.
 
