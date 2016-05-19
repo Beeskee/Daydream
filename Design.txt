@@ -324,7 +324,7 @@ Non-Goals:
   While I do not plan to write an optimizing compiler for this programming language, I have attempted to avoid design decisions that would make that harder.
 
 
-Unconventional Features:
+Noteworthy Features:
 
 * intended use
 
@@ -354,7 +354,7 @@ Unconventional Features:
 
 * symbols
 
-  To avoid surprising behavior, the same name in the same scope always refers to the same value, barring mutation.  This implies that variables and functions are not in separate namespaces, which is not unconventional now, but Common Lisp does not work that way.  It implies that the programming language is case-insensitive, which is unconventional now.  To prevent the use of symbols that jangle like bad typography, uppercase letters in symbols are a defect.
+  To avoid surprising behavior, the same name in the same scope always refers to the same value, barring mutation.  This implies that variables and functions are not in separate namespaces.  It implies that the programming language is case-insensitive.  To prevent the use of symbols that jangle like bad typography, uppercase letters in symbols are a defect.
 
   To avoid surprising behavior, a symbol always looks like a symbol.  Any characters that have special meaning to the parser, such as whitespace or parentheses, cannot be included in a symbol.
 
@@ -495,7 +495,7 @@ Unconventional Features:
 
   * source code transformation
 
-    This macro system is restricted to operating on data that is equivalent to source code for the reasons given in "Unconventional Features: modules".  Passing an argument to a macro, or returning a value from a macro, that contains a type that has no literal syntax is a defect.  Passing an argument to a macro, or returning a value from a macro, that contains a list with a reference cycle is a defect.
+    This macro system is restricted to operating on data that is equivalent to source code for the reasons given in "Noteworthy Features: modules".  Passing an argument to a macro, or returning a value from a macro, that contains a type that has no literal syntax is a defect.  Passing an argument to a macro, or returning a value from a macro, that contains a list with a reference cycle is a defect.
 
     If a macro's expansion contains a qualified symbol, and it does not refer to a variable in the outermost scope of the macro's home module, it is a defect.  Only variables in the outermost scope are always defined.
 
