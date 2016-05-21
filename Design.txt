@@ -458,6 +458,8 @@ Noteworthy Features:
 
     Delimited continuations and dynamic-wind are supported.  Undelimited continuations are not.  Delimited continuations compose.  Undelimited continuations do not.
 
+    The delimited continuations will be similar to the ones in Racket.
+
   * returns
 
     Everything returns a value.  Forms that perform definition or mutation return the value that they used.  Forms that involve a control flow sequence return the value returned by the last expression in the control flow sequence.  This, along with combining allocation and initialization, prevents uninitialized values.
