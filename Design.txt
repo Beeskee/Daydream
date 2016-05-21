@@ -515,14 +515,6 @@ Noteworthy Features:
 
       Macros are like functions in all other respects.  They can be constructed inside arbitrary expressions, be defined locally, use free variables, call functions or macros (including themselves), perform input/output operations, be passed as arguments to functions, and be returned from functions.  Be aware that, like functions, macros cannot be passed as arguments to macros, or be returned from macros, because they do not correspond to source code.  Symbols for functions and macros can be passed as arguments to macros, or be returned from macros, however.
 
-  * local macro definition
-
-    "def" defines variables in the current scope.  While that is usually desirable, it may not be obvious how to define a local macro to simplify other definitions in the outermost scope.
-
-    You could construct a macro in the outermost scope, with your local macro definition inside it, and a body which would return a "do" form containing your other definitions, then call it immediately by surrounding the "mac" form in an additional pair of parentheses.  The advantage is this does precisely what you want.  The disadvantage is this is complicated.
-
-    You could define the macro used to simplify other definitions in the outermost scope, in the outermost scope, but not export it.  The advantage is this is simple.  The disadvantage is this pollutes the module's outermost scope.
-
   * explicit macro expansion
 
     This programming language provides several special forms to perform macro expansion explicitly.  They can be used to observe a macro expansion.  They can be used by macros that inspect or transform constructs.
@@ -538,6 +530,14 @@ Noteworthy Features:
     "(expand-when form fn)" recursively expands macro calls in the form when the predicate function returns true.  The function parameters are "(symbol args)" for the macro call's symbol and arguments.  This is primarily useful when writing code walking macros that inspect or transform constructs (including macro calls).
 
     These special forms determine the macro associated with a symbol the same way macro calls do.  If the symbol is module-qualified, the value of the corresponding variable in the outermost scope of that module is used.  Otherwise, the value of the corresponding variable in the lexical scope where the special form was called is used.  That is usually the expected and desired behavior.
+
+  * local macro definition
+
+    "def" defines variables in the current scope.  While that is usually desirable, it may not be obvious how to define a local macro to simplify other definitions in the outermost scope.
+
+    You could construct a macro in the outermost scope, with your local macro definition inside it, and a body which would return a "do" form containing your other definitions, then call it immediately by surrounding the "mac" form in an additional pair of parentheses.  The advantage is this does precisely what you want.  The disadvantage is this is complicated.
+
+    You could define the macro used to simplify other definitions in the outermost scope, in the outermost scope, but not export it.  The advantage is this is simple.  The disadvantage is this pollutes the module's outermost scope.
 
 * conditions
 
