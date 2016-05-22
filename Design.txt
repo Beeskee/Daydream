@@ -334,6 +334,10 @@ Noteworthy Features:
 
   Some aspects of the programming language behave differently when they are used at the listener instead of in a module.  This allows both good exploratory programming and good error handling.  At the listener "def" and "set!" are equivalent, because not being able to redefine an erroneous definition while doing exploratory programming would be a problem, but redefining a variable, or mutating a variable that has not been defined, is a defect in a module.  In a module redefining a variable indicates you did not know it was already in use.  In a module mutating a variable that has not been defined indicates you typoed the name.
 
+  At the listener redefinition, by importing a variable to the same name as a definition, or importing two or more variables to the same name, causes the most recent definition to be used, because that can be useful for exploratory programming.  In a module it is a defect, because it indicates you did not know the name was already in use.
+
+  Mutating an imported variable is allowed at the listener, because that can be useful for exploratory programming.  In a module it is a defect, because it should not be necessary to violate encapsulation in correct code.
+
 * modernization
 
   Lisp parachronisms have been replaced or removed, since we use IBM PC compatibles instead of IBM 704s, and monitors instead of teleprinters.  "car" is replaced with "first", "cdr" is replaced with "rest", and "car" and "cdr" compositions (like "caddar") have been removed.  You "show" things on the monitor, not "print" them.
@@ -374,7 +378,7 @@ Noteworthy Features:
 
 * built-ins
 
-  There are some definitions that are imported into every namespace by default.  Without forms to perform definition, arithmetic, logic, manipulate the built-in data structures, and call foreign functions it would be impossible to define much else.
+  There are some definitions that are imported into every module implicitly.  Without forms to perform definition, arithmetic, logic, manipulate the built-in data structures, and call foreign functions it would be impossible to define much else.
 
   While redefining a variable in a module is normally forbidden, built-in forms can be redefined in a module with only a warning.  This allows new built-in forms to be defined without breaking existing code.
 
@@ -570,17 +574,13 @@ Noteworthy Features:
 
   The module system works with /variables/, not values, in the outermost scope.  If an exported variable is mutated, other modules that import it can read the current value.
 
-  Modules do not implicitly export anything.  The programmer must explicitly specify the interface.  This encourages encapsulation, planning interfaces, and conscious interface change.
+  Modules do not export anything implicitly.  The programmer must explicitly specify the interface.  This encourages encapsulation, planning interfaces, and conscious interface change.
 
   A module can have any number of import- and export specifications mingled with definitions and expressions.  Import- and export specifications are cumulative.  They never remove an import or export.  The only restriction on order is that variables must be initialized by definition or importing before they are read.  This makes macro use easier.
 
   Import- and export specifications inside definitions or expressions, except for (potentially nested) "do" forms, is a defect.  Module interfaces should not vary.  Macros may expand into import- and export specifications, which is sufficient to allow module implementations to vary at macro expansion time.  Import- and export specifications are allowed in "do" forms so a single macro call can expand into a combination of import- and export specifications, definitions, and expressions.  The value of an import- or export specification is "null".
 
   Dependency cycles are a defect.  They indicate two or more modules are badly decomposed.  Some definitions need to be combined into a single module to eliminate the cycle.  Others probably need to be separated into other modules.
-
-  At the listener redefinition, by importing a variable to the same name as a definition, or importing two or more variables to the same name, causes the most recent definition to be used, because that can be useful for exploratory programming.  In a module it is a defect, because it indicates you did not know the name was already in use.
-
-  Mutating an imported variable is allowed at the listener, because that can be useful for exploratory programming.  In a module it is a defect, because it should not be necessary to violate encapsulation in correct code.
 
   All state, except for the abstract syntax tree, is discarded after each module is macro expanded.  The abstract syntax tree is reevaluated as needed to create the necessary state for the macro expansion of other modules or run time.  This prevents the state within a module at macro expansion time from influencing the macro expansion of other modules, or from influencing run time.
 
