@@ -177,7 +177,7 @@ Non-Goals:
 
   A mandatory static type system causes several problems.
 
-  Static type systems are incompatible with exploratory programming.  They require you to specify, explicitly or implicitly, the type of a value before you know all of the operations that need to be performed with that value.  Static type systems are only useful for verifying known solutions.
+  Static type systems are incompatible with exploratory programming.  They require you to specify, explicitly or implicitly, the type of a value before you know all of the operations that need to be performed with that value.  They are only useful for verifying known solutions.
 
   Programmers define an excess of types, and a small number of functions to work with each type, because using a separate type for each purpose minimizes the chance of operating on an invalid value.  It also minimizes code reuse.
 
