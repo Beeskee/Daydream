@@ -177,9 +177,11 @@ Non-Goals:
 
   A mandatory static type system causes several problems.
 
+  Static type systems are incompatible with exploratory programming.  They require you to specify, explicitly or implicitly, the type of a value before you know all of the operations that need to be performed with that value.  Static type systems are only useful for verifying known solutions.
+
   Programmers define an excess of types, and a small number of functions to work with each type, because using a separate type for each purpose minimizes the chance of operating on an invalid value.  It also minimizes code reuse.
 
-  Type annotations make source code more verbose.  Theoretically type inference, combined with a programming language design that assures type inference is always possible, can eliminate the need for type annotations.  In practice, even in programming languages with type inference, most definitions in the outermost scope must have type annotations, because most will be exported and code in other modules would break if their type changed.
+  Type annotations make source code more verbose.  In theory, type inference, combined with a programming language design that assures type inference is always possible, can eliminate the need for type annotations.  In practice, even in programming languages with type inference, most definitions in the outermost scope must have type annotations, because most will be exported, and code in other modules would break if their type changed.
 
   Making changes requires more effort, because you must change the type annotations everywhere a value is used when you want to change its type.
 
