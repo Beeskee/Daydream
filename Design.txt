@@ -388,7 +388,7 @@ Noteworthy Features:
 
 * equality
 
-  Equality is much simpler than in most Lisp-like languages.  Most equality tests are performed with "=", which compares values for immutable types, and identities (i.e. addresses) for mutable types, like "==" in most popular programming languages.  Dictionaries always use this form of equality, because it is the only way to assure keys remain associated with their values.  "equal?" is also provided, which compares values even for mutable data structures, and correctly handles reference cycles.  Pattern matching always uses this form of equality, because it handles immutable and mutable types consistently.  The behavior of "=" is almost always what is desired, and "equal?" covers when it is not.
+  Equality is much simpler than in most Lisp-like languages.  "=" compares values for immutable types, and identities (i.e. addresses) for mutable types, like "==" in most popular programming languages.  Dictionaries always use this form of equality, because it assures keys remain associated with their values.  "equal?" compares values even for mutable data structures, and correctly handles reference cycles, like "equal?" in Scheme.  Pattern matching always uses this form of equality, because it handles immutable and mutable types consistently.
 
 * regular expressions
 
