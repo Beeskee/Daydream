@@ -153,7 +153,7 @@ Non-Goals:
 
   Some Scheme hygienic macro systems are limited to templates that are impractical to use for computation.
 
-  Others are practical to use for computation but include runaway complexity (e.g. phase separation).
+  Other Scheme hygienic macro systems are practical to use for computation, but include runaway complexity (e.g. phase separation).
 
   I have attempted to design a macro system that merely solves the problems with Common Lisp's macro system.
 
@@ -388,7 +388,7 @@ Noteworthy Features:
 
 * equality
 
-  Equality is much simpler than in most Lisp-like languages.  Most equality tests are performed with "=", which compares values for immutable types, and identities (i.e. addresses) for mutable types, like "==" in most popular programming languages.  Dictionaries always use this form of equality, because it is the only way to assure keys remain associated with their values.  "equal?" is also provided, which compares values even for mutable data structures, and correctly handles reference cycles.  Pattern matching always uses this form of equality, because it handles immutable types and mutable data structures consistently.  The behavior of "=" is almost always what is desired, and "equal?" covers when it is not.
+  Equality is much simpler than in most Lisp-like languages.  Most equality tests are performed with "=", which compares values for immutable types, and identities (i.e. addresses) for mutable types, like "==" in most popular programming languages.  Dictionaries always use this form of equality, because it is the only way to assure keys remain associated with their values.  "equal?" is also provided, which compares values even for mutable data structures, and correctly handles reference cycles.  Pattern matching always uses this form of equality, because it handles immutable and mutable types consistently.  The behavior of "=" is almost always what is desired, and "equal?" covers when it is not.
 
 * regular expressions
 
