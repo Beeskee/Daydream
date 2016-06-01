@@ -62,7 +62,7 @@ Goals:
 
   * composable
 
-    It should be possible to combine most constructs to produce new, useful, constructs.  The number of non-composable constructs should be minimized.
+    It should be possible to combine most constructs to construct new, useful, constructs.  The number of non-composable constructs should be minimized.
 
   * brief
 
@@ -147,7 +147,7 @@ Non-Goals:
 
 * overcomplicated macros
 
-  Common Lisp's macro system captures implicitly.
+  Common Lisp's macro system implicitly captures variables.
 
   Scheme hygienic macro systems usually begin with destroying homoiconicity.  Requiring macros to work with syntax objects instead of normal values prevents the use of normal functions in macro expansion, which defeats the purpose of using a Lisp macro system, or requires the syntax objects to be converted to normal values, which defeats the purpose of using syntax objects.
 
