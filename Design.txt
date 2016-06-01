@@ -251,7 +251,7 @@ Non-Goals:
 
   Which implicit control flow algorithm should be included?  Each one is useful in some situations.  Whatever you decide, if you include an implicit control flow algorithm, everyone that uses your programming language is forced to learn and use it, even if it does not help solve their problems.
 
-  When the implicit control flow is /not/ what you need, you spend a lot of effort working around it.
+  When the implicit control flow is /not/ what is needed, it requires a lot of effort to work around it.
 
   Other than push dataflow, implicit control flow is unsafe to use with code that has side effects.  It becomes difficult to determine if, or in what order, each side effect will occur.
 
@@ -376,7 +376,7 @@ Noteworthy Features:
 
   There is no character type.  Strings are effectively immutable vectors of strings of 1 character.  Strings can be indexed like a vector.  Strings of 1 character can be converted to and from integers.  This may result in more code reuse.
 
-  Vectors are dynamic arrays.  Values can be 'pushed' to, or 'popped' from, the highest index, allowing them to double as stacks.  Singly-linked lists support efficient pushing to, and popping from, the beginning, but not efficient indexing.  This makes vectors more versatile, and since bounds are still checked, they are just as safe.  Like singly-linked lists, dynamic arrays are used in most hash table implementations, which are used in most environment implementations, so it makes sense to expose them in the programming language.  It takes little effort and is consistent with the goal of not unnecessarily restricting those programming in the language.
+  Vectors are dynamic arrays.  Values can be 'pushed' to, or 'popped' from, the highest index, allowing them to double as stacks.  Singly-linked lists support efficient pushing to, and popping from, the beginning, but not efficient indexing.  This makes vectors more versatile, and since bounds are still checked, they are just as safe.  Like singly-linked lists, dynamic arrays are used in most hash table implementations, which are used in most environment implementations, so it makes sense to expose them in the programming language.  It requires little effort and is consistent with the goal of not unnecessarily restricting those programming in the language.
 
 * built-ins
 
@@ -553,7 +553,7 @@ Noteworthy Features:
 
   There is a condition system that is similar to the one in Common Lisp.  It is used to handle defects, input/output errors, and warnings.  Using it as a general-purpose communication mechanism is discouraged, because invisible communication channels make maintenance difficult.  A condition system seems to be the only way to satisfy our error handling design goals.
 
-  Warnings are issued when code needs maintenance but still works.  For example, it might use a depreciated construct, or a bad practice that was previously tolerated.  Warnings are shown by default, since that is the only responsible way to design a programming language.  History has shown most programmers will not exert any effort to find problems in their code.  Condition handlers can choose other ways to handle warnings, such as logging or discarding them.
+  Warnings are issued when code needs maintenance but still works.  For example, it might use a depreciated construct, or a bad practice that was previously tolerated.  Warnings are shown by default, since that is the only responsible way to design a programming language.  History has shown most programmers make no effort to find problems in their code.  Condition handlers can choose other ways to handle warnings, such as logging or discarding them.
 
   Sometimes the condition system cannot report the exact location of a problem, because the code with the problem was generated instead of parsed.  In these cases it reports the closest location possible, which is usually an "eval" or macro call.  That is usually the expected and desired behavior.
 
