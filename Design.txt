@@ -511,9 +511,7 @@ Noteworthy Features:
 
       Those are the primary differences between Common Lisp's macro system and this one.
 
-      This programming language does not use the concept of interned symbols.  It does use the concept of module-qualified symbols.
-
-      A captured symbol and a module-qualified symbol with the same module and name are /not/ the same in this programming language, unlike in Common Lisp.  The value associated with a captured symbol will be determined by the lexical scope at the macro call site.  The value associated with a module-qualified symbol will be determined by the outermost scope of the module.  This makes it safe to define and call a macro in the same module.
+      This programming language does not use the concept of interned symbols.  It does use the concept of module-qualified symbols.  A captured symbol and a module-qualified symbol with the same module and name are /not/ the same in this programming language, unlike in Common Lisp.  The value associated with a captured symbol will be determined by the lexical scope at the macro call site.  The value associated with a module-qualified symbol will be determined by the outermost scope of the module.  This makes it safe to define and call a macro in the same module.
 
       This programming language does use the concept of gensymed symbols.  Instead of being uninterned symbols named by combining a string with a global counter, they are essentially symbols named by a global counter, which are unique due to forbidding symbols in source code from having integer names and the global counter incrementing by 1 on each use.  They are still shown with a valid symbol name preceding the integer.  The difference is unobservable.  It is just a way of achieving the same effect in a programming language without uninterned symbols.
 
