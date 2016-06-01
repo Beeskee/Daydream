@@ -521,7 +521,7 @@ Noteworthy Features:
 
       If macros' arguments were evaluated before their body, as in function application, macros could not inspect, transform, or selectively evaluate their arguments.  Using a macro with function application (e.g. with "apply", folds, "map", or "filter") is a defect.
 
-      If macros did not execute before run time, interpreters, compilers, and code analysis tools could not rely on code being reduced to the simpler base language (the programming language without macros) at run time.  That is what makes them superior to fexprs.  Calling a macro at run time is a defect.
+      If macros did not execute before run time, they would be less useful.  They could not be used for static analysis or optimization.  They could not be used for extending the language in ways that are easy to statically analyze or optimize.  Executing before run time, and reducing the extended language to the base language (the language without macros), is what makes them superior to fexprs.  Calling a macro at run time is a defect.
 
       Macros are like functions in all other respects.  They can be constructed inside arbitrary expressions, be defined locally, use free variables, call functions or macros (including themselves), perform input/output operations, be passed as arguments to functions, and be returned from functions.  Be aware that, like functions, macros cannot be passed as arguments to macros, or be returned from macros, because they do not correspond to source code.  Symbols for functions and macros can be passed as arguments to macros, or be returned from macros, however.
 
