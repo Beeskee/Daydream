@@ -570,7 +570,7 @@ Noteworthy Features:
   * renaming imports - resolves name collisions
   * selective export - prevents dependence on implementation details
 
-  A module essentially encapsulates part of the outermost scope.  Only one instance of a module exists at a time, which is observable via mutation.  Modules do not nest, but they do compose.
+  A module effectively encapsulates part of the outermost scope.  Only one instance of a module exists at a time, which is observable via mutation.  Modules do not nest, but they do compose.
 
   The module system works with /variables/, not values, in the outermost scope.  If an exported variable is mutated, other modules that import it can read the current value.
 
