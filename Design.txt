@@ -513,7 +513,7 @@ Noteworthy Features:
 
       Name symbols may be coerced to a gensymed or module-qualified symbol as appropriate when returned from a macro.
 
-      The values associated with symbols returned from a macro are compared to "def", "fn", and "mac" when determining how name symbols are used.  This is an equality test for identity (i.e. address), so they are correctly recognized when rebound.  Name and gensym symbols are looked up in the macro's environment.  There may be no value associated with some symbols (e.g. symbols for variables in the outermost scope, parameters, and local variables).  Module-qualified symbols are looked up in the associated module's outermost scope.
+      The values associated with symbols returned from a macro are compared to "def", "fn", and "mac" when determining how name symbols are used.  This is an equality test for identity (i.e. address), so they are correctly recognized when rebound.  Name symbols are looked up in the macro's environment.  Gensymed symbols are not looked up (that would be unnecessary).  Module-qualified symbols are looked up in the associated module's outermost scope.  There may be no value associated with some symbols (e.g. symbols for variables in the outermost scope, parameters, and local variables).
 
       If the name symbol is used as a variable in the outermost scope, it is not coerced when returned from a macro.
 
@@ -537,7 +537,7 @@ Noteworthy Features:
 
       This is sufficient for the expansion of anaphoric macros.
 
-      Occasionally symbols are not used as identifiers (e.g. in computer algebra programs).  These symbols should not be transformed by the macro system.
+      Occasionally symbols are not used as identifiers (e.g. in computer algebra systems).  These symbols should not be transformed by the macro system.
 
       The "literal" function converts name symbols contained in its argument, which can be any data equivalent to source code, to literal symbols.
 
