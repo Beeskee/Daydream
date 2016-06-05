@@ -143,7 +143,7 @@ Non-Goals:
 
 * reader macros
 
-  Reader macros do not seem useful to me.  Their scope is unlimited, making them hard to use safely.  Without the ability to create new types and new human-readable representations there is little motivation for new literal syntax.
+  Reader macros do not seem useful to me.  Their scope is unlimited, making them difficult to use safely.  Without the ability to create new types and new human-readable representations there is little motivation for new literal syntax.
 
 * overcomplicated macros
 
@@ -161,9 +161,9 @@ Non-Goals:
 
   While having a single "set!" special form that can accept any mutable place (variables, those referred to by a dictionary and key, a list's "first" and "rest", or a vector and index) is appealing, I cannot imagine how to implement this in AutoHotkey.  AutoHotkey's "byref" only works with some variables, not Objects.  Pointer hacks are likely to break when AutoHotkey's implementation changes.
 
-  I can still provide special forms that mutate each of those kinds of places, but the programmer will have to use the right one.
+  I can provide special forms that mutate each of those kinds of places, but the programmer will have to use the right one.
 
-  If it was possible to correct this, it would still reduce the efficiency of the garbage collector, since it currently does not have to set every reference in a collection to null when freeing it to cope with AutoHotkey's reference counting.  If it was possible to refer to places inside collections, instead of just to the collection, this would not work.
+  If it was possible to implement this, it would reduce the efficiency of the garbage collector, since it currently does not have to set every reference in a collection to null when freeing it to cope with AutoHotkey's reference counting.  If it was possible to refer to places inside collections, instead of just to the collection, this would not work.
 
   The absence of this feature should not be annoying if you are doing mostly functional programming.
 
@@ -191,7 +191,7 @@ Non-Goals:
 
   A static type system is not necessary nor sufficient to eliminate run time type checks.  Most variables in code written in dynamically type checked languages are used with a single type of value, and compilers can use type inference to eliminate most run time type checks.  Lisp compilers have been doing that for decades.  When sum types (a.k.a. tagged unions) are used in statically type checked languages, run time type checks (reading the tag) determine what code to run.
 
-  What features should be included in a static type system?  Most are primarily or exclusively concerned with type specifiers; what type a value is.  I rarely make mistakes involving operating on the wrong type of value, and when I do it is almost always easy to detect and correct.  Making mistakes with units of measure is an exception.  I consider unit and dimensional analysis, especially with safe type coercion, very helpful.  I would prefer a static type system to be more concerned with type qualifiers; what qualities a value has.  For example, inferring and checking the immutability of variables and values, taint and trademark checking, and typestate checking.  Mistakes involving those are almost always hard to detect and correct.  Forcing side effects to be clustered near execution entry points, by preventing referentially transparent procedures from calling non-referentially transparent procedures (which would make them not referentially transparent), results in designs where most procedures compose, and the code is easier to maintain and optimize.  Something like checked exceptions, but for a condition system, is probably the right way to assure input/output conditions are handled.  Whatever you decide, if you include a mandatory static type system, everyone that uses your programming language is forced to learn and use it, even if it does not help solve their problems.  Trying to solve everyone's problems in a mandatory static type system results in runaway complexity.
+  What features should be included in a static type system?  Most are primarily or exclusively concerned with type specifiers; what type a value is.  I rarely make mistakes involving operating on the wrong type of value, and when I do it is almost always easy to detect and correct.  Making mistakes with units of measure is an exception.  I consider unit and dimensional analysis, especially with safe type coercion, very helpful.  I would prefer a static type system to be more concerned with type qualifiers; what qualities a value has.  For example, inferring and checking the immutability of variables and values, taint and trademark checking, and typestate checking.  Mistakes involving those are almost always difficult to detect and correct.  Forcing side effects to be clustered near execution entry points, by preventing referentially transparent procedures from calling non-referentially transparent procedures (which would make them not referentially transparent), results in designs where most procedures compose, and the code is easier to maintain and optimize.  Something like checked exceptions, but for a condition system, is probably the right way to assure input/output conditions are handled.  Whatever you decide, if you include a mandatory static type system, everyone that uses your programming language is forced to learn and use it, even if it does not help solve their problems.  Trying to solve everyone's problems in a mandatory static type system results in runaway complexity.
 
   For all these reasons, and more, a dynamically type checked language with a Lisp macro system is "the right thing".  Macros can describe any static type system you want, if you want one.  Static type checking becomes optional and pluggable.  Functions written with different type systems can call each other effortlessly.
 
@@ -229,7 +229,7 @@ Non-Goals:
 
 * object-oriented programming
 
-  I believe object-oriented programming usually does more harm than good.  The difficulty of maintaining code that uses mutable global variables is widely recognized.  When a global variable becomes corrupt, it is hard to tell what code was responsible.  Mutable objects are mutable global variables.  Implementation inheritance is also, recently, widely recognized as a source of maintainability problems.  Changing a method's implementation can break anything that inherits it.  Of course you can use immutable objects, and only inherit interfaces and use composition, but then objects are no improvement over records or dictionaries.
+  I believe object-oriented programming usually does more harm than good.  Mutable global variables make code difficult to maintain.  When a global variable becomes corrupt, it is difficult to tell what code was responsible.  Mutable objects are mutable global variables.  Implementation inheritance makes code difficult to maintain.  Changing a method's implementation can break subtypes, because subtypes' implementations may depend on side effects of supertypes' methods.  Of course programmers can limit themselves to using immutable objects, and inheriting interfaces and using composition, but then objects are no improvement over records or dictionaries.
 
   This programming language has mutable closures, and it should be possible to implement a CLOS-like system using them, which is more powerful than popular programming languages' object-oriented programming support, but I do not plan to write that myself.
 
@@ -289,7 +289,9 @@ Non-Goals:
 
   Transducers are transformations from one reducing (folding) function to another.
 
-  Transducers are unnecessarily restrictive, since they are limited to one order of traversal (usually "foldl1").  They cause surprising behavior in a programming language with partial application, because it is ambiguous whether functions that can return transducers return a transducer or partially applied function when they are passed less than the maximum number of arguments.
+  Transducers are unnecessarily restrictive, since they are limited to one order of traversal (usually "foldl1").
+
+  They cause surprising behavior in a programming language with partial application, because it is ambiguous whether functions that can return transducers return a transducer or partially applied function when they are passed less than the maximum number of arguments.
 
   To avoid the construction and traversal of intermediate data structures, use streams.
 
@@ -319,11 +321,11 @@ Non-Goals:
 
 * high efficiency
 
-  Running on top of AutoHotkey makes high efficiency impossible.  It was never designed with efficiency in mind.  It uses string interpolation of code, which is roughly equivalent to parsing and evaluating lines repeatedly.  It uses reference counting, which we cannot avoid even on objects that have to be traced to be garbage collected (e.g. environments).  It makes no attempt at optimization.  Source code written on one line, using commas to separate statements, is up to 35% faster than properly formatted source code, for some unfathomable reason.
+  Running on top of AutoHotkey makes high efficiency impossible.  It was never designed with efficiency in mind.  It uses string interpolation of code, which is roughly equivalent to parsing lines repeatedly.  It uses reference counting, which we cannot avoid even on objects that have to be traced to be garbage collected (e.g. environments).  It makes no attempt at optimization.  Source code written on one line, using commas to separate statements, is up to 35% faster than properly formatted source code, for some unfathomable reason.
 
   So long as the implementation is not too wasteful it should still be usable.
 
-  While I do not plan to write an optimizing compiler for this programming language, I have attempted to avoid design decisions that would make that harder.
+  While I do not plan to write an optimizing compiler for this programming language, I have attempted to avoid design decisions that would make that more difficult.
 
 
 Noteworthy Features:
@@ -376,7 +378,7 @@ Noteworthy Features:
 
   There is no character type.  Strings are effectively immutable vectors of strings of 1 character.  Strings can be indexed like a vector.  Strings of 1 character can be converted to and from integers.  This may result in more code reuse.
 
-  Vectors are dynamic arrays.  Values can be 'pushed' to, or 'popped' from, the highest index, allowing them to double as stacks.  Singly-linked lists support efficient pushing to, and popping from, the beginning, but not efficient indexing.  This makes vectors more versatile, and since bounds are still checked, they are just as safe.  Like singly-linked lists, dynamic arrays are used in most hash table implementations, which are used in most environment implementations, so it makes sense to expose them in the programming language.  It requires little effort and is consistent with the goal of not unnecessarily restricting those programming in the language.
+  Vectors are dynamic arrays.  Values can be 'pushed' to, or 'popped' from, the highest index, allowing them to double as stacks.  Singly-linked lists support efficient pushing to, and popping from, the beginning, but not efficient indexing.  This makes vectors more versatile, and since bounds are still checked, they are still safe.  Like singly-linked lists, dynamic arrays are used in most hash table implementations, which are used in most environment implementations, so it makes sense to expose them in the programming language.  It requires little effort and is consistent with the goal of not unnecessarily restricting the programming language.
 
 * built-ins
 
@@ -432,7 +434,7 @@ Noteworthy Features:
 
       Racket's "cons" pattern construct refers to mutable cons cells in this programming language.  This programming language only has mutable cons cells.
 
-      Racket's "and" pattern construct is supported.  It is more general than the "as" pattern construct in other programming languages.  It is handy for binding "or" and "interval" pattern matches, in addition to destructuring and equality testing.
+      Racket's "and" pattern construct is supported.  It is more general than the "as" pattern construct in other programming languages.  It is useful for binding "or" and "interval" pattern matches, in addition to destructuring and equality testing.
 
       OCaml's closed interval pattern construct is supported, and named "interval".  It has two parameters, the first for the low bound, the second for the high bound.  It is more convenient than specifying each element of a closed interval of numbers or single-character strings in an "or" pattern construct.
 
@@ -442,13 +444,13 @@ Noteworthy Features:
 
   * scope
 
-    Only lexical scope is supported.  Dynamic scope prevents composition and makes understanding code more difficult.  Closures and partial application are a composable, understandable, alternative to dynamic scope for avoiding repeatedly specifying an argument.
+    Only lexical scope is supported.  Dynamic scope prevents composition and makes code difficult to maintain.  Closures and partial application are a composable, maintainable, alternative to dynamic scope for avoiding repeatedly specifying an argument.
 
   * calls
 
-    While (trailing) optional and rest parameters are supported, most forms are of fixed-arity.  Optional parameters follow "?", while the rest parameter follows "&".  To avoid surprising behavior, "?" and "&" are not valid variable names.  Partial application only works with fixed-arity forms.  If a form cannot be used with partial application (e.g. special forms that do not evaluate all their arguments in order and macros), and variable-arity could be useful, it is used.  Most constructors (e.g. "dict", "list", and "vector") are variadic, because if they were not it would be impossible to create data structures with different numbers of elements.  "do" (explicit and implicit) is variadic, because if it was not it would be impossible to create control flow sequences with different numbers of expressions.  Keyword parameters are not supported.  They interact in surprising ways with optional and rest parameters, and cannot be used with partial application.  Data structures are often used where keyword, optional, and rest parameters would be used in other Lisp-like languages.
+    While (trailing) optional and rest parameters are supported, most forms are of fixed-arity.  Partial application only works with fixed-arity forms.  If a form cannot be used with partial application (e.g. special forms that do not evaluate all their arguments in order and macros), and variable-arity could be useful, it is used.  Most constructors (e.g. "dict", "list", and "vector") are variadic, because if they were not it would be impossible to create data structures with different numbers of elements.  "do" (explicit and implicit) is variadic, because if it was not it would be impossible to create control flow sequences with different numbers of expressions.  Optional parameters follow "?", while the rest parameter follows "&".  To avoid surprising behavior, "?" and "&" are not valid variable names.  Keyword parameters are not supported.  They interact in surprising ways with optional and rest parameters, and cannot be used with partial application.  Data structures are often used where optional, rest, and keyword parameters would be used in other Lisp-like languages.
 
-    Function arguments are evaluated once, from left to right, as in Common Lisp.  It is bad style to depend on that, but it seems better to standardize it than to have it be implementation-defined as it is in so many programming languages.  Optimizing compilers are free to evaluate arguments without side effects however they please, so long as the results are correct.
+    Function arguments are evaluated once, from left to right, as in Common Lisp.  It is bad style to depend on that, but it seems better to standardize it than to have it be implementation-defined as it is in so many programming languages.  Optimizing compilers are free to evaluate arguments without side effects however they please.
 
     Partial application is supported.  If you call a fixed-arity function with less than the number of arguments it expects, it will return a closure that will accept the remaining arguments and has the closed-over arguments in its environment.  Parameters should appear in order from the most to least likely to be reused.  This makes using closures much more convenient.  Calling a fixed-arity function with the expected number of arguments causes it to run normally.  Calling a function with too many arguments is a defect.
 
@@ -456,7 +458,7 @@ Noteworthy Features:
 
     If you want to omit values in the middle of a function's arguments, instead of only at the end, you can use "_" in their place.  The resulting closure will expect the remaining arguments in the same order.  To avoid surprising behavior, "_" is not a valid variable name.
 
-    Function parameters can be rearranged to ease closure creation like so "#(bad-fn %2 %1)".  The rest parameter can be passed with "%&".
+    Function parameters can be rearranged to ease closure creation like so "#(bad-fn %2 %1)".  The rest parameter can be passed with "%&".  To avoid surprising behavior, "%" followed by an integer and "%&" are not valid variable names.
 
     Recursion is properly supported.  Call stack frames are heap allocated, so non-tail recursion will succeed unless memory is exhausted.  Tail call elimination is performed, so loops can be defined recursively.
 
@@ -553,11 +555,11 @@ Noteworthy Features:
 
       If macros did not execute before run time, they would be less useful.  They could not be used for static analysis or optimization.  They could not be used for extending the language in ways that are easy to statically analyze or optimize.  Executing before run time, and reducing the extended language to the base language (the language without macros), is what makes them superior to fexprs.  Calling a macro at run time is a defect.
 
-      Macros are like functions in all other respects.  They can be constructed inside arbitrary expressions, be defined locally, use free variables, call functions or macros (including themselves), perform input/output operations, be passed as arguments to functions, and be returned from functions.  Be aware that, like functions, macros cannot be passed as arguments to macros, or be returned from macros, because they do not correspond to source code.  Symbols for functions and macros can be passed as arguments to macros, or be returned from macros, however.
+      Macros are like functions in all other respects.  They can be constructed inside arbitrary expressions, be defined locally, use free variables, call functions or macros, perform input/output operations, be passed as arguments to functions, and be returned from functions.  Be aware that, like functions, macros cannot be passed as arguments to macros, or be returned from macros, because they do not correspond to source code.  Symbols for functions and macros can be passed as arguments to macros, or be returned from macros, however.
 
   * explicit macro expansion
 
-    This programming language provides several special forms to perform macro expansion explicitly.  They can be used to observe a macro expansion.  They can be used by macros that inspect or transform constructs.
+    This programming language provides several special forms to perform macro expansion explicitly.  They can be used to observe a macro expansion.  They can be used by macros that inspect or transform macro calls.
 
     "(expand-defs form)" recursively expands macro calls in the form when the macros are defined (not imported) in the current module.  This is primarily useful to reduce clutter when trying to understand your own macro expansions.
 
@@ -567,21 +569,21 @@ Noteworthy Features:
 
     "(expand-hide form symbols)" recursively expands macro calls in the form unless their symbol names match the symbol names in the list.  This is primarily useful to reduce clutter caused by specific macro expansions when trying to understand other macro expansions.
 
-    "(expand-when form fn)" recursively expands macro calls in the form when the predicate function returns true.  The function parameters are "(symbol args)" for the macro call's symbol and arguments.  This is primarily useful when writing code walking macros that inspect or transform constructs (including macro calls).
+    "(expand-when form function)" recursively expands macro calls in the form when the predicate function returns true.  The function parameters are "(symbol args)" for the macro call's symbol and arguments.  This is primarily useful when writing code walking macros that inspect or transform macro calls.
 
     These special forms use the current environment to determine the value associated with a symbol, like a macro call.  That is usually the expected and desired behavior.
 
   * local macro definition
 
-    "def" defines variables in the current scope.  While that is usually desirable, it may not be obvious how to define a local macro to simplify other definitions in the outermost scope.
+    "def" defines variables in the current scope.  While that is usually the expected and desired behavior, it may not be obvious how to define a local macro to simplify definitions in the outermost scope.
 
-    You could construct a macro in the outermost scope, with your local macro definition inside it, and a body which would return a "do" form containing your other definitions, then call it immediately by surrounding the "mac" form in an additional pair of parentheses.  The advantage is this does precisely what you want.  The disadvantage is this is complicated.
+    You could construct a macro in the outermost scope, with your local macro definition inside it, and a body which would return a "do" form containing your definitions in the outermost scope, then call it immediately by surrounding the "mac" form in an additional pair of parentheses.  The advantage is this does precisely what you want.  The disadvantage is this is complicated.
 
-    You could define the macro used to simplify other definitions in the outermost scope, in the outermost scope, but not export it.  The advantage is this is simple.  The disadvantage is this pollutes the module's outermost scope.
+    You could define the macro used to simplify definitions in the outermost scope, in the outermost scope, but not export it.  The advantage is this is simple.  The disadvantage is this pollutes the module's outermost scope.
 
 * conditions
 
-  There is a condition system that is similar to the one in Common Lisp.  It is used to handle defects, input/output errors, and warnings.  Using it as a general-purpose communication mechanism is discouraged, because invisible communication channels make maintenance difficult.  A condition system seems to be the only way to satisfy our error handling design goals.
+  There is a condition system that is similar to the one in Common Lisp.  It is used to handle defects, input/output errors, and warnings.  Using it as a general-purpose communication mechanism is discouraged, because invisible communication channels make code difficult to maintain.  A condition system seems to be the only way to satisfy our error handling design goals.
 
   Warnings are issued when code needs maintenance but still works.  For example, it might use a depreciated construct, or a bad practice that was previously tolerated.  Warnings are shown by default, since that is the only responsible way to design a programming language.  History has shown most programmers make no effort to find problems in their code.  Condition handlers can choose other ways to handle warnings, such as logging or discarding them.
 
@@ -626,4 +628,14 @@ Noteworthy Features:
 
 * garbage collector
 
-  The garbage collector is continuous, generational, and incremental (i.e. marking and sweeping are broken down into multiple steps).  This should result in low, and fairly steady, latency.  While, past a point, a trade-off must be made between low-latency and high-throughput, generational garbage collection improves both.  Favoring low-latency over high-throughput seems like the right decision for interactive programs, like those most likely to be written in this programming language.  It is possible to disable garbage collection, perform increments only when the program is idle, and force non-incremental full garbage collections.  These features are often desired by those writing software intended for use in short bursts or video games.  AutoHotkey scripts are often used in short bursts, and often used with video games.  In all cases a non-incremental full garbage collection will still occur if memory is almost exhausted, because a pause is less disruptive than crashing.  The interface is inspired by Lua's garbage collector.
+  The garbage collector is continuous, generational, and incremental (i.e. marking and sweeping are broken down into multiple steps).  This should result in low, and fairly steady, latency.
+
+  While, past a point, a trade-off must be made between low-latency and high-throughput, generational garbage collection improves both.
+
+  Favoring low-latency over high-throughput seems like the right decision for interactive programs, like those most likely to be written in this programming language.
+
+  It is possible to disable garbage collection, perform increments only when the program is idle, and force non-incremental full garbage collections.  These features are often desired by those writing software intended for use in short bursts or video games.  AutoHotkey scripts are often used in short bursts, and often used with video games.
+
+  In all cases a non-incremental full garbage collection will still occur if memory is almost exhausted, because a pause is less disruptive than crashing.
+
+  The interface is inspired by Lua's garbage collector.
