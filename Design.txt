@@ -151,25 +151,27 @@ Non-Goals:
 
   Scheme hygienic macro systems usually begin with destroying homoiconicity.  Requiring macros to work with syntax objects instead of normal values prevents the use of normal functions in macro expansion, which defeats the purpose of using a Lisp macro system, or requires the syntax objects to be converted to normal values, which defeats the purpose of using syntax objects.
 
-  Some Scheme hygienic macro systems are limited to templates that are impractical to use for computation.
+  Some Scheme hygienic macro systems are limited to templates that are impractical to use for processing.
 
-  Other Scheme hygienic macro systems are practical to use for computation, but include runaway complexity (e.g. phase separation).
+  Other Scheme hygienic macro systems are practical to use for processing, but include runaway complexity (e.g. phase separation).
 
   I have attempted to design a macro system that merely solves the problems with Common Lisp's macro system.
 
 * generalized variables
 
-  While having a single "set!" special form that can accept any mutable place (variables, those referred to by a dictionary and key, a list's "first" and "rest", or a vector and index) is appealing, I cannot imagine how to implement this in AutoHotkey.  AutoHotkey's "byref" only works with some variables, not Objects.  Pointer hacks are likely to break when AutoHotkey's implementation changes.
+  Having a single "set!" special form that can accept any mutable place (variables, those referred to by a dictionary and key, a list's "first" and "rest", or a vector and index) is appealing, but making it possible to refer to places inside collections would reduce efficiency.
 
-  I can provide special forms that mutate each of those kinds of places, but the programmer will have to use the right one.
+  It could be supported by implementing a new type of value, a reference, which contains references to a collection and index, and evaluates to the value at that location.  "(set! (a-dict "x") (a-dict "y"))" would receive "(a-dict "y")" as a reference and set the value of "(a-dict "x")" to that.  Upon receiving a reference, most primitive constructs would evaluate it until the result is no longer a reference, to hide their existence.  Evaluating a reference cycle would be a defect.  Only dictionaries and vectors need special treatment.  It naturally occurs for lists.
 
-  If it was possible to implement this, it would reduce the efficiency of the garbage collector, since it currently does not have to set every reference in a collection to null when freeing it to cope with AutoHotkey's reference counting.  If it was possible to refer to places inside collections, instead of just to the collection, this would not work.
+  The problem is this programming language's tracing garbage collector copes with AutoHotkey's reference counting garbage collector by restricting references to referring to value objects, which contain various information like the type, and breaks reference cycles by setting their "value" field to an empty string.  If reference cycles could occur in the value, that would not work.  To break reference cycles all references in the value would have to be set to empty strings.
 
-  The absence of this feature should not be annoying if you are doing mostly functional programming.
+  If this programming language was implemented in a programming language with manual memory management or tracing garbage collection, I would support this feature.
 
 * symbol macros
 
   Symbol macros are only useful for generalized variables, which is a feature I do not plan to support.  Since they have no parameters, they cannot perform any useful processing.
+
+  If this programming language was implemented in a programming language with manual memory management or tracing garbage collection, I would support this feature.
 
 * mandatory static type checking
 
@@ -240,6 +242,8 @@ Non-Goals:
   Transparent persistence is a marvelous feature, so long as you do not try to use it to replace the file system (as Smalltalk did).  Hardware and software are likely to fail eventually, and if that occurs it is important to be able to recover programs and data, which is almost impossible if they are only stored in a, likely corrupted, core dump.
 
   Unfortunately, it is very difficult to implement, and very inefficient, if you do not implement your own allocator.  Running on top of AutoHotkey makes that impossible.
+
+  If this programming language was implemented in a programming language with manual memory management, I would support this feature.
 
 * implicit control flow
 
@@ -549,7 +553,7 @@ Noteworthy Features:
 
       This solution was chosen for several reasons:
       * Homoiconicity is preserved.  Captured and literal symbols support the name symbol interface.  Macros are able to pass values to and from normal functions with no effort.
-      * Macros can easily perform computation and side effects.
+      * Macros can easily perform processing and side effects.
       * The macro system is not much more complex than Common Lisp's.  Most of the additional complexity is in implementation, not use.  Common Lisp already had name, gensymed, and module-qualified symbols, though with somewhat different semantics.  Those are still the only types of symbols that exist at run time.
       * In the common case, when writing hygienic macros where all symbols are identifiers, the programmer does not have to provide extra specification.  When writing anaphoric macros, or macros where some symbols are not identifiers, the programmer has to provide less specification than Common Lisp's macro system, and far less specification than Scheme's syntax-case macro system.
       * The gensym counter is not observable outside each module without effort on the part of the programmer.  This avoids interfering with incremental compilation.
