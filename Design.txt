@@ -535,9 +535,9 @@ Noteworthy Features:
 
       Anaphoric macros require the ability to capture variables.
 
-      The "capt" function converts name symbols contained in its argument, which can be any data equivalent to source code, to captured symbols.
+      The "cap" function converts name symbols contained in its argument, which can be any data equivalent to source code, to captured symbols.
 
-      Calling "capt" at run time is a defect.
+      Calling "cap" at run time is a defect.
 
       Captured symbols are coerced to name symbols when returned from a macro.
 
