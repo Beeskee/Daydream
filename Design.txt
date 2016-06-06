@@ -163,7 +163,7 @@ Non-Goals:
 
   It could be supported by implementing a new type of value, a reference, which contains references to a collection and index, and evaluates to the value at that location.  "(set! (a-dict "x") (a-dict "y"))" would receive "(a-dict "y")" as a reference and set the value of "(a-dict "x")" to that.  Upon receiving a reference, most primitive constructs would evaluate it until the result is no longer a reference, to hide their existence.  Evaluating a reference cycle would be a defect.  Only dictionaries and vectors need special treatment.  It naturally occurs for lists.
 
-  The problem is this programming language's tracing garbage collector copes with AutoHotkey's reference counting garbage collector by restricting references to referring to value objects, which contain various information like the type, and breaks reference cycles by setting their "value" field to an empty string.  If reference cycles could occur in the value, that would not work.  To break reference cycles all references in the value would have to be set to empty strings.
+  The problem is this programming language's tracing garbage collector copes with AutoHotkey's reference counting garbage collector by restricting references to referring to value objects, which contain various information like the type, and breaks reference cycles by setting their value field to an empty string.  If reference cycles could occur in the value, that would not work.  To break reference cycles all references in the value would have to be set to empty strings.
 
   If this programming language was implemented in a programming language with manual memory management or tracing garbage collection, I would support this feature.
 
@@ -438,9 +438,9 @@ Noteworthy Features:
 
       Racket's "cons" pattern construct refers to mutable cons cells in this programming language.  This programming language only has mutable cons cells.
 
-      Racket's "and" pattern construct is supported.  It is more general than the "as" pattern construct in other programming languages.  It is useful for binding "or" and "interval" pattern matches, in addition to destructuring and equality testing.
+      Racket's "and" pattern construct is supported.  It is more general than the "as" pattern construct in other programming languages.  It is useful for binding "or" and "inr" pattern matches, in addition to destructuring and equality testing.
 
-      OCaml's closed interval pattern construct is supported, and named "interval".  It has two parameters, the first for the low bound, the second for the high bound.  It is more convenient than specifying each element of a closed interval of numbers or single-character strings in an "or" pattern construct.
+      OCaml's closed interval pattern construct is supported, and named "inr".  It has two parameters, the first for the low bound, the second for the high bound.  It is more convenient than specifying each element of a closed interval of numbers or single-character strings in an "or" pattern construct.
 
       "when" guards use s-expression prefix syntax, since this programming language does not support keyword parameters.  They cannot appear inside a pattern, because all variables must be bound before a "when" guard can be evaluated.  They are useful for testing individual variables for something more complex than equality, or testing relationships between variables.
 
