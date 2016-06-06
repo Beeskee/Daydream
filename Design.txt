@@ -535,9 +535,9 @@ Noteworthy Features:
 
       Anaphoric macros require the ability to capture variables.
 
-      The "capture" function converts name symbols contained in its argument, which can be any data equivalent to source code, to captured symbols.
+      The "capt" function converts name symbols contained in its argument, which can be any data equivalent to source code, to captured symbols.
 
-      Calling "capture" at run time is a defect.
+      Calling "capt" at run time is a defect.
 
       Captured symbols are coerced to name symbols when returned from a macro.
 
@@ -545,9 +545,9 @@ Noteworthy Features:
 
       Occasionally symbols are not used as identifiers (e.g. in computer algebra systems).  These symbols should not be transformed by the macro system.
 
-      The "literal" function converts name symbols contained in its argument, which can be any data equivalent to source code, to literal symbols.
+      The "lit" function converts name symbols contained in its argument, which can be any data equivalent to source code, to literal symbols.
 
-      Calling "literal" at run time is a defect.
+      Calling "lit" at run time is a defect.
 
       Literal symbols are coerced to name symbols when transitioning from macro expansion time to run time.
 
@@ -570,7 +570,7 @@ Noteworthy Features:
 
   * explicit macro expansion
 
-    This programming language provides several special forms to perform macro expansion explicitly.  They can be used to observe a macro expansion.  They can be used by macros that inspect or transform macro calls.
+    This programming language provides several special forms to perform macro expansion explicitly.  They can be used to observe a macro expansion.  They can be used by macros that inspect or transform constructs (including macro calls).
 
     "(expand-defs form)" recursively expands macro calls in the form when the macros are defined (not imported) in the current module.  This is primarily useful to reduce clutter when trying to understand your own macro expansions.
 
@@ -580,7 +580,7 @@ Noteworthy Features:
 
     "(expand-hide form symbols)" recursively expands macro calls in the form unless their symbol names match the symbol names in the list.  This is primarily useful to reduce clutter caused by specific macro expansions when trying to understand other macro expansions.
 
-    "(expand-when form function)" recursively expands macro calls in the form when the predicate function returns true.  The function parameters are "(symbol args)" for the macro call's symbol and arguments.  This is primarily useful when writing code walking macros that inspect or transform macro calls.
+    "(expand-when form function)" recursively expands macro calls in the form when the predicate function returns true.  The function parameters are "(symbol args)" for the macro call's symbol and arguments.  This is primarily useful when writing code walking macros that inspect or transform constructs (including macro calls).
 
     These special forms use the current environment to determine the value associated with a symbol, like a macro call.  That is usually the expected and desired behavior.
 
