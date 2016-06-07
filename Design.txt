@@ -143,7 +143,7 @@ Non-Goals:
 
 * reader macros
 
-  Reader macros do not seem useful to me.  Their scope is unlimited, making them difficult to use safely.  Without the ability to create new types and new human-readable representations there is little motivation for new literal syntax.
+  Reader macros do not seem useful to me.  Without the ability to create new types and new human-readable representations there is little motivation for new literal syntax.
 
 * overcomplicated macros
 
@@ -156,22 +156,6 @@ Non-Goals:
   Other Scheme hygienic macro systems are practical to use for processing, but include runaway complexity (e.g. phase separation).
 
   I have attempted to design a macro system that merely solves the problems with Common Lisp's macro system.
-
-* generalized variables
-
-  Having a single "set!" special form that can accept any mutable place (variables, those referred to by a dictionary and key, a list's "first" and "rest", or a vector and index) is appealing, but making it possible to refer to places inside collections would reduce efficiency.
-
-  It could be supported by implementing a new type of value, a reference, which contains references to a collection and index, and evaluates to the value at that location.  "(set! (a-dict "x") (a-dict "y"))" would receive "(a-dict "y")" as a reference and set the value of "(a-dict "x")" to that.  Upon receiving a reference, most primitive constructs would evaluate it until the result is no longer a reference, to hide their existence.  Evaluating a reference cycle would be a defect.  Only dictionaries and vectors need special treatment.  It naturally occurs for lists.
-
-  The problem is this programming language's tracing garbage collector copes with AutoHotkey's reference counting garbage collector by restricting references to referring to value objects, which contain various information like the type, and breaks reference cycles by setting their value field to an empty string.  If reference cycles could occur in the value, that would not work.  To break reference cycles all references in the value would have to be set to empty strings.
-
-  If this programming language was implemented in a programming language with manual memory management or tracing garbage collection, I would support this feature.
-
-* symbol macros
-
-  Symbol macros are only useful for generalized variables, which is a feature I do not plan to support.  Since they have no parameters, they cannot perform any useful processing.
-
-  If this programming language was implemented in a programming language with manual memory management or tracing garbage collection, I would support this feature.
 
 * mandatory static type checking
 
@@ -390,7 +374,20 @@ Noteworthy Features:
 
   While redefining a variable in a module is normally forbidden, built-in forms can be redefined in a module with only a warning.  This allows new built-in forms to be defined without breaking existing code.
 
-  The built-in forms are as general as possible.  For example, there is only one "map" for all sequence collection types (list, string, and vector).  To avoid surprising type coercion, the collection returned is of the same type as the collection argument.  This should allow more code reuse, and minimize what programmers must learn and remember to use the programming language.  "set!" is not generalized for the reasons given in "Non-Goals: generalized variables".
+  The built-in forms are as general as possible.  For example, there is only one "map" for all sequence collection types (list, string, and vector).  To avoid surprising type coercion, the collection returned is of the same type as the collection argument.  This should allow more code reuse, and minimize what programmers must learn and remember to use the programming language.
+
+* generalized variables
+
+  The "set!" special form accepts any mutable place:
+  * variables
+  * a dictionary and key
+  * a list and "'first" or "'rest"
+  * a vector and index
+
+  This is much simpler than in Common Lisp.
+
+  For example:
+  "(set! (a-dict "x") (a-dict "y"))"
 
 * equality
 
@@ -452,7 +449,7 @@ Noteworthy Features:
 
   * calls
 
-    While (trailing) optional and rest parameters are supported, most forms are of fixed-arity.  Partial application only works with fixed-arity forms.  If a form cannot be used with partial application (e.g. special forms that do not evaluate all their arguments in order and macros), and variable-arity could be useful, it is used.  Most constructors (e.g. "dict", "list", and "vec") are variadic, because if they were not it would be impossible to create data structures with different numbers of elements.  "do" (explicit and implicit) is variadic, because if it was not it would be impossible to create control flow sequences with different numbers of expressions.  Optional parameters follow "?", while the rest parameter follows "&".  To avoid surprising behavior, "?" and "&" are not valid variable names.  Keyword parameters are not supported.  They cannot be used with partial application, and interact in surprising ways with optional and rest parameters.  Data structures are often used where optional, rest, and keyword parameters would be used in other Lisp-like languages.
+    While (trailing) optional and rest parameters are supported, most forms are of fixed-arity.  Partial application only works with fixed-arity forms.  If a form cannot be used with partial application (e.g. special forms that do not evaluate all their arguments in order and macros), and variable-arity could be useful, it is used.  Most constructors (e.g. "dict", "lst", and "vec") are variadic, because if they were not it would be impossible to create data structures with different numbers of elements.  "do" (explicit and implicit) is variadic, because if it was not it would be impossible to create control flow sequences with different numbers of expressions.  Optional parameters follow "?", while the rest parameter follows "&".  To avoid surprising behavior, "?" and "&" are not valid variable names.  Keyword parameters are not supported.  They cannot be used with partial application, and interact in surprising ways with optional and rest parameters.  Data structures are often used where optional, rest, and keyword parameters would be used in other Lisp-like languages.
 
     Function arguments are evaluated once, from left to right, as in Common Lisp.  It is bad style to depend on that, but it seems better to standardize it than to have it be implementation-defined as it is in so many programming languages.  Optimizing compilers may evaluate arguments without side effects however they please.
 
@@ -558,6 +555,16 @@ Noteworthy Features:
       * In the common case, when writing hygienic macros where all symbols are identifiers, the programmer does not have to provide extra specification.  When writing anaphoric macros, or macros where some symbols are not identifiers, the programmer has to provide less specification than Common Lisp's macro system, and far less specification than Scheme's syntax-case macro system.
       * The gensym counter is not observable outside each module without effort on the part of the programmer.  This avoids interfering with incremental compilation.
 
+    * symbol macros
+
+      Symbol macros are supported.  A symbol macro call looks like a symbol.  They are useful as generalized variables.
+
+      They are constructed with "sym-mac".  "sym-mac"'s first parameter is a symbol.  Symbol macros have no parameters.
+
+      Name symbols are not coerced when returned from a symbol macro.  This reduces the specification necessary when constructing them.
+
+      Symbol macros are like other macros in all other respects.
+
     * evaluation
 
       Macros differ from functions in that their arguments are not evaluated before their body, and they execute before run time.
@@ -570,7 +577,7 @@ Noteworthy Features:
 
   * explicit macro expansion
 
-    This programming language provides several special forms to perform macro expansion explicitly.  They can be used to observe a macro expansion.  They can be used by macros that inspect or transform constructs (including macro calls).
+    This programming language provides several special forms to perform macro expansion explicitly.  They can be used to observe a macro expansion.  They can be used by macros that inspect or transform constructs.
 
     "(expand-defs form)" recursively expands macro calls in the form when the macros are defined (not imported) in the current module.  This is primarily useful to reduce clutter when trying to understand your own macro expansions.
 
