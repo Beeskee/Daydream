@@ -107,9 +107,15 @@ Non-Goals:
 
 * syntactic innovation
 
-  I hope to take all syntax from existing Lisp-like languages.  I want to keep the amount of punctuation very low.  I /like/ the simple, regular, appearance of Lisp source code.
+  I hope to take most syntax from existing Lisp-like languages.  I want to keep the amount of punctuation very low.  I /like/ the simple, regular, appearance of Lisp source code.
 
-  I might use some original names for things if I cannot find something acceptable.  I want frequently used constructs to have very short, but meaningful, names, so expressions remain readable.
+  I may use some original names if I cannot find acceptable existing names.  I want frequently used constructs to have very short, but meaningful, names, so expressions remain readable.
+
+  It is better for built-in constructs to have abbreviated names than user-defined constructs.  Programmers are more likely to know the meaning of the abbreviation for a built-in construct, due to having encountered it before.
+
+  Abbreviating the names of built-in constructs makes the longer names available for programmers to use.  This is the most beneficial for constructors.  For example, Lisp programmers frequently want to name a variable "list", but that is usually the name of a list constructor.
+
+  I will try to follow the conventions for abbreviating names in Lisp.  They are usually the first syllable.  They do not usually omit internal vowels, unlike abbreviated names in C.  Names consisting of multiple abbreviated names do not usually have hyphens separating them.  Popular abbreviations may override these rules, however.  For example, the abbreviation for dictionary is "dict" not "dic", and the abbreviation for list is "lst".
 
 * parentheses reduction
 
@@ -559,7 +565,7 @@ Noteworthy Features:
 
       Symbol macros are supported.  A symbol macro call looks like a symbol.  They are useful as generalized variables.
 
-      They are constructed with "sym-mac".  "sym-mac"'s first parameter is a symbol.  Symbol macros have no parameters.
+      They are constructed with "symmac".  "symmac"'s first parameter is a symbol.  Symbol macros have no parameters.
 
       Name symbols are not coerced when returned from a symbol macro.  This reduces the specification necessary when constructing them.
 
