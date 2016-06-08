@@ -183,7 +183,7 @@ Non-Goals:
 
   A static type system is not necessary nor sufficient to eliminate run time type checks.  Most variables in code written in dynamically type checked languages are used with a single type of value, and compilers can use type inference to eliminate most run time type checks.  Lisp compilers have been doing that for decades.  When sum types (a.k.a. tagged unions) are used in statically type checked languages, run time type checks (reading the tag) determine what code to run.
 
-  What features should be included in a static type system?  Most are primarily or exclusively concerned with type specifiers; what type a value is.  I rarely make mistakes involving operating on the wrong type of value, and when I do it is almost always easy to detect and correct.  Making mistakes with units of measure is an exception.  I consider unit and dimensional analysis, especially with safe type coercion, very helpful.  I would prefer a static type system to be more concerned with type qualifiers; what qualities a value has.  For example, inferring and checking the immutability of variables and values, taint and trademark checking, and typestate checking.  Mistakes involving those are almost always difficult to detect and correct.  Forcing side effects to be clustered near execution entry points, by preventing referentially transparent procedures from calling non-referentially transparent procedures (which would make them not referentially transparent), results in designs where most procedures compose, and the code is easier to maintain and optimize.  Something like checked exceptions, but for a condition system, is probably the right way to assure input/output conditions are handled.  Whatever you decide, if you include a mandatory static type system, everyone that uses your programming language is forced to learn and use it, even if it does not help solve their problems.  Trying to solve everyone's problems in a mandatory static type system results in runaway complexity.
+  What features should be included in a static type system?  Most are primarily or exclusively concerned with type specifiers; what type a value is.  I rarely make mistakes involving operating on the wrong type of value, and when I do it is almost always easy to detect and correct.  Making mistakes with units of measure is an exception.  I consider unit and dimensional analysis, especially with safe type coercion, very helpful.  I would prefer a static type system to be more concerned with type qualifiers; what qualities a value has.  For example, inferring and checking the immutability of variables and values, taint and trademark checking, and typestate checking.  Mistakes involving those are almost always difficult to detect and correct.  Forcing side effects to be clustered near execution entry points, by preventing referentially transparent procedures from calling non-referentially transparent procedures (which would make them not referentially transparent), results in designs where most procedures compose, and the code is easier to maintain and optimize.  Something like checked exceptions, but for a condition system, is probably the right way to assure input/output errors are handled.  Whatever you decide, if you include a mandatory static type system, everyone that uses your programming language is forced to learn and use it, even if it does not help solve their problems.  Trying to solve everyone's problems in a mandatory static type system results in runaway complexity.
 
   For all these reasons, and more, a dynamically type checked language with a Lisp macro system is "the right thing".  Macros can describe any static type system you want, if you want one.  Static type checking becomes optional and pluggable.  Functions written with different type systems can call each other with no effort.
 
@@ -211,7 +211,7 @@ Non-Goals:
   * Lie.  For example, claim to only generate a sequence of actions, and that the runtime performs the side effects the actions instruct it to.  If you believe that, then C also enforces global referential transparency in exactly the same way.  The actions are system calls.  The runtime is the operating system kernel and drivers.  It just has very convenient syntax for the IO and state monads.
   * Be limited to behaving like a fancy calculator, where all variables and data structures are immutable, and no input/output is possible.  Code written in a more capable programming language could display the return values of the non-interactive programs.
 
-  Since I want this programming language to be as useful as possible, I want it to be able to describe most input/output operations.
+  Since I want this programming language to be as useful as possible, I want it to be able to perform input/output.
 
 * mandatory immutability
 
@@ -307,7 +307,7 @@ Non-Goals:
 
   There is not much point in having sandboxing, taint or trademark checking, or similar security features when the programming language does not support networking.
 
-  I think sandboxing would be practical to implement.  Built-in definitions for calling foreign functions and manipulating the interpreter would not be imported into the namespace used by untrusted code, and imports would be restricted to a fixed set.  It would still be trivial to crash the interpreter by exhausting memory, but the same can be said of most sandbox implementations.  It would be sufficient to keep untrusted code from performing harmful input/output operations.
+  I think sandboxing would be practical to implement.  Definitions from the "unsafe" module would not be imported into untrusted code's modules, and untrusted code would be restricted to importing a user-defined set of definitions.  It would still be trivial to crash the interpreter by exhausting memory, but the same can be said of most sandbox implementations.  It would be sufficient to keep untrusted code from performing harmful input/output.
 
   I will consider implementing sandboxing after networking is implemented.
 
@@ -376,11 +376,11 @@ Noteworthy Features:
 
 * built-ins
 
-  There are some definitions that are imported into every module implicitly.  Without forms to perform definition, arithmetic, logic, manipulate the built-in data structures, and call foreign functions it would be impossible to define much else.
+  The built-ins for manipulating the interpreter, and the foreign function interface, which is used to perform all input/output, are defined in the "unsafe" module.  All other built-ins are defined in the "base" module.  All definitions in these modules are normally imported into every other module implicitly, so it is possible for programmers to define things.
 
-  While redefining a variable in a module is normally forbidden, built-in forms can be redefined in a module with only a warning.  This allows new built-in forms to be defined without breaking existing code.
+  While redefining a variable in a module is normally a defect, built-ins can be redefined with only a warning.  This allows new built-ins to be defined without breaking existing code.
 
-  The built-in forms are as general as possible.  For example, there is only one "map" for all sequence collection types (list, string, and vector).  To avoid surprising type coercion, the collection returned is of the same type as the collection argument.  This should allow more code reuse, and minimize what programmers must learn and remember to use the programming language.
+  The built-ins are as general as possible.  For example, there is only one "map" for all sequence collection types (list, string, and vector).  To avoid surprising type coercion, the collection returned is of the same type as the collection argument.  This should allow more code reuse, and minimize what programmers must learn and remember to use the programming language.
 
 * generalized variables
 
@@ -579,7 +579,7 @@ Noteworthy Features:
 
       If macros did not execute before run time, they would be less useful.  They could not be used for static analysis or optimization.  They could not be used for extending the language in ways that are easy to statically analyze or optimize.  Executing before run time, and reducing the extended language to the base language (the language without macros), is what makes them superior to fexprs.  Calling a macro at run time is a defect.
 
-      Macros are like functions in all other respects.  They can be constructed inside arbitrary expressions, be defined locally, use free variables, call functions or macros, perform input/output operations, be passed as arguments to functions, and be returned from functions.  Be aware that, like functions, macros cannot be passed as arguments to macros, or be returned from macros, because they do not correspond to source code.  Symbols for functions and macros can be passed as arguments to macros, or be returned from macros, however.
+      Macros are like functions in all other respects.  They can be constructed inside arbitrary expressions, be defined locally, use free variables, call functions or macros, perform input/output, be passed as arguments to functions, and be returned from functions.  Be aware that, like functions, macros cannot be passed as arguments to macros, or be returned from macros, because they do not correspond to source code.  Symbols for functions and macros can be passed as arguments to macros, or be returned from macros, however.
 
   * explicit macro expansion
 
