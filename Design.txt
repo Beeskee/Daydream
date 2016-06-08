@@ -328,13 +328,17 @@ Noteworthy Features:
 
   This programming language is designed to be easy to embed in another programming language, to be used for event handling, and make it easy to call foreign functions.
 
-* exploratory programming and good error handling
+* good error handling and exploratory programming
 
-  Some aspects of the programming language behave differently when they are used at the listener instead of in a module.  This allows both good exploratory programming and good error handling.  At the listener "def" and "set!" are equivalent, because not being able to redefine an erroneous definition while doing exploratory programming would be a problem, but redefining a variable, or mutating a variable that has not been defined, is a defect in a module.  In a module redefining a variable indicates you did not know it was already in use.  In a module mutating a variable that has not been defined indicates you typoed the name.
+  This programming language uses different syntax for initialization and mutation to better detect defects.  Redefining a variable normally indicates the programmer did not know it was in use.  Redefinition can occur via definition or importing.  Mutating a variable that has not been defined indicates the programmer typoed the name.
 
-  At the listener redefinition, by importing a variable to the same name as a definition, or importing two or more variables to the same name, causes the most recent definition to be used, because that can be useful for exploratory programming.  In a module it is a defect, because it indicates you did not know the name was already in use.
+  In this programming language mutating an imported variable is normally a defect, because it should not normally be necessary to violate encapsulation.
 
-  Mutating an imported variable is allowed at the listener, because that can be useful for exploratory programming.  In a module it is a defect, because it should not be necessary to violate encapsulation in correct code.
+  However, being unable to correct a defective definition interferes with exploratory programming.  For this reason redefinition and mutating imported variables works at the listener.  A warning is issued in case it was accidental.  Mutating a variable that has not been defined is still a defect at the listener.
+
+  Be aware that redefinition and mutation are not the same.  Redefinition affects the value in the current module.  Mutation affects the value in the home module, which is not the same as the current module for imported variables.
+
+  Modules can also be reloaded to correct defective definitions.
 
 * modernization
 
