@@ -334,7 +334,7 @@ Noteworthy Features:
 
   In this programming language mutating an imported variable is normally a defect, because it should not normally be necessary to violate encapsulation.
 
-  However, being unable to correct a defective definition interferes with exploratory programming.  For this reason redefinition and mutating imported variables works at the listener.  A warning is issued in case it was accidental.  Mutating a variable that has not been defined is still a defect at the listener.
+  However, being unable to correct defective definitions interferes with exploratory programming.  For this reason redefinition and mutating imported variables works at the listener.  A warning is issued in case it was accidental.  Mutating a variable that has not been defined is still a defect at the listener.
 
   Be aware that redefinition and mutation are not the same.  Redefinition affects the value in the current module.  Mutation affects the value in the home module, which is not the same as the current module for imported variables.
 
