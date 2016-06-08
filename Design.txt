@@ -115,7 +115,7 @@ Non-Goals:
 
   Abbreviating the names of built-in constructs makes the longer names available for programmers to use.  This is the most beneficial for constructors.  For example, Lisp programmers frequently want to name a variable "list", but that is usually the name of a list constructor.
 
-  I will try to follow the conventions for abbreviating names in Lisp.  They are usually the first syllable.  They do not usually omit internal vowels, unlike abbreviated names in C.  Names consisting of multiple abbreviated names do not usually have hyphens separating them, and usually remove repeated letters (e.g. define function is "defn", not "def-fn").  Popular abbreviations may override these rules, however.  For example, the abbreviation for dictionary is "dict", function is "fn", and list is "lst".
+  I will try to follow the conventions for abbreviating names in Lisp.  They are usually the first syllable.  They do not usually omit internal vowels, unlike abbreviated names in C.  Names consisting of multiple abbreviated names do not usually have hyphens separating them, and usually remove repeated letters (e.g. define function is "defn").  Popular abbreviations may override these rules, however.  For example, the abbreviation for dictionary is "dict", function is "fn", and list is "lst".
 
 * parentheses reduction
 
