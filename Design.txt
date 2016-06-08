@@ -530,7 +530,7 @@ Noteworthy Features:
 
       If the name symbol is used as a variable in the outermost scope, it is not coerced when returned from a macro.
 
-      If the name symbol is used as a parameter or a local variable, it is coerced to a gensymed symbol when returned from a macro.
+      If the name symbol is used as a parameter or a local variable, every name symbol with the same name in the same scope is coerced to a gensymed symbol with the same counter value when returned from a macro.
 
       Gensymed symbols construct unique places for each gensymed symbol for each macro expansion.  This avoids surprising behavior by preventing name collisions.  They are effectively symbols named by a global counter.  They are unique due to forbidding symbols in source code from having integer names, and incrementing the global counter by 1 on each use.  They are still shown with a valid symbol name preceding the integer.
 
