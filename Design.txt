@@ -115,7 +115,7 @@ Non-Goals:
 
   Abbreviating the names of built-in constructs makes the longer names available for programmers to use.  This is the most beneficial for constructors.  For example, Lisp programmers frequently want to name a variable "list", but that is usually the name of a list constructor.
 
-  I will try to follow the conventions for abbreviating names in Lisp.  They are usually the first syllable.  They do not usually omit internal vowels, unlike abbreviated names in C.  Names consisting of multiple abbreviated names do not usually have hyphens separating them.  Popular abbreviations may override these rules, however.  For example, the abbreviation for dictionary is "dict" not "dic", and the abbreviation for list is "lst".
+  I will try to follow the conventions for abbreviating names in Lisp.  They are usually the first syllable.  They do not usually omit internal vowels, unlike abbreviated names in C.  Names consisting of multiple abbreviated names do not usually have hyphens separating them, and usually remove repeated letters (e.g. "defun", not "deffun").  Popular abbreviations may override these rules, however.  For example, the abbreviation for dictionary is "dict", not "dic", and the abbreviation for list is "lst".
 
 * parentheses reduction
 
@@ -565,7 +565,7 @@ Noteworthy Features:
 
       Symbol macros are supported.  A symbol macro call looks like a symbol.  They are useful as generalized variables.
 
-      They are constructed with "symmac".  "symmac"'s first parameter is a symbol.  Symbol macros have no parameters.
+      They are constructed with "symac".  "symac"'s first parameter is a symbol.  Symbol macros have no parameters.
 
       Name symbols are not coerced when returned from a symbol macro.  This reduces the specification necessary when constructing them.
 
