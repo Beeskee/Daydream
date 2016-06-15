@@ -581,7 +581,7 @@ Noteworthy Features:
 
       If macros did not execute before run time, they would be less useful.  They could not be used for static analysis or optimization.  They could not be used for extending the language in ways that are easy to statically analyze or optimize.  Executing before run time, and reducing the extended language to the base language (the language without macros), is what makes them superior to fexprs.  Calling a macro at run time is a defect.
 
-      Macros are like functions in all other respects.  They can be constructed inside arbitrary expressions, be defined locally, use free variables, call functions or macros, perform input/output, be passed as arguments to functions, and be returned from functions.  Be aware that, like functions, macros cannot be passed as arguments to macros, or be returned from macros, because they do not correspond to source code.  Symbols for functions and macros can be passed as arguments to macros, or be returned from macros, however.
+      Macros are like functions in all other respects.  They can be constructed inside arbitrary expressions, be defined locally, use free variables, call functions or macros (including themselves), perform input/output, be passed as arguments to functions, and be returned from functions.  Be aware that, like functions, macros cannot be passed as arguments to macros, or be returned from macros, because they are not equivalent to source code.  Symbols for functions and macros can be passed as arguments to macros, or be returned from macros, however.
 
   * explicit macro expansion
 
@@ -591,9 +591,9 @@ Noteworthy Features:
 
     "(expand-once form)" expands macro calls in the form once.  If the form is not a macro call, but contains macro calls, each macro call will be expanded once.  This is primarily useful when trying to understand recursive macro expansions.
 
-    "(expand-show form symbols)" recursively expands macro calls in the form when their symbol names match the symbol names in the list.  This is primarily useful to reduce clutter when trying to understand specific macro expansions.
+    "(expand-show form symbols)" recursively expands macro calls in the form when their symbol names match the symbol names in the sequence.  This is primarily useful to reduce clutter when trying to understand specific macro expansions.
 
-    "(expand-hide form symbols)" recursively expands macro calls in the form unless their symbol names match the symbol names in the list.  This is primarily useful to reduce clutter caused by specific macro expansions when trying to understand other macro expansions.
+    "(expand-hide form symbols)" recursively expands macro calls in the form unless their symbol names match the symbol names in the sequence.  This is primarily useful to reduce clutter caused by specific macro expansions when trying to understand other macro expansions.
 
     "(expand-when form function)" recursively expands macro calls in the form when the predicate function returns true.  The function parameters are "(symbol args)" for the macro call's symbol and arguments.  This is primarily useful when writing code walking macros that inspect or transform constructs (including macro calls).
 
