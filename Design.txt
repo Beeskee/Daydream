@@ -557,7 +557,7 @@ Noteworthy Features:
       Literal symbols are coerced to name symbols when transitioning from macro expansion time to run time.
 
       This solution was chosen for several reasons:
-      * Homoiconicity is preserved.  Captured and literal symbols support the name symbol interface.  Macros are able to pass values to and from normal functions with no effort.
+      * Homoiconicity is preserved.  All symbol types support the name symbol interface.  Macros are able to pass values to and from normal functions with no effort.
       * Macros can easily perform processing and side effects.
       * The macro system is not much more complex than Common Lisp's.  Most of the additional complexity is in implementation, not use.  Common Lisp already had name, gensymed, and module-qualified symbols, though with somewhat different semantics.  Those are still the only types of symbols that exist at run time.
       * In the common case, when writing hygienic macros where all symbols are identifiers, the programmer does not have to provide extra specification.  When writing anaphoric macros, or macros where some symbols are not identifiers, the programmer has to provide less specification than Common Lisp's macro system, and far less specification than Scheme's syntax-case macro system.
@@ -622,7 +622,7 @@ Noteworthy Features:
   * libraries                              - supports code reuse
 
   The module system features solve practical problems:
-  * selective import - prevents namespace pollution
+  * selective import - prevents name collisions
   * renaming imports - resolves name collisions
   * selective export - prevents dependence on implementation details
 
