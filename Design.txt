@@ -139,7 +139,7 @@ Non-Goals:
 
   Having dictionary and vector literals raises questions about whether their elements should be evaluated or not, and causes defects by programmers incorrectly assuming they are or are not.
 
-  It is necessary to use 'constructor syntax' (e.g. "(list x y z)") for lists to prevent ambiguity in pattern matching.  Otherwise it is impossible to tell the difference between a pattern construct and trying to bind a variable with the same name as a pattern construct.
+  It is necessary to use 'constructor syntax' (e.g. "(lst x y z)") for lists to prevent ambiguity in pattern matching.  Otherwise it is impossible to tell the difference between a pattern construct and trying to bind a variable with the same name as a pattern construct.
 
   While the ambiguity problem is limited to lists, using a different syntax in pattern matching for everything but lists is not consistent.
 
