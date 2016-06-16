@@ -380,7 +380,7 @@ Noteworthy Features:
 
 * built-ins
 
-  The built-ins for manipulating the interpreter, and the foreign function interface, which is used to perform all input/output, are defined in the "unsafe" module.  All other built-ins are defined in the "base" module.  All definitions in these modules are normally imported into every other module implicitly, so it is possible for programmers to define things.
+  The built-ins for manipulating the interpreter, and the foreign function interface, which is used to perform all input/output, are defined in the "unsafe" module.  All other built-ins are defined in the "core" module.  All definitions in these modules are normally imported into every other module implicitly, so it is possible for programmers to define things.
 
   While redefining a variable in a module is normally a defect, built-ins can be redefined with only a warning.  This allows new built-ins to be defined without breaking existing code.
 
@@ -503,7 +503,7 @@ Noteworthy Features:
 
       If a macro's expansion contains a module-qualified symbol, and it does not refer to a variable in the outermost scope of the macro's home module, it is a defect.  Only variables in the outermost scope are always defined.
 
-      If a macro is called outside its home module, its expansion contains a module-qualified symbol, and it does not refer to an exported variable, it is a defect.  This restriction prevents dependence on implementation details.  The variable does not have to be exported from the macro's home module.  The variable only has to be exported from the variable's home module, which may not be the same as the macro's home module.  If modules had to import all variables their macro calls use, module interfaces would be dependent on implementation details of the macros they use.  If modules had to export all variables their macro expansions use, module interfaces would be cluttered with constructs implemented elsewhere (e.g. most modules would reexport most of the "base" and "unsafe" modules).  This encourages encapsulation.
+      If a macro is called outside its home module, its expansion contains a module-qualified symbol, and it does not refer to an exported variable, it is a defect.  This restriction prevents dependence on implementation details.  The variable does not have to be exported from the macro's home module.  The variable only has to be exported from the variable's home module, which may not be the same as the macro's home module.  If modules had to import all variables their macro calls use, module interfaces would be dependent on implementation details of the macros they use.  If modules had to export all variables their macro expansions use, module interfaces would be cluttered with constructs implemented elsewhere (e.g. most modules would reexport most of the "core" and "unsafe" modules).  This encourages encapsulation.
 
     * hygiene
 
