@@ -520,13 +520,12 @@ Noteworthy Features:
       * gensymed
       * module-qualified
       * captured
-      * literal
 
       The parser and "sym" function generate name symbols.
 
-      Name symbols coerced to module-qualified symbols with the value of "def", "set!", "fn", and "mac" cause some name symbols that follow to be handled differently.  This is a test for identity, so they are correctly recognized when rebound.
+      Name symbols coerced to module-qualified symbols with the value of "def", "set!", "fn", and "mac", in list configurations that indicate calls to those forms, cause some name symbols that follow to be handled differently.  This is a test for identity, so they are correctly recognized when rebound.
 
-      If the name symbol is used as a variable in the outermost scope, it is not coerced when returned from a macro.
+      If the name symbol is quoted or is used as a variable in the outermost scope, it is not coerced when returned from a macro.
 
       If the name symbol is used as a parameter or a local variable, every name symbol with the same name in the same scope is coerced to a gensymed symbol with the same counter value when returned from a macro.
 
@@ -540,7 +539,7 @@ Noteworthy Features:
 
       Anaphoric macros require the ability to capture variables.
 
-      The "cap" function converts name symbols contained in its argument, which can be any data equivalent to source code, to captured symbols.
+      The "cap" function converts unquoted name symbols contained in its argument, which can be any data equivalent to source code, to captured symbols.
 
       Calling "cap" at run time is a defect.
 
@@ -548,19 +547,11 @@ Noteworthy Features:
 
       This is sufficient for the expansion of anaphoric macros.
 
-      Occasionally symbols are not used as identifiers (e.g. in computer algebra systems).  These symbols should not be transformed by the macro system.
-
-      The "lit" function converts name symbols contained in its argument, which can be any data equivalent to source code, to literal symbols.
-
-      Calling "lit" at run time is a defect.
-
-      Literal symbols are coerced to name symbols when transitioning from macro expansion time to run time.
-
       This solution was chosen for several reasons:
       * Homoiconicity is preserved.  All symbol types support the name symbol interface.  Macros are able to pass values to and from normal functions with no effort.
       * Macros can easily perform processing and side effects.
       * The macro system is not much more complex than Common Lisp's.  Most of the additional complexity is in implementation, not use.  Common Lisp already had name, gensymed, and module-qualified symbols, though with somewhat different semantics.  Those are still the only types of symbols that exist at run time.
-      * In the common case, when writing hygienic macros where all symbols are identifiers, the programmer does not have to provide extra specification.  When writing anaphoric macros, or macros where some symbols are not identifiers, the programmer has to provide less specification than Common Lisp's macro system, and far less specification than Scheme's syntax-case macro system.
+      * When writing hygienic macros the programmer does not have to provide extra specification.  When writing anaphoric macros the programmer has to provide less specification than Common Lisp's macro system, and far less specification than Scheme's syntax-case macro system.
       * The gensym counter is not observable outside each module without effort on the part of the programmer.  This avoids interfering with incremental compilation.
 
     * symbol macros
