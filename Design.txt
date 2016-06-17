@@ -338,7 +338,7 @@ Noteworthy Features:
 
   Be aware that redefinition and mutation are not the same.  Redefinition affects the value in the current module.  Mutation affects the value in the home module, which is not the same as the current module for imported variables.
 
-  Modules can also be reloaded to correct defective definitions.
+  Modules can be reloaded to correct defective definitions.
 
 * modernization
 
