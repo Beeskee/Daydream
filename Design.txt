@@ -360,7 +360,7 @@ Noteworthy Features:
 
 * symbols
 
-  To avoid surprising behavior, the same name in the same scope always refers to the same value, barring mutation.  This implies that variables and functions are not in separate namespaces.  It implies that the programming language is case-insensitive.  To prevent the use of symbols that jangle like bad typography, uppercase letters in symbols are a defect.
+  To avoid surprising behavior, the same name in the same scope always refers to the same value, barring mutation.  This implies that variables and functions are not in separate namespaces.  It implies that the programming language is case-insensitive.  To prevent the use of symbols that jangle like bad typography, uppercase letters in a symbol is a defect.
 
   To avoid surprising behavior, a symbol always looks like a symbol.  Any characters that have special meaning to the parser, such as whitespace or parentheses, cannot be included in a symbol.
 
