@@ -608,38 +608,90 @@ Noteworthy Features:
 
 * modules
 
-  The module system serves multiple purposes:
-  * swapping implementations of interfaces - supports maintenance
-  * libraries                              - supports code reuse
+  * purpose
 
-  The module system features solve practical problems:
-  * selective import - prevents name collisions
-  * renaming imports - resolves name collisions
-  * selective export - prevents dependence on implementation details
+    The module system serves multiple purposes:
+    * swapping implementations of interfaces - supports maintenance
+    * libraries                              - supports code reuse
 
-  A module effectively encapsulates part of the outermost scope.  Only one instance of a module exists at a time, which is observable via mutation.  Modules do not nest, but they do compose.
+    The module system features solve practical problems:
+    * selective import - prevents name collisions
+    * renaming imports - resolves name collisions
+    * selective export - prevents dependence on implementation details
 
-  The module system works with /variables/, not values, in the outermost scope.  If an exported variable is mutated, other modules that import it can read the current value.
+    This module system can support incremental compilation.
 
-  Modules do not export anything implicitly.  The programmer must explicitly specify the interface.  This encourages encapsulation, planning interfaces, and conscious interface change.
+  * semantics
 
-  A module can have any number of import- and export specifications mingled with definitions and expressions.  Import- and export specifications are cumulative.  They never remove an import or export.  The only restriction on order is that variables must be initialized by definition or importing before they are read.  This makes macro use easier.
+    * encapsulation
 
-  Import- and export specifications inside definitions or expressions, except for (potentially nested) "do" forms, is a defect.  Module interfaces should not vary.  Macros may expand into import- and export specifications, which is sufficient to allow module implementations to vary at macro expansion time.  Import- and export specifications are allowed in "do" forms so a single macro call can expand into a combination of import- and export specifications, definitions, and expressions.  The value of an import- or export specification is "null".
+      Modules encapsulate portions of the outermost scope.  This has several implications.  Modules do not nest.  Modules compose concatenatively.  Only one instance of a module exists at a time.
 
-  Dependency cycles are a defect.  They indicate two or more modules are badly decomposed.  Some definitions need to be combined into a single module to eliminate the cycle.  Others probably need to be separated into other modules.
+      All definitions in this programming language are encapsulated in a module, even built-ins (in "core" and "unsafe") and those entered in the listener (in "user").  To avoid surprising behavior, user-defined modules cannot be named "core", "unsafe", or "user".
 
-  All state, except for the abstract syntax tree, is discarded after each module is macro expanded.  The abstract syntax tree is reevaluated as needed to create the necessary state for the macro expansion of other modules or run time.  This prevents the state within a module at macro expansion time from influencing the macro expansion of other modules, or from influencing run time.
+      The module system works with /variables/, not values.  If an exported variable is mutated, other modules that import it can read the current value.
 
-  There is a one-to-one relationship between files and modules.
+    * interfaces
 
-  Modules may be versioned.  Unversioned modules are usually used to ease maintenance.  Versioned modules are usually used for code reuse.  A versioned module's file name contains the module name, followed by a hyphen, then the version in Semantic Versioning format.  A version number consists of non-negative integers for major-, minor-, and patch numbers, in that order, separated by periods.  The major version number is 0 before release, and incremented to 1 at release, then incremented by 1 each time backwards incompatible changes are made.  The minor version number is incremented by 1 each time features are added or depreciated.  The patch version number is incremented by 1 each time defects are corrected.  When the previous number is incremented by 1, the following numbers are reset to 0 (e.g. 1.2.15 to 1.3.0).
+      Modules only implicitly import the "core" and "unsafe" modules, and do not implicitly export anything.  The programmer must explicitly specify the interface.  This encourages encapsulation, planning interfaces, and conscious interface change.
 
-  Modules are imported from by specifying a relative path and file name, and what you want to import.  Only forward path traversal is allowed (i.e. "." and ".." are not allowed), to discourage aliasing.  The programming language attempts to look up the module relative to the program's working directory, but if that fails it tries a central repository.  If the module is versioned, the major version number must be = the requested number, and the minor and patch version numbers must be >= the requested numbers.  The requested patch version number should be 0 unless the programmer knows their implementation is affected by a defect that is corrected in a specific patch version.  The programming language will use the most recent version that matches the requirements.
+      Importing or exporting the same variable from the same module more than once is /not/ a defect.  No warnings are issued.  This makes macro use easier.
 
-  This module system could support incremental compilation (with the abstract syntax trees corresponding to binaries, and reevaluation corresponding to reloading the binaries), but I chose it due to the lack of surprising behavior.
+      A module can have any number of import- and export specifications mingled with definitions and expressions.  The only restriction on order is that variables must be initialized by definition or importing before they are read.  This makes macro use easier.
 
-  Modules can be reloaded, both at the listener and in modules, to update their definitions.  This is useful for exploratory programming, or hot swapping to correct a defect in, or add features to, a running program.  Be aware that this only updates the values of the imported variables.  References to out-of-date values may still exist.  You should therefore prefer to access imported values through the variables you imported them into.
+      An import- or export specification inside a definition or expression, except for (potentially nested) "do" forms, is a defect.  Module interfaces should not vary.  Macros may expand into import- and export specifications, which is sufficient to allow module implementations to vary at macro expansion time.  Import- and export specifications are allowed in "do" forms so a single macro call can expand into a combination of import- and export specifications, definitions, and expressions.  The value of an import- or export specification is "null".
+
+      A dependency cycle is a defect.  It indicates two or more modules are badly decomposed.  Some definitions need to be combined into a single module to eliminate the cycle.  Others may need to be separated into other modules.
+
+    * versioning
+
+      Modules may be versioned.  Unversioned modules are usually used for swapping implementations of interfaces.  Versioned modules are usually used for libraries.
+
+      A subset of the Semantic Versioning format is used.  A version number consists of non-negative decimal integers for major-, minor-, and patch version numbers, in that order, separated by periods.  The major version number is 0 before release, and incremented to 1 at release, then incremented by 1 each time backwards incompatible changes are made.  The minor version number is incremented by 1 each time features are added or depreciated.  The patch version number is incremented by 1 each time defects are corrected.  When the previous number is incremented by 1, the following numbers are reset to 0 (e.g. 1.2.15 to 1.3.0).  Trailing metadata is /not/ supported.
+
+      When (re)loading a versioned module the programming language will use the most recent version that meets the specification.  The major version number must be = the requested number, and the minor- and patch version numbers must be >= the requested numbers.  The programmer should not request a patch number other than 0 unless they know their implementation is affected by a defect that is corrected in a specific patch version.
+
+    * loading
+
+      Modules are loaded by executing them.
+
+      While it is occasionally useful for macro expansion and loading to perform side effects, code /must not/ rely on the number of times a module is macro expanded or loaded, or the time a module is loaded.
+
+      A module may be macro expanded each time a program that depends on it runs.  Optimizing compilers may generate code that is equivalent to the module's code after macro expansion.
+
+      Import specifications may be executed as they are encountered.  Optimizing compilers may generate code that executes all of a module's import specifications before the rest of the code.
+
+      All of a module's dependencies are recursively reset to their initial states when the module is macro expanded.  All modules are reset to their initial states when transitioning from macro expansion time to run time.  This prevents the state within a module at macro expansion time from influencing the macro expansion of other modules, or from influencing run time.  Optimizing compilers may generate code that avoids storing and resetting the state of modules whose state cannot change, and avoids resetting the state of modules whose state did not change.  The backups of the initial states can be freed at run time.
+
+    * reloading
+
+      Modules can be reloaded at the listener and in modules.  This is useful for exploratory programming, or hot swapping to correct a defect in, or add features to, a running program.
+
+      Modules are reloaded by rereading and executing them.
+
+      A reloaded module's dependencies are /not/ reset to their initial states, since the point in reloading a module is usually to redefine the module without losing other state.
+
+      Attempting to reload a module that is not loaded is a defect.
+
+      If the reloaded module does not export a superset of the variables the previous instance did, it is a defect.
+
+      Be aware that references to out-of-date values may exist after reloading a module.  You should prefer to access imported values through imported variables.
+
+  * files
+
+    Unversioned module files have the name of the module.  Versioned module files have the name of the module with a hyphen and the version number appended.  The filename extension for source code in this programming language is appended in both cases.
+
+    Only one instance of a module exists at a time, even if there is a unversioned and versioned file, or multiple versioned files, for it.  A unversioned module file is required if no version was specified.  A versioned module file that meets the specification is required if a version was specified.
+
+    The programming language searches for modules in the directory the program loaded from, then a directory for libraries if that fails.
+
+  * conventions
+
+    A module name consists of symbol names for an organization (optional), project, and the contents of the module, in that order, separated by periods.
+
+    It is better to be descriptive than terse, to minimize the chance of name collisions.  Module names are not used in expressions or for variable names.
+
+    For example, "penguin-charity.population-tracker.map" or "population-tracker.map".
 
 * garbage collector
 
