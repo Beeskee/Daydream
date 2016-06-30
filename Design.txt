@@ -627,7 +627,7 @@ Noteworthy Features:
 
       Modules encapsulate portions of the outermost scope.  This has several implications.  Modules do not nest.  Modules compose concatenatively.  Only one instance of a module exists at a time.
 
-      All definitions in this programming language are encapsulated in a module, even built-ins (in "core" and "unsafe") and those entered in the listener (in "user").  To avoid surprising behavior, user-defined modules cannot be named "core", "unsafe", or "user".
+      All definitions in this programming language are encapsulated in a module, even built-ins (in "core" and "unsafe") and those entered in the top-level listener (in "user").  To avoid surprising behavior, user-defined modules cannot be named "core", "unsafe", or "user".
 
       The module system works with /variables/, not values.  If an exported variable is mutated, other modules that import it can read the current value.
 
