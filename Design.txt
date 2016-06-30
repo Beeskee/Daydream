@@ -543,7 +543,9 @@ Noteworthy Features:
 
       Anaphoric macros require the ability to capture variables.
 
-      The "cap" macro converts unquoted name symbols contained in its argument, which can be any data equivalent to source code, to captured symbols.
+      The "cap" special form converts unquoted name symbols contained in its argument, which can be any data equivalent to source code, to captured symbols.
+
+      Calling "cap" at run time is a defect.
 
       Captured symbols are coerced to name symbols when returned from a macro.
 
