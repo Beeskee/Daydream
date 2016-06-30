@@ -370,13 +370,13 @@ Noteworthy Features:
 
   Only "true" and "false" are true and false.  Integers can be converted to (0 is false, anything else is true) and from (true is 1, false is 0) Booleans, explicitly.  This should make debugging easier, and I have always found treating non-Boolean values as Boolean surprising.
 
-  Data structures can be called with an argument to access elements.  Like 'normal' functions they map their domain to their range.  Dictionaries map keys to values.  Lists map the symbols "first" and "rest" to values.  Strings map 0-based integer indexes to single-character strings.  Vectors map 0-based integer indexes to values.  This is more consistent and brief than most Lisp-like programming languages.
+  Data structures can be called with an argument to access elements.  Like 'normal' functions they map their domain to their range.  Dictionaries map keys to values.  Lists and strings map the symbols "first" and "rest" to values.  Vectors map 0-based integer indexes to values.  This is more consistent and brief than most Lisp-like programming languages.
 
-  Improper lists are not supported.  The second argument to "cons" must be a list.  Improper lists seem to be inferior to proper lists or vectors for all purposes, and the infix syntax they use is unlike everything else in Lisp.
+  Improper lists are not supported.  Any operation that would produce one is a defect.  Improper lists seem to be inferior to proper lists or vectors for all purposes, and the infix syntax they use is unlike everything else in Lisp.
 
-  There is no character type.  Strings are effectively immutable vectors of strings of 1 character.  Strings can be indexed like a vector.  Strings of 1 character can be converted to and from integers.  This may result in more code reuse.
+  There is no character type.  A string is effectively an immutable list of strings of 1 character.  This may result in more code reuse.  Strings cannot be mutated because they are frequently used as hash table keys.  Strings cannot be indexed because UTF-8 is a variable-length code.  Strings of 1 character can be converted to and from integers.
 
-  Vectors are dynamic arrays.  Values can be 'pushed' to, or 'popped' from, the highest index, allowing them to double as stacks.  Singly-linked lists support efficient pushing to, and popping from, the beginning, but not efficient indexing.  This makes vectors more versatile, and since bounds are still checked, they are still safe.  Like singly-linked lists, dynamic arrays are used in most hash table implementations, which are used in most environment implementations, so it makes sense to expose them in the programming language.  It requires little effort and is consistent with the goal of not unnecessarily restricting the programming language.
+  Vectors are dynamic arrays.  Vectors may be used as stacks.  This makes vectors more general.  Bounds are checked.  Like singly-linked lists, dynamic arrays are used in most hash table implementations, which are used in most environment implementations, so it makes sense to expose them to programs written in the programming language.  That avoids unnecessarily restrictions.
 
 * built-ins
 
@@ -499,7 +499,11 @@ Noteworthy Features:
 
     * source code transformation
 
-      This macro system transforms data that is equivalent to source code.  Passing an argument to a macro, or returning a value from a macro, that contains a type that has no literal syntax is a defect.  Passing an argument to a macro, or returning a value from a macro, that contains a list with a reference cycle is a defect.
+      This macro system transforms data that is equivalent to source code.
+
+      Passing an argument to a macro, or returning a value from a macro, that contains a type that has no literal syntax is a defect.
+
+      Passing an argument to a macro, or returning a value from a macro, that contains a list with a reference cycle is a defect.
 
       If a macro's expansion contains a module-qualified symbol, and it does not refer to a variable in the outermost scope of the macro's home module, it is a defect.  Only variables in the outermost scope are always defined.
 
@@ -539,9 +543,7 @@ Noteworthy Features:
 
       Anaphoric macros require the ability to capture variables.
 
-      The "cap" function converts unquoted name symbols contained in its argument, which can be any data equivalent to source code, to captured symbols.
-
-      Calling "cap" at run time is a defect.
+      The "cap" macro converts unquoted name symbols contained in its argument, which can be any data equivalent to source code, to captured symbols.
 
       Captured symbols are coerced to name symbols when returned from a macro.
 
@@ -556,7 +558,7 @@ Noteworthy Features:
 
     * symbol macros
 
-      Symbol macros are supported.  A symbol macro call looks like a symbol.  They are useful as generalized variables.
+      A symbol macro call looks like a symbol.  They are useful as generalized variables.
 
       They are constructed with "symac".  "symac"'s first parameter is a symbol.  Symbol macros have no parameters.
 
@@ -679,9 +681,9 @@ Noteworthy Features:
 
   * files
 
-    Unversioned module files have the name of the module.  Versioned module files have the name of the module with a hyphen and the version number appended.  The filename extension for source code in this programming language is appended in both cases.
+    An unversioned module filename consists of the module name.  A versioned module filename consists of the module name and version number, in that order, separated by a hyphen.  The filename extension for source code in this programming language is appended in both cases.
 
-    Only one instance of a module exists at a time, even if there is a unversioned and versioned file, or multiple versioned files, for it.  A unversioned module file is required if no version was specified.  A versioned module file that meets the specification is required if a version was specified.
+    Only one instance of a module exists at a time, even if there is an unversioned and versioned file, or multiple versioned files, for it.  An unversioned module file is required if no version was specified.  A versioned module file that meets the specification is required if a version was specified.
 
     The programming language searches for modules in the directory the program loaded from, then a directory for libraries if that fails.
 
@@ -689,7 +691,7 @@ Noteworthy Features:
 
     A module name consists of symbol names for an organization (optional), project, and the contents of the module, in that order, separated by periods.
 
-    It is better to be descriptive than terse, to minimize the chance of name collisions.  Module names are not used in expressions or for variable names.
+    It is better to be descriptive than terse, to minimize the chance of name collisions.  Module names are not used in variable names or expressions.
 
     For example, "penguin-charity.population-tracker.map" or "population-tracker.map".
 
