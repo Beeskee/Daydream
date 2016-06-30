@@ -562,8 +562,6 @@ Noteworthy Features:
 
       They are constructed with "symac".  "symac"'s first parameter is a symbol.  Symbol macros have no parameters.
 
-      Name symbols are not coerced when returned from a symbol macro.  This reduces the specification necessary when constructing them.
-
       Symbol macros are like other macros in all other respects.
 
     * evaluation
