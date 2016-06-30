@@ -459,7 +459,7 @@ Noteworthy Features:
 
   * calls
 
-    While (trailing) optional and rest parameters are supported, most forms are of fixed-arity.  Partial application only works with fixed-arity forms.  If a form cannot be used with partial application (e.g. special forms that do not evaluate all their arguments in order and macros), and variable-arity could be useful, it is used.  Most constructors (e.g. "dict", "lst", and "vec") are variadic, because if they were not it would be impossible to create data structures with different numbers of elements.  "do" (explicit and implicit) is variadic, because if it was not it would be impossible to create control flow sequences with different numbers of expressions.  Optional parameters follow "?", while the rest parameter follows "&".  To avoid surprising behavior, "?" and "&" are not valid variable names.  Keyword parameters are not supported.  They cannot be used with partial application, and interact in surprising ways with optional and rest parameters.  Data structures are often used where optional, rest, and keyword parameters would be used in other Lisp-like languages.
+    While (trailing) optional and rest parameters are supported, most forms are of fixed-arity.  Partial application only works with fixed-arity forms.  If a form cannot be used with partial application (special forms and macros), and variable-arity could be useful, it is used.  Most constructors (e.g. "dict", "lst", and "vec") are variadic, because if they were not it would be impossible to create data structures with different numbers of elements.  "do" (explicit and implicit) is variadic, because if it was not it would be impossible to create control flow sequences with different numbers of expressions.  Optional parameters follow "?", while the rest parameter follows "&".  To avoid surprising behavior, "?" and "&" are not valid variable names.  Keyword parameters are not supported.  They cannot be used with partial application, and interact in surprising ways with optional and rest parameters.  Data structures are often used where optional, rest, and keyword parameters would be used in other Lisp-like languages.
 
     Function arguments are evaluated once, from left to right, as in Common Lisp.  It is bad style to depend on that, but it seems better to standardize it than to have it be implementation-defined as it is in so many programming languages.  Optimizing compilers may generate code that evaluates arguments without side effects in any order.
 
@@ -543,7 +543,7 @@ Noteworthy Features:
 
       Anaphoric macros require the ability to capture variables.
 
-      The "cap" special form converts unquoted name symbols contained in its argument, which can be any data equivalent to source code, to captured symbols.
+      The "cap" function converts unquoted name symbols contained in its argument, which can be any data equivalent to source code, to captured symbols.
 
       Calling "cap" at run time is a defect.
 
@@ -578,7 +578,7 @@ Noteworthy Features:
 
   * explicit macro expansion
 
-    This programming language provides several special forms to perform macro expansion explicitly.  They can be used to observe a macro expansion.  They can be used by macros that inspect or transform constructs.
+    This programming language provides several functions to perform macro expansion explicitly.  They can be used to observe a macro expansion.  They can be used by macros that inspect or transform constructs.
 
     "(expand-defs form)" recursively expands macro calls in the form when the macros are defined (not imported) in the current module.  This is primarily useful to reduce clutter when trying to understand your own macro expansions.
 
@@ -590,7 +590,7 @@ Noteworthy Features:
 
     "(expand-when form function)" recursively expands macro calls in the form when the predicate function returns true.  The function parameters are "(symbol args)" for the macro call's symbol and arguments.  This is primarily useful when writing code walking macros that inspect or transform constructs (including macro calls).
 
-    These special forms use the current environment to determine the value associated with a symbol, like a macro call.  That is usually the expected and desired behavior.
+    These functions use the current environment to determine the value associated with a symbol, like a macro call.  That is usually the expected and desired behavior.
 
   * local macro definition
 
