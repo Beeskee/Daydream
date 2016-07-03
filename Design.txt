@@ -338,6 +338,10 @@ Noteworthy Features:
 
   Modules can be reloaded to correct defective definitions.
 
+* documentation
+
+  Docstrings can be associated with modules, variables in the outermost scope, functions, and macros.  Functions are provided for searching for combinations of patterns in module names, variable names (including parameters), and docstrings, types, and values.  While this was common in the past, modern Lisp-like languages seem to be becoming more static, and less useful interactively, thus losing one of their advantages over other programming languages.  Functions are provided to load all code in a directory, or in a directory hierarchy, to make searching easier.
+
 * modernization
 
   Lisp parachronisms have been replaced or removed, since we use IBM PC compatibles instead of IBM 704s, and monitors instead of teleprinters.  "car" is replaced with "first", "cdr" is replaced with "rest", and "car" and "cdr" compositions (like "caddar") have been removed.  You "show" things on the monitor, not "print" them.  You do exploratory programming at the listener, not the REPL.
@@ -351,10 +355,6 @@ Noteworthy Features:
 * definition
 
   Definition is much simpler than in most Lisp-like languages.  There is only one "def" form, which can be used in any scope.  There are no "let" forms.  "let" forms are no improvement over using "fn" or "mac" directly.
-
-* documentation
-
-  Docstrings can be associated with modules, variables in the outermost scope, functions, and macros.  Functions are provided for searching for combinations of patterns in module names, variable names (including parameters), and docstrings, types, and values.  While this was common in the past, modern Lisp-like languages seem to be becoming more static, and less useful interactively, thus losing one of their advantages over other programming languages.  Functions are provided to load all code in a directory, or in a directory hierarchy, to make searching easier.
 
 * symbols
 
