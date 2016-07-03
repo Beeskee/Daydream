@@ -141,21 +141,19 @@ Non-Goals:
 
   It is necessary to use 'constructor syntax' (e.g. "(lst x y z)") for lists to prevent ambiguity in pattern matching.  Otherwise it is impossible to tell the difference between a pattern construct and trying to bind a variable with the same name as a pattern construct.
 
-  While the ambiguity problem is limited to lists, using a different syntax in pattern matching for everything but lists is not consistent.
+  While the ambiguity would be limited to lists, using a different syntax in pattern matching for everything but lists is not consistent.
 
   Having two syntaxes for the same thing is not simple.
 
-  Dictionaries and vectors are shown as the function calls that would create them.
-
 * reader macros
 
-  Reader macros do not seem useful to me.  Without the ability to create new types and new human-readable representations there is little motivation for new literal syntax.
+  Reader macros do not seem useful to me.  Without the ability to create new types and new human-readable representations, there is little motivation for new literal syntax.
 
 * overcomplicated macros
 
   Common Lisp's macro system implicitly captures variables.
 
-  Scheme hygienic macro systems usually begin with destroying homoiconicity.  Requiring macros to work with syntax objects instead of normal values prevents the use of normal functions in macro expansion, which defeats the purpose of using a Lisp macro system, or requires the syntax objects to be converted to normal values, which defeats the purpose of using syntax objects.
+  Scheme hygienic macro systems usually begin with destroying homoiconicity.  Requiring macros to work with syntax objects, instead of normal values, prevents the use of normal functions in macro expansion, which defeats the purpose of using a Lisp macro system, or requires the syntax objects to be converted to normal values, which defeats the purpose of using syntax objects.
 
   Some Scheme hygienic macro systems are limited to templates that are impractical to use for processing.
 
@@ -175,7 +173,7 @@ Non-Goals:
 
   Type annotations make source code more verbose.  In theory, type inference, combined with a programming language design that assures type inference is always possible, can eliminate the need for type annotations.  In practice, even in programming languages with type inference, most definitions in the outermost scope must have type annotations, because most will be exported, and code in other modules would break if their type changed.
 
-  Making changes requires more effort, because you must change the type annotations everywhere a value is used when you want to change its type.
+  Making changes requires more effort, because you must change the type annotations everywhere a variable is used when you want to change its type.
 
   Generic static type systems often have poor payoff per effort ratios for improving safety and efficiency.
 
@@ -237,7 +235,7 @@ Non-Goals:
 
 * implicit control flow
 
-  Declarative programming is said to be specifying what to do, not how to do it.  In practice you always have to specify how to do it, because there are too many possibilities, and most are too inefficient or would have negative side effects.
+  In theory, declarative programming is specifying what to do, not how to do it.  In practice, you usually have to specify how to do it, because there are too many possible solutions, and most are too inefficient or would have harmful side effects.
 
   Most programming languages considered to be declarative have implicit control flow, which allows you to avoid specifying how to do control flow, so long as the implicit control flow is what you need.
 
@@ -247,9 +245,9 @@ Non-Goals:
 
   When the implicit control flow is /not/ what is needed, it requires a lot of effort to work around it.
 
-  Other than push dataflow, implicit control flow is unsafe to use with code that has side effects.  It becomes difficult to determine if, or in what order, each side effect will occur.
-
   Implicit control flow makes it difficult to predict the time and space efficiency of code.  Optimizing compilers for programming languages with implicit control flow spend a lot of effort working around it.
+
+  Except for push dataflow, implicit control flow is unsafe to use with side effects.  It becomes difficult to determine if, or in what order, each side effect will occur.
 
   For all these reasons, and more, a strictly evaluated language with a Lisp macro system is "the right thing".  Macros can describe any implicit control flow algorithm you want, if you want one.  Implicit control flow becomes optional and pluggable.  Functions written with different implicit control flow algorithms can call each other with no effort.
 
@@ -657,13 +655,13 @@ Noteworthy Features:
 
       Modules are loaded by executing them.
 
-      While it is occasionally useful for macro expansion and loading to perform side effects, code /must not/ rely on the number of times a module is macro expanded or loaded, or the time a module is loaded.
+      While it is occasionally useful for macro expansion and loading to perform side effects, code /must not/ rely on the number of times a module is macro-expanded or loaded, or the time a module is loaded.
 
-      A module may be macro expanded each time a program that depends on it runs.  Optimizing compilers may generate code that is equivalent to the module's code after macro expansion.
+      A module may be macro-expanded each time a program that depends on it runs.  Optimizing compilers may generate code that is equivalent to the module's code after macro expansion.
 
       Import specifications may be executed as they are encountered.  Optimizing compilers may generate code that executes all of a module's import specifications before the rest of the code.
 
-      All of a module's dependencies are recursively reset to their initial states when the module is macro expanded.  All modules are reset to their initial states when transitioning from macro expansion time to run time.  This prevents the state within a module at macro expansion time from influencing the macro expansion of other modules, or from influencing run time.  Optimizing compilers may generate code that avoids storing and resetting the state of modules whose state cannot change, and avoids resetting the state of modules whose state did not change.  The backups of the initial states can be freed at run time.
+      All of a module's dependencies are recursively reset to their initial states when the module is macro-expanded.  All modules are reset to their initial states when transitioning from macro expansion time to run time.  Modules whose state did not change need not be reset.  The state may be reset by re-executing the macro-expanded code, or copying from a backup which may be freed at run time.  This prevents mutation within a module at macro expansion time from influencing the macro expansion of other modules, or from influencing run time.
 
     * reloading
 
