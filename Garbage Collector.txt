@@ -1,0 +1,24 @@
+Introduction:
+
+If the host programming language uses a tracing garbage collector, it will be reused.  This document describes the tracing garbage collector I would implement in a programming language without one.
+
+
+Design:
+
+This garbage collector is intended for interactive programs, where low, constant, latency is important.
+
+This garbage collector is continuous, generational, and incremental (i.e. marking and sweeping are broken down into multiple steps).
+
+Continuous garbage collection improves latency and space efficiency at cost to throughput.
+
+Generational garbage collection improves latency and throughput.
+
+Incremental garbage collection improves latency at cost to throughput.
+
+It is possible to stop and start garbage collection, perform increments only when the program is idle (by calling a "step" procedure after stopping garbage collection), set the number of increments (the "step multiplier") the garbage collector performs at each step, and force non-incremental full garbage collection.  These operations can be performed with both the external (host programming language) and internal (this programming language) garbage collector interfaces.  They allow you to control the trade-off between low-latency and high-throughput, and control when pauses happen.
+
+In all cases a non-incremental full garbage collection will occur if memory is almost exhausted, because a pause is less disruptive than a crash.
+
+This garbage collector is non-moving.  Moving corrupts C and C++ pointers.
+
+This garbage collector is single-threaded.  Most C and C++ code is not thread-safe.
