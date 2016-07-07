@@ -1,0 +1,9 @@
+The name is "Macroni".
+
+It is not a correctly spelled word, so it should be easy to find with search engines.
+
+The name contains "macro", and macros are the most notable feature of Lisp-like programming languages.
+
+Parentheses resemble elbow macaroni, and parentheses are the most notable tokens in Lisp-like programming languages.
+
+If Macroni was used to implement an Emacs-like editor, or replace AutoHotkey's programming language, it would become a double entendre for syntactic macros and keyboard macros.
