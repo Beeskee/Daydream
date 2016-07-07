@@ -18,7 +18,7 @@ Goals:
 
   The damage errors can cause should be minimized.
 
-  If the program does not handle an error, the programming language implementation should immediately halt execution, display what expectation was violated, where the error occurred, and the relevant values.
+  If the program does not handle an error, the programming language implementation should immediately halt execution and display what expectation was violated, where the error occurred, and the relevant values.
 
   Errors should be classified such that errors due to defects are separate from input/output errors.  Only input/output errors should normally be handled.  This prevents defects from being hidden by accident.
 
@@ -78,11 +78,11 @@ Goals:
 
 * avoid unnecessary restrictions
 
-  If the programming language is too restrictive, it will be unpleasant to work in.
+  If the programming language is too restrictive, it will be unpleasant to use.
 
   As much as practical should be implemented in the programming language itself.  If it is too restrictive, this will reveal it.
 
-  It should be possible to implement a metacircular evaluator in the programming language, with a small amount of code, without much loss in efficiency.  This assures the programming language's implementation is exposed in a useful way to programs written in it.
+  It should be possible to implement a metacircular evaluator in the programming language, without much code, without much loss in efficiency.  This assures the programming language's implementation is exposed in a useful way to programs written in it.
 
 
 Non-Goals:
