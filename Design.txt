@@ -225,7 +225,7 @@ Non-Goals:
 
   That does imply that this programming language will have a fixed set of types.  It is better to have a small number of types and a large number of procedures that operate on each, than to have a large number of types and a small number of procedures that operate on each, because more code can be reused.  Dictionaries are used in place of new types.
 
-* transparent (as in Smalltalk) or non-transparent (as in Lisp Machine Lisp) persistence
+* transparent (as in Smalltalk) or non-transparent (as in Common Lisp) persistence
 
   Transparent persistence is a marvelous feature, so long as you do not try to use it to replace the file system (as Smalltalk did).  Hardware and software are likely to fail eventually, and if that occurs it is important to be able to recover programs and data, which is almost impossible if they are only stored in a, likely corrupted, core dump.
 
