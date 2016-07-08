@@ -1,0 +1,26 @@
+AutoHotkey is a kludge to solve the artificial problem that modern computers are bad at what they are designed for: automation.  It simulates a human's manual labor at the computer.
+
+Specifically, it can:
+* execute arbitrary code when a keyboard, mouse, or controller button combination is pressed, unconditionally or only when a certain window is active
+* send keyboard, mouse, and controller events
+* use Automation objects (a.k.a. an unintelligible soup of other marketing terms, including OLE Automation objects, ActiveX Scripting objects, and Active Scripting objects)
+
+In an ideal world, an officially supported interface for automation would be provided.  In reality, Automation objects are almost exclusively provided by Microsoft's products, and even they are usually inadequate.
+
+Frequently derived functionality includes:
+* automating installation, upgrading, uninstallation, and reconfiguration of software
+* remapping buttons, unconditionally or only when a certain window is active
+* implementing rapid fire in video games without it
+* launching programs when a button combination is pressed
+* switching active windows when a button combination is pressed
+* automating unnecessarily verbose data entry
+
+In an ideal world, the operating system or applications would provide these features, or eliminate the desire for them.  In reality, they frequently are not provided, and bad design makes users desire them.
+
+Most processes, and many proprietary, constantly changing, file formats and networking protocols, are only accessible through a graphical user interface.
+
+In an ideal world, the runtime would allow you to access other programs' internals to work around these problems (as in Open Genera).  In reality, all modern popular operating systems are limited by the C runtime.
+
+AutoHotkey is better than nothing.
+
+Unfortunately, the AutoHotkey programming language violates almost every principle of good design.  If a better programming language were built atop it, the lives of many Windows system administrators and users would be improved.
