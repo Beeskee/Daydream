@@ -1,13 +1,5 @@
 Goals:
 
-* good for automating Windows and Windows programs
-
-  It should be good for automating installation, upgrading, uninstallation, and reconfiguration of software.  These are among the worst problems for Windows system administrators.
-
-  It should be able to run arbitrary code when a button or button combination is pressed, globally or only when a certain window is active.  Infrequently used key combinations can be used to launch programs.  It is useful for adding some automation while using a particular program.  For example, quickly filling in fields in a badly-designed database interface.  It is useful for video games which did not bother to provide rapid fire.
-
-  It should be good for remapping buttons, globally or only when a certain window is active.  This is useful for temporarily changing the keyboard layout.  For example, a computer technician who has switched to the Dvorak keyboard layout to treat their repetitive strain injury could use it while repairing the computer of someone that uses the QWERTY keyboard layout.  It is useful for programs that did not bother to provide proper button remapping.  3-D modelers and video games frequently do not provide button remapping, and may have a very awkward default mapping, especially when alternative keyboard layouts are used.
-
 * good error handling
 
   Good error handling makes writing safe code and debugging easier.
@@ -34,7 +26,7 @@ Goals:
 
   Consistency means not having to learn, remember, and abstract over, differences that should not exist.
 
-  Constructs should always compose with any construct that can satisfy its requirements.
+  Constructs should always compose with constructs that can satisfy their requirements.
 
   Related constructs should have similar names.
 
@@ -44,7 +36,7 @@ Goals:
 
   Conflation means having to learn, remember, and abstract over, similarities that should not exist.  For example, many vector (array) operations only have useful semantics when sequential integer indexes are assumed, and therefore vectors and dictionaries should not be the same type.
 
-  Constructs should never compose with any construct that cannot satisfy its requirements.
+  Constructs should never compose with constructs that cannot satisfy their requirements.
 
   Unrelated constructs should have different names.
 
