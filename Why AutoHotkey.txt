@@ -5,7 +5,7 @@ Specifically, it can:
 * send keyboard, mouse, and controller events
 * use Automation objects (a.k.a. an unintelligible soup of other marketing terms, including OLE Automation objects, ActiveX Scripting objects, and Active Scripting objects)
 
-In an ideal world, an officially supported interface for automation would be provided.  In reality, Automation objects are almost exclusively provided by Microsoft's products, and even they are usually inadequate.
+Ideally, an officially supported interface for automation would be provided.  Unfortunately, Automation objects are almost exclusively provided by Microsoft's products, and even they are usually inadequate.
 
 Frequently derived functionality includes:
 * automating installation, upgrading, uninstallation, and reconfiguration of software
@@ -15,11 +15,11 @@ Frequently derived functionality includes:
 * switching active windows when a button combination is pressed
 * automating unnecessarily verbose data entry
 
-In an ideal world, the operating system or applications would provide these features, or eliminate the desire for them.  In reality, they frequently are not provided, and bad design makes users desire them.
+Ideally, the operating system or applications would provide these features, or eliminate the desire for them.  Unfortunately, they frequently are not provided, and bad design makes users desire them.
 
 Most processes, and many proprietary, constantly changing, file formats and networking protocols, are only accessible through a graphical user interface.
 
-In an ideal world, the runtime would allow you to access other programs' internals to work around these problems (as in Open Genera).  In reality, all modern popular operating systems are limited by the C runtime.
+Ideally, the runtime would allow you to access other programs' internals to work around these problems (as in Open Genera).  Unfortunately, all modern popular operating systems are limited by the C runtime.
 
 AutoHotkey is better than nothing.
 
