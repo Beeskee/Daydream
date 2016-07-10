@@ -93,9 +93,7 @@ Non-Goals:
 
   Being compatible with an existing Lisp-like language means accepting all of their design decisions.  I am unaware of any Lisp-like languages where I agree with all of their design decisions.
 
-  I am unaware of any Lisp-like languages that are intended for automating other programs.  It would not be surprising if one that was made different design decisions.
-
-  If I am going to go to the trouble of writing my own Lisp-like language implementation, I am going to try to improve upon existing designs as much as possible in the process.
+  If I am going to implement my own Lisp-like language, I am going to try to improve upon existing designs as much as possible.
 
 * syntactic innovation
 
@@ -189,11 +187,11 @@ Non-Goals:
 
 * implement Scheme's numerical tower
 
-  This would be nice, but it is a lot of work.
+  This is not immediately useful to me.
 
-  While system administration may involve complex data structures (it certainly involves a lot of parsing), it rarely involves complex numerical math.
+  I would be inclined to add dynamic unit and dimensional analysis.
 
-  I may support it eventually.
+  I may eventually implement this.
 
 * mandatory referential transparency
 
@@ -201,7 +199,7 @@ Non-Goals:
   * Lie.  For example, claim to only generate a sequence of actions, and that the runtime performs the side effects the actions instruct it to.  If you believe that, then C also enforces global referential transparency in exactly the same way.  The actions are system calls.  The runtime is the operating system kernel and drivers.  It just has very convenient syntax for the IO and state monads.
   * Be limited to behaving like a fancy calculator, where all variables and data structures are immutable, and no input/output is possible.  Code written in a more capable programming language could display the return values of the non-interactive programs.
 
-  Since I want this programming language to be as useful as possible, I want it to be able to perform input/output.
+  I want to use this programming language for interactive programs.
 
 * mandatory immutability
 
@@ -221,7 +219,7 @@ Non-Goals:
 
   Transparent persistence is a marvelous feature, so long as you do not try to use it to replace the file system (as Smalltalk did).  Hardware and software are likely to fail eventually, and if that occurs it is important to be able to recover programs and data, which is almost impossible if they are only stored in a, likely corrupted, core dump.
 
-  Unfortunately, it is very difficult to implement, and very inefficient, if you do not implement your own allocator.  Running on top of AutoHotkey makes that impossible.
+  Unfortunately, it is very difficult to implement, and very inefficient, if you do not implement your own allocator.
 
   If this programming language was implemented in a programming language with manual memory management, I would support this feature.
 
@@ -281,35 +279,34 @@ Non-Goals:
 
 * parallelism
 
-  AutoHotkey does not support multithreading, making this difficult to implement.
+  Some host programming languages cannot express parallelism.
 
-  To this day most C and C++ code is not thread-safe, so many programming languages with easy integration with C and C++ do not support multithreading.  AutoHotkey may never do so.
+  To this day most code is not thread-safe.  This programming language performs input/output by calling foreign functions.
 
-  There are hacks abusing inter-process communication for this purpose in the forums, similar to Python's multiprocessing and concurrent.futures implementations.  I may eventually add support for thread pools and futures that way.
+  I am unlikely to ever implement this.
 
-* networking
+* efficiency
 
-  AutoHotkey does not support networking, making this difficult to implement.
+  Some host programming languages are inefficient.
 
-  There are some libraries that use DLL calls for this purpose in the forums.  I may eventually add support for networking that way.
+  So long as the implementation is not too wasteful, it should still be usable.
 
-* high security
+  While I do not plan to implement an optimizing compiler for this programming language, I have attempted to avoid design decisions that would make that more difficult.
 
-  There is not much point in having sandboxing, taint or trademark checking, or similar security features when the programming language does not support networking.
+  If code needs to be very efficient, it should be written for the Vulkan API.  Hosts can expose that to this programming language.
 
-  I think sandboxing would be practical to implement.  Definitions from the "unsafe" module would not be imported into untrusted code's modules, and untrusted code would be restricted to importing a user-defined set of definitions.  It would still be trivial to crash the interpreter by exhausting memory, but the same can be said of most sandbox implementations.  It would be sufficient to keep untrusted code from performing harmful input/output.
+* standardized input/output facilities
 
-  I will consider implementing sandboxing after networking is implemented.
+  The input/output facilities of host programming languages varies.
 
-  I do not expect security features to be relevant to most uses of this programming language.  It is not intended for writing web apps.
+* security
 
-* high efficiency
+  Security is a lost cause so long as operating systems are not object-capability-based.
 
-  Running on top of AutoHotkey makes high efficiency impossible.  It was never designed with efficiency in mind.  It uses string interpolation of code, which is roughly equivalent to parsing lines repeatedly.  It uses reference counting, which we cannot avoid even on objects that have to be traced to be garbage collected (e.g. environments).  It makes no attempt at optimization.  Source code written on one line, using commas to separate statements, is up to 35% faster than properly formatted source code, for some unfathomable reason.
+  While I do not plan to implement security features for this programming language, I have attempted to avoid design decisions that would make that more difficult.  For example, I will not implement first-class environments.
 
-  So long as the implementation is not too wasteful it should still be usable.
+  Security features can be implemented in code written in this programming language, if necessary.
 
-  While I do not plan to write an optimizing compiler for this programming language, I have attempted to avoid design decisions that would make that more difficult.
 
 
 Noteworthy Features:
@@ -370,7 +367,7 @@ Noteworthy Features:
 
 * built-ins
 
-  The built-ins for manipulating the interpreter, and the foreign function interface, which is used to perform all input/output, are defined in the "unsafe" module.  All other built-ins are defined in the "core" module.  All definitions in these modules are normally imported into every other module implicitly, so it is possible for programmers to define things.
+  Built-ins are defined in the "core" module.  All definitions in this module are imported into every other module implicitly, so it is possible for programmers to define things.
 
   While redefining a variable in a module is normally a defect, built-ins can be redefined with only a warning.  This allows new built-ins to be defined without breaking existing code.
 
@@ -497,7 +494,7 @@ Noteworthy Features:
 
       If a macro's expansion contains a module-qualified symbol, and it does not refer to a variable in the outermost scope of the macro's home module, it is a defect.  Only variables in the outermost scope are always defined.
 
-      If a macro is called outside its home module, its expansion contains a module-qualified symbol, and it does not refer to an exported variable, it is a defect.  This restriction prevents dependence on implementation details.  The variable does not have to be exported from the macro's home module.  The variable only has to be exported from the variable's home module, which may not be the same as the macro's home module.  If modules had to import all variables their macro calls use, module interfaces would be dependent on implementation details of the macros they use.  If modules had to export all variables their macro expansions use, module interfaces would be cluttered with constructs implemented elsewhere (e.g. most modules would reexport most of the "core" and "unsafe" modules).  This encourages encapsulation.
+      If a macro is called outside its home module, its expansion contains a module-qualified symbol, and it does not refer to an exported variable, it is a defect.  This restriction prevents dependence on implementation details.  The variable does not have to be exported from the macro's home module.  The variable only has to be exported from the variable's home module, which may not be the same as the macro's home module.  If modules had to import all variables their macro calls use, module interfaces would be dependent on implementation details of the macros they use.  If modules had to export all variables their macro expansions use, module interfaces would be cluttered with constructs implemented elsewhere (e.g. most modules would reexport most of the "core" module).  This encourages encapsulation.
 
     * hygiene
 
@@ -619,13 +616,13 @@ Noteworthy Features:
 
       Modules encapsulate portions of the outermost scope.  This has several implications.  Modules do not nest.  Modules compose concatenatively.  Only one instance of a module exists at a time.
 
-      All definitions in this programming language are encapsulated in a module, even built-ins (in "core" and "unsafe") and those entered in the top-level listener (in "user").  To avoid surprising behavior, user-defined modules cannot be named "core", "unsafe", or "user".
+      All definitions in this programming language are encapsulated in a module, even built-ins (in "core") and those entered in the top-level listener (in "user").  To avoid surprising behavior, user-defined modules cannot be named "core" or "user".
 
       The module system works with /variables/, not values.  If an exported variable is mutated, other modules that import it can read the current value.
 
     * interfaces
 
-      Modules only implicitly import the "core" and "unsafe" modules, and do not implicitly export anything.  The programmer must explicitly specify the interface.  This encourages encapsulation, planning interfaces, and conscious interface change.
+      Modules only implicitly import the "core" module, and do not implicitly export anything.  The programmer must explicitly specify the interface.  This encourages encapsulation, planning interfaces, and conscious interface change.
 
       Importing or exporting the same variable from the same module more than once is /not/ a defect.  No warnings are issued.  This makes macro use easier.
 
@@ -684,17 +681,3 @@ Noteworthy Features:
     It is better to be descriptive than terse, to minimize the chance of name collisions.  Module names are not used in variable names or expressions.
 
     For example, "penguin-charity.population-tracker.map" or "population-tracker.map".
-
-* garbage collector
-
-  The garbage collector is continuous, generational, and incremental (i.e. marking and sweeping are broken down into multiple steps).  This should result in low, and fairly steady, latency.
-
-  While, past a point, a trade-off must be made between low-latency and high-throughput, generational garbage collection improves both.
-
-  Favoring low-latency over high-throughput seems like the right decision for interactive programs, like those most likely to be written in this programming language.
-
-  It is possible to disable garbage collection, perform increments only when the program is idle, and force non-incremental full garbage collections.  These features are often desired by those writing software intended for use in short bursts or video games.  AutoHotkey scripts are often used in short bursts, and often used with video games.
-
-  In all cases a non-incremental full garbage collection will still occur if memory is almost exhausted, because a pause is less disruptive than crashing.
-
-  The interface is inspired by Lua's garbage collector.
