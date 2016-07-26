@@ -217,11 +217,34 @@ Non-Goals:
 
 * transparent (as in Smalltalk) or non-transparent (as in Common Lisp) persistence
 
-  Transparent persistence is a marvelous feature, so long as you do not try to use it to replace the file system (as Smalltalk did).  Hardware and software are likely to fail eventually, and if that occurs it is important to be able to recover programs and data, which is almost impossible if they are only stored in a, likely corrupted, core dump.
+  Transparent persistence makes it possible to resume execution of a program as if nothing had gone wrong if a power or hardware failure (that does not corrupt data) occurs.
 
-  Unfortunately, it is very difficult to implement, and very inefficient, if you do not implement your own allocator.
+  Non-transparent persistence is no improvement over loading source code or binaries.
 
-  If this programming language was implemented in a programming language with manual memory management, I would support this feature.
+  Transparent persistence should not be used to replace the file system (as Smalltalk did).  Hardware may fail, and it is important to be able to recover user data, which is difficult if it is only stored in an image that may be corrupted.
+
+  The information used to resume execution is usually stored in an image file.  An image contains the set of all reachable data in a program (including call stack frames), and the program counter.
+
+  Image files are not just memory written to disk.  They may be versioned, so the image file format can be changed.  References may be stored in a relocatable format, like how the listener shows cyclical references.  Recovering from an image requires applying fix-ups to data associated with external resources, like files and network sockets.
+
+  Images must be updated atomically.  Otherwise a power or hardware failure during an update to the image would corrupt it.  If the operating system provides transactional file access, that can be used to safely update the image.  Otherwise an updated image must be written to another file, then the original file must be replaced with the updated file.
+
+  It must be possible to associate external resources with recovery procedures.  The recovery procedures are executed when recovering from an image.  In most cases a recovery procedure should put the datum into a state that will cause an input/output error condition when it is written or read.  That is appropriate for most uses of files and network sockets, because the files may have changed and the network connections may have closed since the program terminated.  That is not appropriate for graphical user interfaces, because they could not have changed since the program terminated.
+
+  Several hooks would be useful for implementing transparent persistence.  The garbage collector could have a hook for allocating a datum, and another for freeing a datum.  Those could be used to tell the transparent persistence implementation when to add a datum to or remove a datum from the image.  The runtime could have a hook for mutating a datum.  That could be used to tell the transparent persistence implementation when to change a value associated with a datum.  These hooks would be useful for implementing other things (e.g. space profilers; invariant inferencers; record, rewind, and replay debuggers).
+
+  Transparent persistence requires the host to have several features to be efficient:
+  * Parallelism.  Otherwise allocation and mutation, which require updating the image, occur at disk write speed.
+  * Transactional file access.  Otherwise updating the image requires twice the time and space.
+  * Integration with the garbage collector.  Otherwise the garbage collector must be (re)implemented with the necessary support.
+
+  Transparent persistence is not helpful if the host uses its own state recovery mechanism.  For example, a word processor might save the location of each file it has open, the location of the cursor in each file, and the contents of each file, when they change, and use this information to recover its state whenever it is executed.  If this programming language were embedded in the word processor just described (for scripting), there would be no benefit to transparent persistence.
+
+  Transparent persistence is harmful if the host uses a flash drive to store the image.  The frequent writes will rapidly wear out the drive.
+
+  Those are enough reasons to not require transparent persistence.
+
+  If this programming language were implemented in a host without tracing garbage collection, and with the ability to support efficient transparent persistence, I would consider implementing it.
 
 * implicit control flow
 
@@ -229,7 +252,7 @@ Non-Goals:
 
   Most programming languages considered to be declarative have implicit control flow, which allows you to avoid specifying how to do control flow, so long as the implicit control flow is what you need.
 
-  Some people consider functional programming languages with strict evaluation to be declarative, but they require specifying how to do everything like imperative programming languages.  Programming languages with lazy- or speculative evaluation, or goal-directed evaluation (like Icon), are more deserving of the title, but still require specifying how to do most control flow.  Good examples include constraint, pull- and push dataflow, deductive-, inductive-, and abductive logic, and string-, term-, and graph rewriting programming languages.
+  Some people consider functional programming languages with strict evaluation to be declarative, but they require specifying how to do everything like imperative programming languages.  Programming languages with lazy or speculative evaluation, or goal-directed evaluation (like Icon), are more deserving of the title, but still require specifying how to do most control flow.  Good examples include constraint, pull and push dataflow, deductive, inductive, and abductive logic, and string, term, and graph rewriting programming languages.
 
   Which implicit control flow algorithm should be included?  Each one is useful in some situations.  Whatever you decide, if you include an implicit control flow algorithm, everyone that uses your programming language is forced to learn and use it, even if it does not help solve their problems.
 
@@ -255,7 +278,7 @@ Non-Goals:
 
   The only advantage pattern guards have (views have none) over fixing the code is short-circuit evaluation.  That is an optimization for a situation that is too rare to justify its inclusion in a programming language.
 
-  Variable-length patterns, like those in Racket, are redundant.  Processing data structures of variable-depth or -length is best done with recursion.  Recursion is more general, because it can be used for more than pattern matching.  Racket uses variable-length patterns to construct, and sometimes filter, lists and bind them.  Pattern matching should be used for destructuring, not structuring (constructing data structures) or restructuring (transforming data structures).  Structuring and restructuring is best done in the code associated with a pattern.
+  Variable-length patterns, like those in Racket, are redundant.  Processing data structures of variable depth or length is best done with recursion.  Recursion is more general, because it can be used for more than pattern matching.  Racket uses variable-length patterns to construct, and sometimes filter, lists and bind them.  Pattern matching should be used for destructuring, not structuring (constructing data structures) or restructuring (transforming data structures).  Structuring and restructuring is best done in the code associated with a pattern.
 
   Some of Racket's pattern matching features are made redundant by "when" guards, which Racket also supports.  It includes a pattern construct that matches if a function passed the value returns true, which is equivalent to putting the same function call in the "when" guard.  It includes a pattern construct that matches if a regular expression matches the string value, which is equivalent to putting the same test in the "when" guard.  "when" guards are more general, because they can perform tests involving multiple values.
 
@@ -297,7 +320,7 @@ Non-Goals:
 
 * standardized input/output facilities
 
-  The input/output facilities of host programming languages varies.
+  The input/output facilities of hosts vary.
 
 * security
 
@@ -626,9 +649,9 @@ Noteworthy Features:
 
       Importing or exporting the same variable from the same module more than once is /not/ a defect.  No warnings are issued.  This makes macro use easier.
 
-      A module can have any number of import- and export specifications mingled with definitions and expressions.  The only restriction on order is that variables must be initialized by definition or importing before they are read.  This makes macro use easier.
+      A module can have any number of import and export specifications mingled with definitions and expressions.  The only restriction on order is that variables must be initialized by definition or importing before they are read.  This makes macro use easier.
 
-      An import- or export specification inside a definition or expression, except for (potentially nested) "do" forms, is a defect.  Module interfaces should not vary.  Macros may expand into import- and export specifications, which is sufficient to allow module implementations to vary at macro expansion time.  Import- and export specifications are allowed in "do" forms so a single macro call can expand into a combination of import- and export specifications, definitions, and expressions.  The value of an import- or export specification is "null".
+      An import or export specification inside a definition or expression, except for (potentially nested) "do" forms, is a defect.  Module interfaces should not vary.  Macros may expand into import and export specifications, which is sufficient to allow module implementations to vary at macro expansion time.  Import and export specifications are allowed in "do" forms so a single macro call can expand into a combination of import and export specifications, definitions, and expressions.  The value of an import or export specification is "null".
 
       A dependency cycle is a defect.  It indicates two or more modules are badly decomposed.  Some definitions need to be combined into a single module to eliminate the cycle.  Others may need to be separated into other modules.
 
@@ -636,9 +659,9 @@ Noteworthy Features:
 
       Modules may be versioned.  Unversioned modules are usually used for swapping implementations of interfaces.  Versioned modules are usually used for libraries.
 
-      A subset of the Semantic Versioning format is used.  A version number consists of non-negative decimal integers for major-, minor-, and patch version numbers, in that order, separated by periods.  The major version number is 0 before release, and incremented to 1 at release, then incremented by 1 each time backwards incompatible changes are made.  The minor version number is incremented by 1 each time features are added or depreciated.  The patch version number is incremented by 1 each time defects are corrected.  When the previous number is incremented by 1, the following numbers are reset to 0 (e.g. 1.2.15 to 1.3.0).  Trailing metadata is /not/ supported.
+      A subset of the Semantic Versioning format is used.  A version number consists of non-negative decimal integers for major, minor, and patch version numbers, in that order, separated by periods.  The major version number is 0 before release, and incremented to 1 at release, then incremented by 1 each time backwards incompatible changes are made.  The minor version number is incremented by 1 each time features are added or depreciated.  The patch version number is incremented by 1 each time defects are corrected.  When the previous number is incremented by 1, the following numbers are reset to 0 (e.g. 1.2.15 to 1.3.0).  Trailing metadata is /not/ supported.
 
-      When (re)loading a versioned module the programming language will use the most recent version that meets the specification.  The major version number must be = the requested number, and the minor- and patch version numbers must be >= the requested numbers.  The programmer should not request a patch number other than 0 unless they know their implementation is affected by a defect that is corrected in a specific patch version.
+      When (re)loading a versioned module the programming language will use the most recent version that meets the specification.  The major version number must be = the requested number, and the minor and patch version numbers must be >= the requested numbers.  The programmer should not request a patch number other than 0 unless they know their implementation is affected by a defect that is corrected in a specific patch version.
 
     * loading
 
