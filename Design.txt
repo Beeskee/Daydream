@@ -234,7 +234,7 @@ Non-Goals:
   Several hooks would be useful for implementing transparent persistence.  The garbage collector could have a hook for allocating a datum, and another for deallocating a datum.  Those could be used to tell the transparent persistence implementation when to save a datum to or delete a datum from the image.  The runtime could have a hook for mutating a datum.  That could be used to tell the transparent persistence implementation when to change a value associated with a datum.  These hooks would be useful for implementing other things (e.g. space profilers; invariant inferencers; record, rewind, and replay debuggers).
 
   Transparent persistence requires the host to have several features to be efficient:
-  * Parallelism.  Otherwise allocation and mutation, which require updating the image, occur at disk write speed.
+  * Parallelism.  Otherwise allocation, mutation and deallocation, which require updating the image, occur at disk write speed.
   * Transactional file access.  Otherwise updating the image requires twice the time and space.
   * Integration with the garbage collector.  Otherwise the garbage collector must be (re)implemented with the necessary support.
 
