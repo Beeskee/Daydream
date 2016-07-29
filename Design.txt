@@ -221,7 +221,7 @@ Non-Goals:
 
   Non-transparent persistence is no improvement over loading source code or binaries.
 
-  Transparent persistence should not be used to replace the file system (as Smalltalk did).  Hardware may fail, and it is important to be able to recover user data, which is difficult if it is only stored in an image that may be corrupted.
+  Transparent persistence should not be used to replace the file system (as Smalltalk did).  It is important to be able to recover user data if a hardware failure corrupts data.  That is difficult if all system data, user data, and the contents of memory are amalgamated.
 
   The information used to resume execution is usually stored in an image file.  An image contains the set of all reachable data in a program (including call stack frames), and the program counter.
 
@@ -233,12 +233,13 @@ Non-Goals:
 
   Several hooks would be useful for implementing transparent persistence.  The garbage collector could have a hook for allocating a datum, and another for deallocating a datum.  Those could be used to tell the transparent persistence implementation when to save a datum to or delete a datum from the image.  The runtime could have a hook for mutating a datum.  That could be used to tell the transparent persistence implementation when to change a value associated with a datum.  These hooks would be useful for implementing other things (e.g. space profilers; invariant inferencers; record, rewind, and replay debuggers).
 
-  Transparent persistence requires the host to have several features to be efficient:
+  Transparent persistence requires integration with the garbage collector.
+
+  Transparent persistence requires the host to have certain features to be efficient:
   * Parallelism.  Otherwise allocation, mutation, and deallocation, which require updating the image, occur at disk write speed.
   * Transactional file access.  Otherwise updating the image requires twice the time and space.
-  * Integration with the garbage collector.  Otherwise the garbage collector must be (re)implemented with the necessary support.
 
-  Transparent persistence is not helpful if the host uses its own state recovery mechanism.  For example, a word processor might save the location of each file it has open, the location of the cursor in each file, and the contents of each file, when they change, and use this information to recover its state whenever it is executed.  If this programming language were embedded in the word processor just described (for scripting), there would be no benefit to transparent persistence.
+  Transparent persistence is not helpful if the host uses its own state recovery mechanism.  For example, a word processor might save the location of each file, the location of the cursor in each file, and the contents of each file, when they change, and use this information to recover its state whenever it is executed.  If this programming language were embedded in the word processor just described (for scripting), there would be no benefit to transparent persistence.
 
   Transparent persistence is harmful if the host uses a flash drive to store the image.  The frequent writes will rapidly wear out the drive.
 
