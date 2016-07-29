@@ -239,7 +239,7 @@ Non-Goals:
   * Parallelism.  Otherwise allocation, mutation, and deallocation, which require updating the image, occur at disk write speed.
   * Transactional file access.  Otherwise updating the image requires twice the time and space.
 
-  Transparent persistence is not helpful if the host uses its own state recovery mechanism.  For example, a word processor might save the location of each file, the location of the cursor in each file, and the contents of each file, when they change, and use this information to recover its state whenever it is executed.  If this programming language were embedded in the word processor just described (for scripting), there would be no benefit to transparent persistence.
+  Transparent persistence is not helpful if the host uses its own state recovery mechanism.  For example, a word processor might save the location of each document file, the location of the cursor in each document file, and the contents of each document file, when they change, and use this information to recover its state whenever it is executed.  If this programming language were embedded in the word processor just described (for scripting), transparent persistence would provide no additional benefit.
 
   Transparent persistence is harmful if the host uses a flash drive to store the image.  The frequent writes will rapidly wear out the drive.
 
