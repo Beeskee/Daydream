@@ -223,7 +223,7 @@ Non-Goals:
 
   Transparent persistence should not be used to replace the file system (as Smalltalk did).  It is important to be able to recover user data if a hardware failure corrupts data.  That is difficult if all system data, user data, and the contents of memory are amalgamated.
 
-  The information used to resume execution is usually stored in an image file.  An image contains the set of all reachable data in a program (including call stack frames), and the program counter.
+  The information used to resume execution is usually stored in an image file.  An image contains the set of all reachable data in a program (including the program counter and call stack frames).
 
   Image files are not just memory written to disk.  They may be versioned, so the image file format can be changed.  References may be stored in a relocatable format, like how the listener shows cyclical references.  Recovering from an image requires applying fix-ups to data associated with external resources, like files and network sockets.
 
