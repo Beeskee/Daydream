@@ -664,7 +664,7 @@ Noteworthy Features:
 
       A subset of the Semantic Versioning format is used.  A version number consists of non-negative decimal integers for major, minor, and patch version numbers, in that order, separated by periods.  The major version number is 0 before release, and incremented to 1 at release, then incremented by 1 each time backwards incompatible changes are made.  The minor version number is incremented by 1 each time features are added or depreciated.  The patch version number is incremented by 1 each time defects are corrected.  When the previous number is incremented by 1, the following numbers are reset to 0 (e.g. 1.2.15 to 1.3.0).  Trailing metadata is /not/ supported.
 
-      When (re)loading a versioned module the programming language will use the most recent version that meets the specification.  The major version number must be = the requested number, and the minor and patch version numbers must be >= the requested numbers.  The programmer should not request a patch number other than 0 unless they know their implementation is affected by a defect that is corrected in a specific patch version.
+      When (re)loading a versioned module the programming language will use the latest version that meets the specification.  The major version number must be = the requested number, and the minor and patch version numbers must be >= the requested numbers.  The programmer should not request a patch number other than 0 unless they know their implementation is affected by a defect that is corrected in a specific patch version.
 
     * loading
 
@@ -683,6 +683,8 @@ Noteworthy Features:
       Modules can be reloaded at the listener and in modules.  This is useful for exploratory programming, or hot swapping to correct a defect in, or add features to, a running program.
 
       Modules are reloaded by rereading and executing them.
+
+      Reloading a module that has not changed, when a later version is not available, may have no effect.
 
       A reloaded module's dependencies are /not/ reset to their initial states, since the point in reloading a module is usually to redefine the module without losing other state.
 
