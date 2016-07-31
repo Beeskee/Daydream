@@ -3,11 +3,24 @@ Introduction:
 If the host programming language uses a tracing garbage collector, it will be reused.  This document describes the tracing garbage collector I would implement in a programming language without one.
 
 
-Design:
+The Solution Space:
 
-This garbage collector is intended for interactive programs, where low, constant, latency is important.
+Interactive programs require low, constant, latency.  Garbage collectors with long or variable pauses are unacceptable.
 
-This garbage collector is continuous, generational, and incremental (i.e. marking and sweeping are broken down into multiple steps).
+All modern popular operating systems are written in C and C++.  C and C++ use manual resource management, and lack safe multithreading abstractions.  These and other flaws have had a harmful effect on operating system design.  An acceptable garbage collector design will avoid making these problems worse, and provide workarounds where possible.
+
+Moving corrupts C and C++ pointers.  Moving garbage collectors are unacceptable.
+
+Most code is not thread-safe.  Multithreaded garbage collectors are unacceptable.
+
+
+Internal Resource Management:
+
+Due to the influence of C and C++, only resources which are not observable by other processes can be managed automatically.  That is, effectively, memory.
+
+Modules must be garbage collected.  Reloading a module may cause the previous instance to become unreachable.
+
+This garbage collector is continuous, generational, and incremental (i.e. marking and sweeping are decomposed into multiple steps).
 
 Continuous garbage collection improves latency and space efficiency at cost to throughput.
 
@@ -19,6 +32,26 @@ It is possible to stop and start garbage collection, perform increments only whe
 
 In all cases a non-incremental full garbage collection will occur if memory is almost exhausted, because a pause is less disruptive than a crash.
 
-This garbage collector is non-moving.  Moving corrupts C and C++ pointers.
 
-This garbage collector is single-threaded.  Most C and C++ code is not thread-safe.
+External Resource Management:
+
+Due to the influence of C and C++, resources which are observable by other processes must be managed manually.  That includes, files, graphical user interfaces, and network connections.
+
+It may seem like the garbage collector could manage external resources automatically, but that would not work reliably, and would hide defects.  Modern popular operating systems assume resources are deallocated as soon as possible; often in a specific order.  Windows will cause an error if the same process tries to open the same file for exclusive access more than once before closing it, and most operating systems will cause an error if the same process tries to open the same port more than once before closing it.  An operating system designed with automatic resource management in mind would tolerate the same process allocating the same resource multiple times, and only deallocate it when it had been deallocated by the process the same number of times (or when the process terminates).  Since delaying deallocating a resource could result in errors, it is best if the garbage collector signals a defect condition when it detects an external resource has become unreachable without being deallocated first.
+
+External resources must be modeled as proxy objects associated with a procedure for allocating them, and a procedure for deallocating them.
+
+The proxy object may contain additional logic.  For example, the proxy object associated with a graphical user interface must contain references to the event handlers of its controls.  Otherwise those event handlers would be considered unreachable and be garbage collected, which would cause an error when the user attempted to use the controls.
+
+Some external resources can be managed semi-automatically by a construct that allocates it, then runs a user-defined procedure with it as an argument, then deallocates it.  Lisp-like languages often provide "with" constructs for this purpose.  That is sufficient for most file operations.
+
+Other external resources must be managed manually by explicitly allocating and deallocating them.  That is necessary for most long-lived external resources.
+
+
+Transparent Persistence:
+
+If the implementation is to support transparent persistence, external resources must also be associated with a procedure for recovering them, and the hooks mentioned in the main design document should be implemented.
+
+When deciding what parameters procedures attached to the hooks should have, remember that those procedures will be called when the program counter or call stack frames change.
+
+While the transparent persistence mechanism could be hardcoded, that would preclude implementing as much has practical in the programming language itself, and would preclude implementing other useful tools.
