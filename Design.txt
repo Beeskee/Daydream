@@ -332,7 +332,6 @@ Non-Goals:
   Security features can be implemented in code written in this programming language, if necessary.
 
 
-
 Noteworthy Features:
 
 * intended use
