@@ -297,7 +297,7 @@ Non-Goals:
 
   Transducers are unnecessarily restrictive, since they are limited to one order of traversal (usually "foldl1").
 
-  They cause surprising behavior in a programming language with partial application, because it is ambiguous whether functions that can return transducers return a transducer or partially applied function when they are passed less than the maximum number of arguments.
+  Transducers cause surprising behavior in a programming language with partial application, because it is ambiguous whether functions that can return transducers return a transducer or partially applied function when they are passed less than the maximum number of arguments.
 
   To avoid the construction and traversal of intermediate data structures, use streams.
 
