@@ -1,1 +1,0 @@
-If we only refer to the 'outer' object, which we will need anyway for things like the type, we will be able to break reference cycles more efficiently than setting large numbers of references to the empty string, by setting the reference to the 'inner' object to the empty string.  This trick should work for all data structures that contain references.

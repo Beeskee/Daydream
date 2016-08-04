@@ -1,9 +1,0 @@
-Due to AutoHotkey's inadequate introspection support, it is necessary to specify the type a value should be boxed as when passing it to our programming language.  This could be performed by code written in AutoHotkey or our programming language, but it is better to do it in AutoHotkey.  If it was done by code written in our programming language, we would be unable to use sum types.  The programmer writing code in AutoHotkey should be able to specify which type to use when there is more than one possibility.  The API must allow data structures to be built.  This design also negatively affects less code I plan to write, since I plan to write as little as possible in AutoHotkey.
-
-It is theoretically possible to avoid the boxing problem entirely by only calling closures that require no arguments or evaluating strings.
-
-Unboxing is not ambiguous, and therefore can be done automatically.
-
-Automation objects can contain: integers, floating point numbers, strings, arrays, other Automation objects, and some things that have no equivalent in AutoHotkey.  That's it.  AutoHotkey converts arrays to its internal format.  We will probably have to ask the programmer how to box values from Automation objects.
-
-AutoHotkey makes you tell it the type signature of a DLL call, so you know how to box the return value (which is always scalar) from that.
