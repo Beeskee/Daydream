@@ -111,7 +111,7 @@ Non-Goals:
 
   Parentheses shaming (e.g. "Lisp stands for Lots of Irritating Superfluous Parentheses") has inspired the authors of several Lisp-like languages (e.g. Arc and Clojure) to remove parentheses anywhere they could be inferred (e.g. around key-value pairs in a dictionary).
 
-  This reduces the utility of structure editors and source code formatting tools, since parentheses inference is not possible in the general case (e.g. in macro calls).
+  This reduces the utility of structure editors and source code formatting tools, because parentheses inference is not possible in the general case (e.g. in macro calls).
 
   It makes source code difficult to understand, because the human has to infer the parentheses to understand the grouping.
 
@@ -153,7 +153,7 @@ Non-Goals:
 
 * mandatory static type checking
 
-  Programmers often worry too much about whether their programming language is dynamically or statically type checked, and do not worry enough about whether their code is very dynamic or static.  The more general code is, the more dynamic it must be, because it must handle more possibilities at run time.  The more safe and efficient code is, the more static it must be, because it must prevent more possibilities at run time.  Since generality, safety, and efficiency are all desirable properties, the question should be which is more important for your code's intended use, not which is always superior.  It is easier to write dynamic code with dynamic type checking, and static code with static type checking, but either kind of code can be written with either kind of type checking.
+  Programmers often worry too much about whether their programming language is dynamically or statically type checked, and do not worry enough about whether their code is very dynamic or static.  The more general code is, the more dynamic it must be, because it must handle more possibilities at run time.  The more safe and efficient code is, the more static it must be, because it must prevent more possibilities at run time.  Generality, safety, and efficiency are all desirable properties, so the question should be which is more important for your code's intended use, not which is always superior.  It is easier to write dynamic code with dynamic type checking, and static code with static type checking, but either kind of code can be written with either kind of type checking.
 
   A mandatory static type system causes several problems.
 
@@ -181,7 +181,7 @@ Non-Goals:
 
   The absence of an equivalent to the null type in most Lisp-like languages results in abusing other types or values as sentinel values.  The empty list is the most common choice, but false is usually chosen when an empty list could be confused with a meaningful value.  This feels like a kludge, but it is the cleanest solution.
 
-  If lists are described in terms of null references, the length of "'(null)" becomes ambiguous, because it is equivalent to "'()".  List operations lose useful semantics.  Converting vectors with trailing nulls to lists will result in lists that have less elements than the corresponding vector.  "cons"ing a value to a list does not necessarily result in a longer list, since that value might have been null.
+  If lists are described in terms of null references, the length of "'(null)" becomes ambiguous, because it is equivalent to "'()".  List operations lose useful semantics.  Converting vectors with trailing nulls to lists will result in lists that have less elements than the corresponding vector.  "cons"ing a value to a list does not necessarily result in a longer list, because that value might have been null.
 
   This does raise the question of what the "first" and "rest" of the empty list is.  In this programming language they are defects, as in Scheme and most Lisp-like languages other than Common Lisp (where they are the empty list).  This is consistent with trying to access a vector out of bounds.  The "rest" of a 1 element list is the empty list, and "null?" can be used to test for that.
 
@@ -223,7 +223,7 @@ Non-Goals:
 
   Transparent persistence should not be used to replace the file system (as Smalltalk did).  It is important to be able to recover user data if a hardware failure corrupts data.  That is difficult if all system data, user data, and the contents of memory are amalgamated.
 
-  The information used to resume execution is usually stored in an image file.  An image contains the set of all reachable data in a program (including the program counter and call stack frames).
+  The data used to resume execution is usually stored in an image file.  An image contains the set of all reachable data in a program (including the program counter and call stack frames).
 
   Image files are not just memory written to disk.  They may be versioned, so the image file format can be changed.  References may be stored in a relocatable format, like how the listener shows cyclical references.  Recovering from an image requires applying fix-ups to data associated with external resources, like files and network sockets.
 
@@ -239,7 +239,7 @@ Non-Goals:
   * Parallelism.  Otherwise allocation, mutation, and deallocation, which require updating the image, occur at disk write speed.
   * Transactional file access.  Otherwise updating the image requires twice the time and space.
 
-  Transparent persistence is not helpful if the host uses its own state recovery mechanism.  For example, a word processor might save the location of each document file, the location of the cursor in each document file, and the contents of each document file, when they change, and use this information to recover its state whenever it is executed.  If this programming language were embedded in the word processor just described (for scripting), transparent persistence would provide no additional benefit.
+  Transparent persistence is not helpful if the host uses its own state recovery mechanism.  For example, a word processor might save the location of each document file, the location of the cursor in each document file, and the contents of each document file, when they change, and use this data to recover its state whenever it is executed.  If this programming language were embedded in the word processor just described (for scripting), transparent persistence would provide no additional benefit.
 
   Transparent persistence is harmful if the host uses a flash drive to store the image.  The frequent writes will rapidly wear out the drive.
 
@@ -295,7 +295,7 @@ Non-Goals:
 
   Transducers are transformations from one reducing (folding) function to another.
 
-  Transducers are unnecessarily restrictive, since they are limited to one order of traversal (usually "foldl1").
+  Transducers are unnecessarily restrictive, because they are limited to one order of traversal (usually "foldl1").
 
   Transducers cause surprising behavior in a programming language with partial application, because it is ambiguous whether functions that can return transducers return a transducer or partially applied function when they are passed less than the maximum number of arguments.
 
@@ -323,14 +323,6 @@ Non-Goals:
 
   The input/output facilities of hosts vary.
 
-* security
-
-  Security is a lost cause so long as operating systems are not object-capability-based.
-
-  While I do not plan to implement security features for this programming language, I have attempted to avoid design decisions that would make that more difficult.  For example, I will not implement first-class environments.
-
-  Security features can be implemented in code written in this programming language, if necessary.
-
 
 Noteworthy Features:
 
@@ -356,7 +348,7 @@ Noteworthy Features:
 
 * modernization
 
-  Lisp parachronisms have been replaced or removed, since we use IBM PC compatibles instead of IBM 704s, and monitors instead of teleprinters.  "car" is replaced with "first", "cdr" is replaced with "rest", and "car" and "cdr" compositions (like "caddar") have been removed.  You "show" things on the monitor, not "print" them.  You do exploratory programming at the listener, not the REPL.
+  Lisp parachronisms have been replaced or removed, because we use IBM PC compatibles instead of IBM 704s, and monitors instead of teleprinters.  "car" is replaced with "first", "cdr" is replaced with "rest", and "car" and "cdr" compositions (like "caddar") have been removed.  You "show" things on the monitor, not "print" them.  You do exploratory programming at the listener, not the REPL.
 
 * syntax
 
@@ -407,7 +399,7 @@ Noteworthy Features:
   This is much simpler than in Common Lisp.
 
   For example:
-  "(set! (a-dict "x") (a-dict "y"))"
+  "(set! (a-dict "x") 0)"
 
 * equality
 
@@ -415,13 +407,13 @@ Noteworthy Features:
 
 * regular expressions
 
-  SREs (s-expression regular expressions) are supported.  They may be missing features the host programming language's regular expression implementation does not support, since I plan to reuse that.  I do not plan to support features the host programming language does, but Schs's SREs do not.
+  SREs (s-expression regular expressions) are supported.  They may be missing features the host programming language's regular expression implementation does not support, because I plan to reuse that.  I do not plan to support features the host programming language does, but Schs's SREs do not.
 
 * control flow
 
   * sequence
 
-    "do" evaluates a sequence of forms in order and returns the value of the last expression.  An empty "do" is a defect, because the value is uninitialized.  Control flow sequences are implicit in most places where you might want to use them, except for "if".  "do" can be used by macros to generate multiple definitions and expressions in the same scope, since it does not create a new scope.
+    "do" evaluates a sequence of forms in order and returns the value of the last expression.  An empty "do" is a defect, because the value is uninitialized.  Control flow sequences are implicit in most places where you might want to use them, except for "if".  "do" can be used by macros to generate multiple definitions and expressions in the same scope, because it does not create a new scope.
 
   * branch
 
@@ -459,7 +451,7 @@ Noteworthy Features:
 
       OCaml's closed interval pattern construct is supported, and named "inr".  It has two parameters, the first for the low bound, the second for the high bound.  It is more convenient than specifying each element of a closed interval of numbers or single-character strings in an "or" pattern construct.
 
-      "when" guards use s-expression prefix syntax, since this programming language does not support keyword parameters.  They cannot appear inside a pattern, because all variables must be bound before a "when" guard can be evaluated.  They are useful for testing individual variables for something more complex than equality, or testing relationships between variables.
+      "when" guards use s-expression prefix syntax, because this programming language does not support keyword parameters.  They cannot appear inside a pattern, because all variables must be bound before a "when" guard can be evaluated.  They are useful for testing individual variables for something more complex than equality, or testing relationships between variables.
 
 * functions
 
@@ -469,7 +461,7 @@ Noteworthy Features:
 
   * calls
 
-    While (trailing) optional and rest parameters are supported, most forms are of fixed-arity.  Partial application only works with fixed-arity forms.  If a form cannot be used with partial application (special forms and macros), and variable-arity could be useful, it is used.  Most constructors (e.g. "dict", "lst", and "vctr") are variadic, because if they were not it would be impossible to create data structures with different numbers of elements.  "do" (explicit and implicit) is variadic, because if it was not it would be impossible to create control flow sequences with different numbers of expressions.  Optional parameters follow "?", while the rest parameter follows "&".  To avoid surprising behavior, "?" and "&" are not valid variable names.  Keyword parameters are not supported.  They cannot be used with partial application, and interact in surprising ways with optional and rest parameters.  Data structures are often used where optional, rest, and keyword parameters would be used in other Lisp-like languages.
+    While (trailing) optional and rest parameters are supported, most forms are of fixed-arity.  Partial application only works with fixed-arity forms.  If a form cannot be used with partial application (special forms and macros), and variable-arity could be useful, it is used.  Most constructors (e.g. "dict", "lst", and "vctr") are variadic, because if they were not it would be impossible to create data structures with different numbers of elements.  "do" (explicit and implicit) is variadic, because if it were not it would be impossible to create control flow sequences with different numbers of expressions.  Optional parameters follow "?", while the rest parameter follows "&".  To avoid surprising behavior, "?" and "&" are not valid variable names.  Keyword parameters are not supported.  They cannot be used with partial application, and interact in surprising ways with optional and rest parameters.  Data structures are often used where optional, rest, and keyword parameters would be used in other Lisp-like languages.
 
     Function arguments are evaluated once, from left to right, as in Common Lisp.  It is bad style to depend on that, but it seems better to standardize it than to have it be implementation-defined as it is in so many programming languages.  Optimizing compilers may generate code that evaluates arguments without side effects in any order.
 
@@ -501,7 +493,7 @@ Noteworthy Features:
 
   "unquote" or "unquote-splicing" outside of "quasiquote" is a defect.
 
-  Destructive unquote-splicing is not supported, since it seems to be only useful for causing defects.
+  Destructive unquote-splicing is not supported, because it seems to be only useful for causing defects.
 
 * macros
 
@@ -537,13 +529,13 @@ Noteworthy Features:
 
       The parser and "sym" function generate name symbols.
 
-      A name symbol at the beginning of a list, coerced to a module-qualified symbol with the value of "def", "fn", "mac", "quote", or "quasiquote" causes some name symbols that follow to be handled differently.  This is a test for identity, so they are correctly recognized when rebound.  Shorthand for "quote" ("'") and "quasiquote" ("`") is equivalent to the longhand form, as always.
+      A name symbol at the beginning of a list, coerced to a module-qualified symbol with the value of "quote", "quasiquote", "def", "fn", or "mac", causes some name symbols that follow to be handled differently.  This is a test for identity, so they are correctly recognized when rebound.  Shorthand for "quote" ("'") and "quasiquote" ("`") is equivalent to the longhand form, as always.
 
       If the name symbol is quoted or is used as a variable in the outermost scope, it is not coerced when returned from a macro.
 
       If the name symbol is used as a parameter or a local variable, every name symbol with the same name in the same scope is coerced to a gensymed symbol with the same counter value when returned from a macro.
 
-      Gensymed symbols construct unique places for each gensymed symbol for each macro expansion.  This avoids surprising behavior by preventing name collisions.  They are effectively symbols named by a global counter.  They are unique due to forbidding symbols in source code from having integer names, and incrementing the global counter by 1 on each use.  They are still shown with a valid symbol name preceding the integer.
+      Gensymed symbols construct unique places for each gensymed symbol for each macro expansion.  This avoids surprising behavior by preventing name collisions.  They are effectively symbols named by a global counter.  They are unique due to forbidding symbols in source code from following the gensymed symbol naming convention, and incrementing the global counter by 1 on each use.
 
       Otherwise the name symbol is coerced to a module-qualified symbol qualified with the macro's home module (where the macro was defined) when returned from a macro.
 
@@ -570,19 +562,17 @@ Noteworthy Features:
 
     * symbol macros
 
-      A symbol macro call looks like a symbol.  They are useful as generalized variables.
+      A symbol macro call appears to be a symbol.  They are useful as generalized variables.
 
       They are constructed with "symac".  "symac"'s first parameter is a symbol.  Symbol macros have no parameters.
 
       Symbol macros are like other macros in all other respects.
 
-      Symbol macros often, but not always, return a list beginning with a captured symbol.
-
     * evaluation
 
       Macros differ from functions in that their arguments are not evaluated before their body, and they execute before run time.
 
-      If macros' arguments were evaluated before their body, as in function application, macros could not inspect, transform, or selectively evaluate their arguments.  Using a macro with function application (e.g. with "apply", folds, "map", or "filter") is a defect.
+      If macros' arguments were evaluated before their body, as in function application, macros could not inspect, transform, or selectively evaluate their arguments.  Using a macro with function application (e.g. with folds, "map", or "filter") is a defect.
 
       If macros did not execute before run time, they would be less useful.  They could not be used for static analysis or optimization.  They could not be used for extending the language in ways that are easy to statically analyze or optimize.  Executing before run time, and reducing the extended language to the base language (the language without macros), is what makes them superior to fexprs.  Calling a macro at run time is a defect.
 
@@ -616,7 +606,7 @@ Noteworthy Features:
 
   There is a condition system that is similar to the one in Common Lisp.  It is used to handle defects, input/output errors, and warnings.  Using it as a general-purpose communication mechanism is discouraged, because invisible communication channels make code difficult to maintain.  A condition system seems to be the only way to satisfy our error handling design goals.
 
-  Warnings are issued when code needs maintenance but still works.  For example, it might use a depreciated construct, or a bad practice that was previously tolerated.  Warnings are shown by default, since that is the only responsible way to design a programming language.  History has shown most programmers make no effort to find problems in their code.  Condition handlers can choose other ways to handle warnings, such as logging or discarding them.
+  Warnings are issued when code needs maintenance but still works.  For example, it might use a depreciated construct, or a bad practice that was previously tolerated.  Warnings are shown by default, because that is the only responsible way to design a programming language.  History has shown most programmers make no effort to find problems in their code.  Condition handlers can choose other ways to handle warnings, such as logging or discarding them.
 
   Sometimes the condition system cannot report the exact location of a problem, because the code with the problem was generated instead of parsed.  In these cases it reports the closest location possible, which is usually an "eval" or macro call.  That is usually the expected and desired behavior.
 
@@ -685,7 +675,7 @@ Noteworthy Features:
 
       Reloading a module that has not changed, when a later version is not available, may have no effect.
 
-      A reloaded module's dependencies are /not/ reset to their initial states, since the point in reloading a module is usually to redefine the module without losing other state.
+      A reloaded module's dependencies are /not/ reset to their initial states, because the point in reloading a module is usually to redefine the module without losing other state.
 
       Attempting to reload a module that is not loaded is a defect.
 
