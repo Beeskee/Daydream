@@ -465,7 +465,7 @@ Noteworthy Features:
 
     Function arguments are evaluated once, from left to right, as in Common Lisp.  It is bad style to depend on that, but it seems better to standardize it than to have it be implementation-defined as it is in so many programming languages.  Optimizing compilers may generate code that evaluates arguments without side effects in any order.
 
-    Partial application is supported.  If you call a fixed-arity function with less than the number of arguments it expects, it will return a closure that will accept the remaining arguments and has the closed-over arguments in its environment.  Parameters should appear in order from the most to least likely to be reused.  This makes using closures much more convenient.  Calling a fixed-arity function with the expected number of arguments causes it to run normally.  Calling a function with too many arguments is a defect.
+    Partial application is used where "apply" would be used in other Lisp-like languages.  If you call a fixed-arity function with less than the number of arguments it expects, it will return a closure that will accept the remaining arguments and has the closed-over arguments in its environment.  Parameters should appear in order from the most to least likely to be reused.  This makes using closures much more convenient.  Calling a fixed-arity function with the expected number of arguments causes it to run normally.  Calling a function with too many arguments is a defect.
 
     "fix-arity" creates a fixed-arity copy of a variadic form to make it easier to build closures with.
 
@@ -608,7 +608,7 @@ Noteworthy Features:
 
   Warnings are issued when code needs maintenance but still works.  For example, it might use a depreciated construct, or a bad practice that was previously tolerated.  Warnings are shown by default, because that is the only responsible way to design a programming language.  History has shown most programmers make no effort to find problems in their code.  Condition handlers can choose other ways to handle warnings, such as logging or discarding them.
 
-  Sometimes the condition system cannot report the exact location of a problem, because the code with the problem was generated instead of parsed.  In these cases it reports the closest location possible, which is usually an "eval" or macro call.  That is usually the expected and desired behavior.
+  Sometimes the condition system cannot report the exact location of a problem, because the code with the problem was generated instead of parsed.  In these cases it reports the closest location possible, which is usually a macro or "sb" call.  That is usually the expected and desired behavior.
 
 * modules
 
