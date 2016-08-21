@@ -66,7 +66,7 @@ Goals:
 
   * seek symmetry
 
-    Where practical, inverse functions should be provided.  Other forms of symmetry may also be of practical value.
+    When practical, inverse functions should be provided.  Other forms of symmetry may also be of practical value.
 
 * avoid unnecessary restrictions
 
@@ -74,7 +74,7 @@ Goals:
 
   As much as practical should be implemented in the programming language itself.  If it is too restrictive, this will reveal it.
 
-  It should be possible to implement a metacircular evaluator in the programming language, without much code, without much loss in efficiency.  This assures the programming language's implementation is exposed in a useful way to programs written in it.
+  It should be possible to implement a metacircular evaluator in the programming language, without much code, without much loss in efficiency.  This ensures the programming language's implementation is exposed in a useful way to programs written in it.
 
 
 Non-Goals:
@@ -161,7 +161,7 @@ Non-Goals:
 
   Programmers define an excess of types, and a small number of functions to work with each type, because using a separate type for each purpose minimizes the chance of operating on an invalid value.  It also minimizes code reuse.
 
-  Type annotations make source code more verbose.  In theory, type inference, combined with a programming language design that assures type inference is always possible, can eliminate the need for type annotations.  In practice, even in programming languages with type inference, most definitions in the outermost scope must have type annotations, because most will be exported, and code in other modules would break if their type changed.
+  Type annotations make source code more verbose.  In theory, type inference, combined with a programming language design that ensures type inference is always possible, can eliminate the need for type annotations.  In practice, even in programming languages with type inference, most definitions in the outermost scope must have type annotations, because most will be exported, and code in other modules would break if their type changed.
 
   Making changes requires more effort, because you must change the type annotations everywhere a variable is used when you want to change its type.
 
@@ -171,7 +171,7 @@ Non-Goals:
 
   A static type system is not necessary nor sufficient to eliminate run time type checks.  Most variables in code written in dynamically type checked languages are used with a single type of value, and compilers can use type inference to eliminate most run time type checks.  Lisp compilers have been doing that for decades.  When sum types (a.k.a. tagged unions) are used in statically type checked languages, run time type checks (reading the tag) determine what code to run.
 
-  What features should be included in a static type system?  Most are primarily or exclusively concerned with type specifiers: what type a value is.  I rarely make mistakes involving operating on the wrong type of value, and when I do it is almost always easy to detect and correct.  Making mistakes with units of measure is an exception.  I consider unit and dimensional analysis, especially with safe type coercion, very helpful.  I would prefer a static type system to be more concerned with type qualifiers: what qualities a value has.  For example, inferring and checking the immutability of variables and values, taint checking, and typestate checking.  Mistakes involving those are almost always difficult to detect and correct.  Forcing side effects to be clustered near execution entry and exit points, by preventing referentially transparent procedures from calling non-referentially transparent procedures (which would make them not referentially transparent), results in designs where most procedures compose, and the code is easier to maintain and optimize.  Something like checked exceptions, but for a condition system, is probably the right way to assure input/output errors are handled.  Whatever you decide, if you include a mandatory static type system, everyone that uses your programming language is forced to learn and use it, even if it does not help solve their problems.  Trying to solve everyone's problems in a mandatory static type system results in runaway complexity.
+  What features should be included in a static type system?  Most are primarily or exclusively concerned with type specifiers: what type a value is.  I rarely make mistakes involving operating on the wrong type of value, and when I do it is almost always easy to detect and correct.  Making mistakes with units of measure is an exception.  I consider unit and dimensional analysis, especially with safe type coercion, very helpful.  I would prefer a static type system to be more concerned with type qualifiers: what qualities a value has.  For example, inferring and checking the immutability of variables and values, taint checking, and typestate checking.  Mistakes involving those are almost always difficult to detect and correct.  Forcing side effects to be clustered near execution entry and exit points, by preventing referentially transparent procedures from calling non-referentially transparent procedures (which would make them not referentially transparent), results in designs where most procedures compose, and the code is easier to maintain and optimize.  Something like checked exceptions, but for a condition system, is probably the right way to ensure input/output errors are handled.  Whatever you decide, if you include a mandatory static type system, everyone that uses your programming language is forced to learn and use it, even if it does not help solve their problems.  Trying to solve everyone's problems in a mandatory static type system results in runaway complexity.
 
   For all these reasons, and more, a dynamically type checked language with a Lisp macro system is "the right thing".  Macros can describe any static type system you want, if you want one.  Static type checking becomes optional and pluggable.  Functions written with different type systems can call each other with no effort.
 
@@ -328,7 +328,7 @@ Noteworthy Features:
 
 * intended use
 
-  This programming language is designed to be embedded in other programs.
+  This programming language is intended to be embedded in other programs.
 
 * good error handling and exploratory programming
 
@@ -403,7 +403,7 @@ Noteworthy Features:
 
 * equality
 
-  Equality is much simpler than in most Lisp-like languages.  "=" compares values for immutable types, and identities (i.e. addresses) for mutable types, like "==" in most popular programming languages.  Dictionaries always use this form of equality, because it assures keys remain associated with their values.  "equal?" compares values even for mutable types, and correctly handles reference cycles, like "equal?" in Scheme.  Pattern matching always uses this form of equality, because it handles immutable and mutable types consistently.
+  Equality is much simpler than in most Lisp-like languages.  "=" compares values for immutable types, and identities (i.e. addresses) for mutable types, like "==" in most popular programming languages.  Dictionaries always use this form of equality, because it ensures keys remain associated with their values.  "equal?" compares values even for mutable types, and correctly handles reference cycles, like "equal?" in Scheme.  Pattern matching always uses this form of equality, because it handles immutable and mutable types consistently.
 
 * regular expressions
 
@@ -572,7 +572,7 @@ Noteworthy Features:
 
       Macros differ from functions in that their arguments are not evaluated before their body, and they execute before run time.
 
-      If macros' arguments were evaluated before their body, as in function application, macros could not inspect, transform, or selectively evaluate their arguments.  Using a macro with function application (e.g. with folds, "map", or "filter") is a defect.
+      If macros' arguments were evaluated before their body, as in function application, macros could not inspect or transform their arguments.  Using a macro with function application (e.g. with folds, "map", or "filter") is a defect.
 
       If macros did not execute before run time, they would be less useful.  They could not be used for static analysis or optimization.  They could not be used for extending the language in ways that are easy to statically analyze or optimize.  Executing before run time, and reducing the extended language to the base language (the language without macros), is what makes them superior to fexprs.  Calling a macro at run time is a defect.
 
@@ -590,7 +590,7 @@ Noteworthy Features:
 
     "(expand-hide form symbols)" recursively expands macro calls in the form unless their symbol names match the symbol names in the sequence.  This is primarily useful to reduce clutter caused by specific macro expansions when trying to understand other macro expansions.
 
-    "(expand-when form function)" recursively expands macro calls in the form when the predicate function returns true.  The function parameters are "(symbol args)" for the macro call's symbol and arguments.  This is primarily useful when writing code walking macros that inspect or transform constructs (including macro calls).
+    "(expand-when form predicate)" recursively expands macro calls in the form when the predicate function returns true.  The function parameters are "(symbol args)" for the macro call's symbol and arguments.  This is primarily useful when writing code walking macros that inspect or transform constructs (including macro calls).
 
     These functions use the current environment to determine the value associated with a symbol, like a macro call.  That is usually the expected and desired behavior.
 
@@ -629,7 +629,7 @@ Noteworthy Features:
 
     * encapsulation
 
-      Modules encapsulate portions of the outermost scope.  This has several implications.  Modules do not nest.  Modules compose concatenatively.  Only one instance of a module exists at a time.
+      Modules encapsulate portions of the outermost scope.  Modules compose concatenatively, not by nesting.  Only one instance of a module exists at a time.
 
       All definitions in this programming language are encapsulated in a module, even built-ins (in "core") and those entered in the top-level listener (in "user").  To avoid surprising behavior, user-defined modules cannot be named "core" or "user".
 
