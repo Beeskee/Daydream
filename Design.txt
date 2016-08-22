@@ -547,9 +547,9 @@ Noteworthy Features:
 
       The "cap" function converts unquoted name symbols in its argument, which can be any data equivalent to source code, to captured symbols.
 
-      Calling "cap" at run time is a defect.
-
       Captured symbols are coerced to name symbols when returned from a macro.
+
+      Calling "cap" at run time, outside the listener, is a defect.  Captured symbols only have useful semantics at macro expansion time.
 
       This is sufficient for the expansion of anaphoric macros.
 
@@ -564,7 +564,7 @@ Noteworthy Features:
 
       A symbol macro call appears to be a symbol.  They are useful as generalized variables.
 
-      They are constructed with "symac".  "symac"'s first parameter is a symbol.  Symbol macros have no parameters.
+      They are constructed with "symac".  "symac"'s first argument is a symbol.  Symbol macros have no parameters.
 
       Symbol macros are like other macros in all other respects.
 
@@ -593,6 +593,8 @@ Noteworthy Features:
     "(expand-when form predicate)" recursively expands macro calls in the form when the predicate function returns true.  The function parameters are "(symbol args)" for the macro call's symbol and arguments.  This is primarily useful when writing code walking macros that inspect or transform constructs (including macro calls).
 
     These functions use the current environment to determine the value associated with a symbol, like a macro call.  That is usually the expected and desired behavior.
+
+    Calling these functions at run time, outside the listener, is a defect.  Macros only have useful semantics at macro expansion time.
 
   * local macro definition
 
