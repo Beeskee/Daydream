@@ -1,4 +1,4 @@
-AutoHotkey is a kludge to solve the artificial problem that modern computers are bad at what they are designed for: automation.  It simulates a human's manual labor at the computer.
+AutoHotkey is a kludge to solve the artificial problem that modern computers are bad at what they are designed for: automation.  It emulates a human's manual labor at the computer.
 
 Specifically, it can:
 * execute arbitrary code when a keyboard, mouse, or controller button combination is pressed, unconditionally or only when a certain window is active
