@@ -549,7 +549,7 @@ Noteworthy Features:
 
       Captured symbols are coerced to name symbols when returned from a macro.
 
-      Calling "cap" at run time, outside the listener, is a defect.  Captured symbols only have useful semantics at macro expansion time.
+      Calling "cap" at run time, outside of a listener or sandbox, is a defect.  Captured symbols only have useful semantics at macro expansion time.
 
       This is sufficient for the expansion of anaphoric macros.
 
@@ -594,7 +594,7 @@ Noteworthy Features:
 
     These functions use the current environment to determine the value associated with a symbol, like a macro call.  That is usually the expected and desired behavior.
 
-    Calling these functions at run time, outside the listener, is a defect.  Macros only have useful semantics at macro expansion time.
+    Calling these functions at run time, outside of a listener or sandbox, is a defect.  Macros only have useful semantics at macro expansion time.
 
   * local macro definition
 
