@@ -556,7 +556,7 @@ Noteworthy Features:
       This solution was chosen for several reasons:
       * Homoiconicity is preserved.  All symbol types support the name symbol interface.  Macros are able to pass values to and from normal functions with no effort.
       * Macros can easily perform processing and side effects.
-      * The macro system is not much more complex than Common Lisp's.  Most of the additional complexity is in implementation, not use.  Common Lisp already had name, gensymed, and module-qualified symbols, though with somewhat different semantics.  Those are still the only types of symbols that exist at run time.
+      * The macro system is not much more complex than Common Lisp's.  Most of the additional complexity is in implementation, not use.  Common Lisp already had name, gensymed, and module-qualified symbols, though with somewhat different semantics.  Those are still the only types of symbols that exist after macro expansion.
       * When writing hygienic macros the programmer does not have to provide extra specification.  When writing anaphoric macros the programmer has to provide less specification than Common Lisp's macro system, and far less specification than Scheme's syntax-case macro system.
       * The gensym counter is not observable outside each module without effort on the part of the programmer.  This avoids interfering with incremental compilation.
 
@@ -574,7 +574,7 @@ Noteworthy Features:
 
       If macros' arguments were evaluated before their body, as in function application, macros could not inspect or transform their arguments.  Using a macro with function application (e.g. with folds, "map", or "filter") is a defect.
 
-      If macros did not execute before run time, they would be less useful.  They could not be used for static analysis or optimization.  They could not be used for extending the language in ways that are easy to statically analyze or optimize.  Executing before run time, and reducing the extended language to the base language (the language without macros), is what makes them superior to fexprs.  Calling a macro at run time is a defect.
+      If macros did not execute before run time, they would be less useful.  They could not be used for static analysis or optimization.  They could not be used for extending the language in ways that are easy to statically analyze or optimize.  Executing before run time, and reducing the extended language to the base language (the language without macros), is what makes them superior to fexprs.  Calling a macro at run time, outside of a listener or sandbox, is a defect.
 
       Macros are like functions in all other respects.  They can be constructed inside arbitrary expressions, be defined locally, use free variables, call functions or macros (including themselves), perform input/output, and be passed as arguments to and be returned from functions.  Be aware that, like functions, macros cannot be passed as arguments to or be returned from macros, because they are not equivalent to source code.  Symbols for functions and macros can be passed as arguments to or be returned from macros, however.
 
