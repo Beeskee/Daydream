@@ -608,11 +608,13 @@ Noteworthy Features:
 
   There is a condition system that is similar to the one in Common Lisp.  It is used to handle defects, input/output errors, and warnings.  Using it as a general-purpose communication mechanism is discouraged, because invisible communication channels make code difficult to maintain.  A condition system seems to be the only way to satisfy our error handling design goals.
 
-  Conditions are arranged in an extensible hierarchy to allow handling related conditions the same way.
+  Conditions are arranged in an extensible type hierarchy to allow handling related conditions the same way.
 
   Warnings are issued when code needs maintenance but still works.  For example, it might use a depreciated construct, or a bad practice that was previously tolerated.  Warnings are shown by default, because that is the only responsible way to design a programming language.  History has shown most programmers make no effort to find problems in their code.  Condition handlers can choose other ways to handle warnings, such as logging or discarding them.
 
   Sometimes the condition system cannot report the exact location of a problem, because the code with the problem was generated instead of parsed.  In these cases it reports the closest location possible, which is usually a macro or "sb" call.  That is usually the expected and desired behavior.
+
+  There are useful built-in restarts for all built-in defect and input/output error types.
 
 * modules
 
