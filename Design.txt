@@ -608,7 +608,7 @@ Noteworthy Features:
     The module system features solve practical problems:
     * selective import - prevents name collisions, enforces security
     * renaming imports - resolves name collisions
-    * selective export - prevents dependence on implementation details
+    * selective export - prevents dependence on implementation details, enforces security
 
     This module system can support incremental compilation.
 
