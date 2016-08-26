@@ -330,18 +330,6 @@ Noteworthy Features:
 
   This programming language is intended to be embedded in other programs.
 
-* good error handling and exploratory programming
-
-  This programming language uses different syntax for initialization and mutation to better detect defects.  Redefining a variable normally indicates the programmer did not know it was in use.  Redefinition can occur via definition or importing.  Mutating a variable that has not been defined indicates the programmer typoed the name.
-
-  In this programming language mutating an imported variable is normally a defect, because it should not normally be necessary to violate encapsulation.
-
-  However, being unable to correct defective definitions interferes with exploratory programming.  For this reason redefinition and mutating imported variables works at the listener.  A warning is issued in case it was accidental.  Mutating a variable that has not been defined is still a defect at the listener.
-
-  Be aware that redefinition and mutation are not the same.  Redefinition affects the value in the current module.  Mutation affects the value in the home module, which is not the same as the current module for imported variables.
-
-  Modules can be reloaded to correct defective definitions.
-
 * documentation
 
   Docstrings can be associated with modules, variables in the outermost scope, functions, and macros.  Functions are provided for searching for combinations of patterns in module names, variable names (including parameters), and docstrings, types, and values.  While this was common in the past, modern Lisp-like languages seem to be becoming more static, and less useful interactively, thus losing one of their advantages over other programming languages.  Functions are provided to load all code in a directory, or in a directory hierarchy, to make searching easier.
@@ -379,14 +367,6 @@ Noteworthy Features:
   There is no character type.  A string is effectively an immutable list of strings of 1 character.  This may result in more code reuse.  Strings cannot be mutated because they are frequently used as hash table keys.  Strings cannot be indexed because UTF-8 is a variable-length code.  Strings of 1 character can be converted to and from integers.
 
   Vectors are dynamic arrays.  Vectors may be used as stacks.  This makes vectors more general.  Bounds are checked.  Like singly-linked lists, dynamic arrays are used in most hash table implementations, which are used in most environment implementations, so it makes sense to expose them to programs written in the programming language.  That avoids unnecessarily restrictions.
-
-* built-ins
-
-  Built-ins are defined in the "core" module.  All definitions in this module are imported into every other module implicitly, so it is possible for programmers to define things.
-
-  While redefining a variable in a module is normally a defect, built-ins can be redefined with only a warning.  This allows new built-ins to be defined without breaking existing code.
-
-  The built-ins are as general as possible.  For example, there is only one "map" for all sequence collection types (list, string, and vector).  To avoid surprising type coercion, the collection returned is of the same type as the collection argument.  This should allow more code reuse, and minimize what programmers must learn and remember to use the programming language.
 
 * generalized variables
 
