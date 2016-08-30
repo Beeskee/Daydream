@@ -127,7 +127,7 @@ Non-Goals:
 
 * dictionary and vector literals
 
-  Having dictionary and vector literals raises questions about whether their elements should be evaluated or not, and causes defects by programmers incorrectly assuming they are or are not.
+  Having dictionary and vector literals raises the question of whether their elements are evaluated or not, and causes defects by programmers incorrectly assuming they are or are not.
 
   It is necessary to use 'constructor syntax' (e.g. "(lst x y z)") for lists to prevent ambiguity in pattern matching.  Otherwise it is impossible to tell the difference between a pattern construct and trying to bind a variable with the same name as a pattern construct.
 
