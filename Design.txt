@@ -755,7 +755,7 @@ Noteworthy Features:
     * deserialization
     * genetic programming
 
-    Using the capability security model has other beneficial effects.  Strictly enforced encapsulation encourages better design of this programming language and software written in it.  In theory, software written in this programming language could run on secure operating systems, but this programming language would need to be extended to support external capabilities.  In theory, secure operating systems could be written in this programming language, but this programming language would need to be extended to support low-level operations.
+    Using the capability security model has other beneficial effects.  Strictly enforced encapsulation encourages better design of this programming language and software written in it.  In theory, software written in this programming language could run on capability-based operating systems, but this programming language would need to be extended to support external capabilities.  In theory, capability-based operating systems could be written in this programming language, but this programming language would need to be extended to support low-level operations.
 
     Internal capabilities are references.
 
