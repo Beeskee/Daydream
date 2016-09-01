@@ -724,9 +724,9 @@ Noteworthy Features:
 
     Programs are granted permissions two ways.
 
-    When the administrator installs a program they are asked to grant the program's permanent permissions (e.g. to read its own data files, and to read and write its own configuration files).  These permissions are called the program's installation endowment.  Installation endowments are minimal.
+    When the administrator installs a program they are asked to grant the program's permanent permissions (e.g. to read its own data files, and to read and write its own configuration files).  These permissions are called the program's "installation endowment".  Installation endowments are minimal.
 
-    When the user uses a standard system dialog the program is granted a one-time permission to do what the user requests (e.g. to open or save a file).  These dialogs are called PowerBoxes.  Most permissions are granted this way.
+    When the user uses a standard system dialog the program is granted a one-time permission to do what the user requests (e.g. to open or save a file).  These dialogs are called "PowerBoxes".  Most permissions are granted this way.
 
     Malware is forced to reveal its intentions by asking the administrator to grant an unreasonable installation endowment, or by opening unrequested PowerBoxes.
 
@@ -761,17 +761,17 @@ Noteworthy Features:
 
     Care has been taken to ensure that capabilities can only be obtained by initial conditions (the "core" module is implicitly required by all modules), construction (e.g. constructing a list), and introduction (being required, being a free variable, or being passed as an argument).  This is necessary and sufficient to support the capability security model.
 
-    Confinement is achieved by the restrictions on how capabilities are obtained.
+    Confinement of capabilities is achieved by the restrictions on how capabilities are obtained.
 
-    Revocation is achieved by passing a mutable closure that can conditionally operate on the resource, instead of passing the resource directly.
+    Revocation of capabilities is achieved by passing a mutable closure that can conditionally operate on the resource, instead of passing the resource directly.
 
-    "sb" is a function that evaluates a form in a sandbox, returning its return value.
+    "sb" is a function that evaluates a form in a sandbox, and returns the return value.
 
     "sb"'s first argument is a form in the same format as a "require" specification.  "sb" recognizes "env" as a module that contains the environment.  To avoid surprising behavior, user-defined modules cannot be named "env".
 
     "sb" is intended to be used with partial application to construct reusable sandboxes to evaluate multiple forms with the same capabilities.  This implies that "env" is lexically scoped, like the rest of this programming language, and stored with the sandbox when it is constructed.
 
-    Definitions from "env" are handled like other modules.  Attempting to redefine or mutate them results in the construction of a variable with the same name in the outermost scope of the sandbox's environment, and a warning.  This does /not/ change the value outside the sandbox.
+    Definitions from "env" are handled like other modules.  Redefining and mutating definitions from "env" does /not/ change the value outside the sandbox.
 
     "sb"'s second argument is a form to evaluate.  "sb" can evaluate any data that is equivalent to source code.
 
@@ -779,7 +779,7 @@ Noteworthy Features:
 
     "sb" is intended to evaluate normal source code, and therefore "require" is required.
 
-    Sandboxes compose by nesting.  When a sandbox is constructed, and an outer sandbox exists, the inner sandbox's specification is compared to the outer sandbox's specification.  If the inner sandbox's specification is more permissive, it is a defect.  This usually involves ensuring that the outer sandbox's specification allows requiring each variable or the entire corresponding module.  Requiring variables from "env" is always allowed, because lexical scope ensures it cannot become more permissive.
+    Sandboxes compose by nesting.  When a sandbox is constructed, and an outer sandbox exists, the inner sandbox's specification is compared to the outer sandbox's specification.  If the inner sandbox's specification is more permissive, it is a defect.  This normally involves ensuring that the outer sandbox's specification allows requiring each variable or the entire corresponding module.  Requiring variables from "env" is always allowed, because lexical scope ensures it cannot become more permissive.
 
     Using the capability security model has other, less beneficial, effects.  Strictly enforced encapsulation interferes with many desirable activities.  Fortunately, there are workarounds.
 
@@ -796,9 +796,9 @@ Noteworthy Features:
 
     A module must normally explicitly require all variables it uses from other modules, other than "core".  Macro generated code may contain variables from other modules that the module containing the generated code did not require.  If those variables had to be explicitly required, modules would depend on the implementation details of macros they use.  If those variables were always allowed, macros could violate the capability security model.  By implicitly requiring those variables, only variables that violate the capability security model are denied.
 
-    Modules often provide hooks for other modules to attach callbacks to.  This is achieved by providing functions that mutate a data structure within the module containing the hook, because it is normally impossible to directly mutate the contents of another module.  This has other beneficial effects.  It is possible to cause side effects when the contents of a hook changes.  Exposing the hook data structure could harm security.
+    Modules often provide hooks for other modules to attach callbacks to.  This is achieved by providing functions that mutate a data structure within the module containing the hook, because it is normally impossible to directly mutate the contents of another module.  This has several beneficial effects.  It is possible to cause side effects when the contents of a hook changes.  Exposing the hook data structure could harm security.
 
-    Checking the module file's write permissions is a hack.  What is needed is a modification to the capability security model, which will be described later.  On modern popular operating systems, if the process (i.e. user) running this programming language can write the module file, it can subvert the module.  If it can subvert the module, preventing it from mutating the module's contents is an unnecessary restriction, which this programming language does not enforce.  This works well in practice.  Programmers cannot mutate the contents of built-in modules.  Programmers can mutate the contents of their own modules during development.  Encapsulation is strictly enforced in production.
+    Checking the module file's write permissions is a hack.  What is needed is a modification to the capability security model, which will be described later.  On modern popular operating systems, if the process (i.e. user) running this programming language can write to the module file, it can subvert the module.  If it can subvert the module, preventing it from observing or mutating the module's contents is an unnecessary restriction, which this programming language does not enforce.  This works well in practice.  Programmers cannot observe or mutate the contents of built-in modules.  Programmers can observe and mutate the contents of their own modules during development.  Encapsulation is strictly enforced in production, because production ready modules are normally read-only.
 
     The debugger uses implicit "require" and module file write permissions checks.  Only the values of variables allowed to be required, and call stack frames from functions allowed to be required, or from module files allowed to be written, are allowed to be shown.  Only variables from module files allowed to be written are allowed to be mutated.  If an unhandled error condition occurs in a call stack frame that is not allowed to be shown, the stack is unwound until it reaches a call stack frame that is allowed to be shown or the program terminates.  If stack unwinding reaches a call stack frame that is not allowed to be shown, the stack is unwound until it reaches a call stack frame that is allowed to be shown or the program terminates.  Most programming languages behave similarly, because debugging information is usually unavailable for built-in or third party modules.
 
