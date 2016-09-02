@@ -674,7 +674,7 @@ Noteworthy Features:
 
     An unversioned module filename consists of the module name.  A versioned module filename consists of the module name and version number, in that order, separated by a hyphen.  The filename extension for source code in this programming language is appended in both cases.
 
-    Only one instance of a module exists at a time, even if there is an unversioned and versioned file, or multiple versioned files, for it.  An unversioned module file is required if no version was specified.  A versioned module file that meets the specification is required if a version was specified.
+    Only one instance of a module exists at a time, even if there is an unversioned and versioned file, or multiple versioned files, for it.  An unversioned module file is necessary if no version was specified.  A versioned module file that meets the specification is necessary if a version was specified.
 
     The programming language searches for modules in the directory the program loaded from, then a directory for libraries if that fails.
 
@@ -720,7 +720,7 @@ Noteworthy Features:
 
     If the concepts of users or groups are relevant to a service, its implementation includes the service-specific computer security model.  This is already necessary for most services.
 
-    Programs are restricted to the permissions they require to solve the problem they are intended to solve.
+    Programs are restricted to the permissions necessary to solve the problem they are intended to solve.
 
     Programs are granted permissions two ways.
 
@@ -759,7 +759,7 @@ Noteworthy Features:
 
     Internal capabilities are references.
 
-    Care has been taken to ensure that capabilities can only be obtained by initial conditions (the "core" module is implicitly required by all modules), construction (e.g. constructing a list), and introduction (being required, being a free variable, or being passed as an argument).  This is necessary and sufficient to support the capability security model.
+    Care has been taken to ensure that capabilities can only be obtained by initial conditions (the "core" module is implicitly imported by all modules), construction (e.g. constructing a list), and introduction (being imported, being a free variable, or being passed as an argument).  This is necessary and sufficient to support the capability security model.
 
     Confinement of capabilities is achieved by the restrictions on how capabilities are obtained.
 
@@ -767,19 +767,19 @@ Noteworthy Features:
 
     "sb" is a function that evaluates a form in a sandbox, and returns the return value.
 
-    "sb"'s first argument is a form in the same format as a "require" specification.  "sb" recognizes "env" as a module that contains the environment.  To avoid surprising behavior, user-defined modules cannot be named "env".
+    "sb"'s first argument is a form in the same format as a "take" specification.  "sb" recognizes "env" as a module that contains the environment.  To avoid surprising behavior, user-defined modules cannot be named "env".
 
-    "sb" is intended to be used with partial application to construct reusable sandboxes to evaluate multiple forms with the same capabilities.  This implies that "env" is lexically scoped, like the rest of this programming language, and stored with the sandbox when it is constructed.
+    "sb" is intended to be used with partial application to construct reusable sandboxes to evaluate multiple forms with the same capabilities.  This implies that "env" is lexically scoped, like the rest of this programming language, and stored with the sandbox when the "take" specification is passed.
 
     Definitions from "env" are handled like other modules.  Redefining and mutating definitions from "env" does /not/ change the value outside the sandbox.
 
     "sb"'s second argument is a form to evaluate.  "sb" can evaluate any data that is equivalent to source code.
 
-    All definitions from the "core" module, and any specified definitions from the "env" virtual module, are included in the sandbox's environment before evaluation begins.  The form to be evaluated must "require" all other definitions.
+    All definitions from the "core" module, and any specified definitions from the "env" virtual module, are included in the sandbox's environment before evaluation begins.  The form to be evaluated must "take" all other definitions.
 
-    "sb" is intended to evaluate normal source code, and therefore "require" is required.
+    "sb" is intended to evaluate normal source code, and therefore "take" is necessary.
 
-    Sandboxes compose by nesting.  When a sandbox is constructed, and an outer sandbox exists, the inner sandbox's specification is compared to the outer sandbox's specification.  If the inner sandbox's specification is more permissive, it is a defect.  This normally involves ensuring that the outer sandbox's specification allows requiring each variable or the entire corresponding module.  Requiring variables from "env" is always allowed, because lexical scope ensures it cannot become more permissive.
+    Sandboxes compose by nesting.  When a sandbox is constructed, and an outer sandbox exists, the inner sandbox's specification is compared to the outer sandbox's specification.  If the inner sandbox's specification is more permissive, it is a defect.  This normally involves ensuring that the outer sandbox's specification allows importing each variable or the entire corresponding module.  Importing variables from "env" is always allowed, because lexical scope ensures it cannot become more permissive.
 
     Using the capability security model has other, less beneficial, effects.  Strictly enforced encapsulation interferes with many desirable activities.  Fortunately, there are workarounds.
 
@@ -789,17 +789,17 @@ Noteworthy Features:
 
     Problem             | Solution
     --------------------+----------------------------------------------------------
-    read the variable   | implicitly "require" the variable
+    read the variable   | implicitly import the variable
     mutate the variable | cooperation, or check the module file's write permissions
 
-    Implicitly requiring variables must be an acceptable solution, because implicitly requiring "core" variables is necessary to define anything else.
+    Implicitly importing variables must be an acceptable solution, because implicitly importing "core" variables is necessary to define anything else.
 
-    A module must normally explicitly require all variables it uses from other modules, other than "core".  Macro generated code may contain variables from other modules that the module containing the generated code did not require.  If those variables had to be explicitly required, modules would depend on the implementation details of macros they use.  If those variables were always allowed, macros could violate the capability security model.  By implicitly requiring those variables, only variables that violate the capability security model are denied.
+    A module must normally explicitly import all variables it uses from other modules, other than "core".  Macro generated code may contain variables from other modules that the module containing the generated code did not import.  If those variables had to be explicitly imported, modules would depend on the implementation details of macros they use.  If those variables were always allowed, macros could violate the capability security model.  By implicitly importing those variables, only variables that violate the capability security model are denied.
 
     Modules often provide hooks for other modules to attach callbacks to.  This is achieved by providing functions that mutate a data structure within the module containing the hook, because it is normally impossible to directly mutate the contents of another module.  This has several beneficial effects.  It is possible to cause side effects when the contents of a hook changes.  Exposing the hook data structure could harm security.
 
-    Checking the module file's write permissions is a hack.  What is needed is a modification to the capability security model, which will be described later.  On modern popular operating systems, if the process (i.e. user) running this programming language can write to the module file, it can subvert the module.  If it can subvert the module, preventing it from observing or mutating the module's contents is an unnecessary restriction, which this programming language does not enforce.  This works well in practice.  Programmers cannot observe or mutate the contents of built-in modules.  Programmers can observe and mutate the contents of their own modules during development.  Encapsulation is strictly enforced in production, because production ready modules are normally read-only.
+    Checking the module file's write permissions is a hack.  What is needed is a change to the capability security model, which will be described later.  On modern popular operating systems, if the process (i.e. user) running this programming language can write to the module file, it can subvert the module.  If it can subvert the module, preventing it from observing or mutating the module's contents is an unnecessary restriction, which this programming language does not enforce.  This works well in practice.  Programmers cannot observe or mutate the contents of built-in modules.  Programmers can observe and mutate the contents of their own modules during development.  Encapsulation is strictly enforced in production, because production ready modules are normally read-only.
 
-    The debugger uses implicit "require" and module file write permissions checks.  Only the values of variables allowed to be required, and call stack frames from functions allowed to be required, or from module files allowed to be written, are allowed to be shown.  Only variables from module files allowed to be written are allowed to be mutated.  If an unhandled error condition occurs in a call stack frame that is not allowed to be shown, the stack is unwound until it reaches a call stack frame that is allowed to be shown or the program terminates.  If stack unwinding reaches a call stack frame that is not allowed to be shown, the stack is unwound until it reaches a call stack frame that is allowed to be shown or the program terminates.  Most programming languages behave similarly, because debugging information is usually unavailable for built-in or third party modules.
+    The debugger uses implicit import and module file write permissions checks.  Only the values of variables allowed to be imported, and call stack frames from functions allowed to be imported, or from module files allowed to be written, are allowed to be shown.  Only variables from module files allowed to be written are allowed to be mutated.  If an unhandled error condition occurs in a call stack frame that is not allowed to be shown, the stack is unwound until it reaches a call stack frame that is allowed to be shown or the program terminates.  If stack unwinding reaches a call stack frame that is not allowed to be shown, the stack is unwound until it reaches a call stack frame that is allowed to be shown or the program terminates.  Most programming languages behave similarly, because debugging information is usually unavailable for built-in or third party modules.
 
     Reloading uses module file write permissions checks.  Only module files allowed to be written are allowed to be reloaded.  In other words, being allowed to reload a module requires being allowed to mutate its contents.  Programs that use hot code swapping normally download their own updates, and therefore are allowed to write their reloadable module files.
