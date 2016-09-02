@@ -775,7 +775,7 @@ Noteworthy Features:
 
     "sb"'s second argument is a form to evaluate.  "sb" can evaluate any data that is equivalent to source code.
 
-    All definitions from the "core" module, and any specified definitions from the "env" virtual module, are included in the sandbox's environment before evaluation begins.  The form to be evaluated must "take" all other definitions.
+    All definitions from the "core" module, and any specified definitions from the "env" virtual module, are imported to the sandbox's environment before evaluation begins.  The form to be evaluated must "take" all other definitions.
 
     "sb" is intended to evaluate normal source code, and therefore "take" is necessary.
 
