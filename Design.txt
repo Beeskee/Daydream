@@ -720,17 +720,17 @@ Noteworthy Features:
 
     If the concepts of users or groups are relevant to a service, its implementation includes the service-specific computer security model.  This is already necessary for most services.
 
-    Programs are restricted to the permissions necessary to solve the problem they are intended to solve.
+    Programs are restricted to the permissions (capabilities) necessary to solve the problem they are intended to solve.
 
-    Programs are granted permissions two ways.
+    Programs are granted capabilities two ways.
 
-    When the administrator installs a program they are asked to grant the program's permanent permissions (e.g. to read its own data files, and to read and write its own configuration files).  These permissions are called the program's "installation endowment".  Installation endowments are minimal.
+    When the administrator installs a program they are asked to grant the program's permanent capabilities (e.g. to read its own data files, and to read and write its own configuration files).  A program's permanent capabilities are called its "installation endowment".  Installation endowments should be minimal.
 
-    When the user uses a standard system dialog the program is granted a one-time permission to do what the user requests (e.g. to open or save a file).  These dialogs are called "PowerBoxes".  Most permissions are granted this way.
+    When the user uses a standard system dialog the program is granted a single-use capability to do what the user requested (e.g. to open or save a file).  A dialog that grants single-use capabilities is called a "PowerBox".  Most capabilities should be granted this way.
 
     Malware is forced to reveal its intentions by asking the administrator to grant an unreasonable installation endowment, or by opening unrequested PowerBoxes.
 
-    Code injection attacks are heavily restricted.  Most subverted programs can only damage or transmit their configuration files.  Subverted services can often damage or transmit more valuable data, because their permissions are permanent.
+    Code injection attacks are heavily restricted.  Most subverted programs can only damage or transmit their configuration files.  Subverted services can often damage or transmit more valuable data, because their capabilities are permanent.
 
     In all cases software can only be installed, upgraded, and uninstalled by the operating system.  Malware and code injection attacks /cannot/ be used to install other malware.  What is installed is always observable.  Uninstallation is always easy.
 
@@ -746,7 +746,7 @@ Noteworthy Features:
 
     Security is effectively encapsulation.
 
-    Therefore, this programming language uses its module system to enforce internal capabilities.  This programming language does not attempt to enforce external capabilities, because that would be in vain.
+    Therefore, this programming language uses its module system to enforce internal capabilities.  This programming language does not attempt to enforce external capabilities, because that would be futile.
 
     Capabilities are used to implement sandboxed evaluation.
 
