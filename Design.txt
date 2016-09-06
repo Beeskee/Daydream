@@ -818,4 +818,6 @@ Noteworthy Features:
 
     Programs should not be installed in a shared environment by default.
 
-    This does not change this programming language's semantics in incompatible ways.  Outside sandboxes, modules only indicate which file contains the definition of a variable.  All variables in the outermost scope can be imported.  All variables can can be observed and mutated by the debugger.  All modules can be reloaded.  Variables in other modules cannot be mutated by "def" and "set!", because code may depend on their existing semantics.
+    This programming language's semantics would change in a backwards-compatible way.  Outside sandboxes, modules only indicate which file contains the definition of a variable.  All variables in the outermost scope can be imported.  All variables can can be observed and mutated by the debugger.  All modules can be reloaded.  Variables in other modules cannot be mutated by "def" and "set!", because code may depend on their existing semantics.
+
+    This change helps achieve the goal of avoiding unnecessary restrictions.
