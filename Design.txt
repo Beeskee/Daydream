@@ -803,3 +803,19 @@ Noteworthy Features:
     The debugger uses implicit import and module file write permissions checks.  Only the values of variables allowed to be imported, and call stack frames from functions allowed to be imported, or from module files allowed to be written, are allowed to be shown.  Only variables from module files allowed to be written are allowed to be mutated.  If an unhandled error condition occurs in a call stack frame that is not allowed to be shown, the stack is unwound until it reaches a call stack frame that is allowed to be shown or the program terminates.  If stack unwinding reaches a call stack frame that is not allowed to be shown, the stack is unwound until it reaches a call stack frame that is allowed to be shown or the program terminates.  Most programming languages behave similarly, because debugging information is usually unavailable for built-in or third party modules.
 
     Reloading uses module file write permissions checks.  Only module files allowed to be written are allowed to be reloaded.  In other words, being allowed to reload a module requires being allowed to mutate its contents.  Programs that use hot code swapping normally download their own updates, and therefore are allowed to write their reloadable module files.
+
+  * a change to the capability security model
+
+    Violating encapsulation allows software to be used in unintended ways.  Violating encapsulation is not only useful to crackers.  Programmers always consider how to solve the problem their program is intended to automate solving, but they rarely consider how to solve the meta-problem of automating their program.  Violating encapsulation is useful to anyone trying to solve the problem caused by inconsiderate programmers.
+
+    This does raise the question of how to allow violating encapsulation without allowing violating security.  The answer is using external capabilities, which requires a capability-based operating system.
+
+    Capability-based operating systems normally associate installation endowments with programs, and capabilities with processes (instances of programs).  Capabilities are stored outside the process' address space in a dynamic array called a "C-list".  The process can refer to its capabilities in system calls by integers used to index the C-list, but only the operating system can directly mutate the C-list.
+
+    The separation of capabilities and data gives rise to the term "partitioned capability system".  This has several beneficial effects.  Insecure programming languages like assembly (for most processors), C, and C++ can be used without allowing them to violate security.  Confinement of capabilities (/not/ data) can be achieved without using dynamic or static analysis, by the operating system not transmitting them.  Revocation of capabilities can be achieved without using proxy closures, by the operating system removing them.
+
+    The change I propose is providing the /option/ to install multiple programs in a shared environment.  The installation endowment of the shared environment is the set union of the installation endowments of all programs installed in it.  When multiple programs written in this programming language are installed in a shared environment, their module encapsulation boundaries are not enforced, except inside sandboxes.
+
+    Programs should not be installed in a shared environment by default.
+
+    This does not change this programming language's semantics in incompatible ways.  Outside sandboxes, modules only indicate which file contains the definition of a variable.  All variables in the outermost scope can be imported.  All variables can can be observed and mutated by the debugger.  All modules can be reloaded.  Variables in other modules cannot be mutated by "def" and "set!", because code may depend on their existing semantics.
