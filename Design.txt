@@ -783,9 +783,7 @@ Noteworthy Features:
 
     Using the capability security model has other, less beneficial, effects.  Strictly enforced encapsulation interferes with many desirable activities.  Fortunately, there are workarounds.
 
-    First-class environments are useful when implementing a listener using "eval", or when implementing a metacircular evaluator.  First-class environments allow accessing all variables, thereby making encapsulation impossible.  First-class environments and "eval" are only useful when implementing, as opposed to using, a programming language.  There is no reason to expose these implementation details, so this programming language does not.
-
-    Most other problems are effectively wanting to read or mutate variables across module boundaries.  These problems have associated solutions.
+    Most problems are effectively wanting to read or mutate variables across module boundaries.  These problems have associated solutions.
 
     Problem             | Solution
     --------------------+----------------------------------------------------------
