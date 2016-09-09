@@ -765,13 +765,13 @@ Noteworthy Features:
 
     Revocation of capabilities is achieved by passing a mutable closure that can conditionally operate on the resource, instead of passing the resource directly.
 
-    "sb" is a function that accepts a list in the same format as an "import" specification, and returns a sandboxed evaluator.  Only modules and variables in the specification can be imported inside the sandbox.  "sb" recognizes "env" as a module that contains the environment.  To avoid surprising behavior, user-defined modules cannot be named "env".
+    "sb" is a function that accepts a list in the same format as an "import" specification and returns a sandboxed evaluator.  Only modules and variables in the specification can be imported inside the sandbox.  "sb" recognizes "env" as a module that contains the environment.  To avoid surprising behavior, user-defined modules cannot be named "env".
 
-    "env" is lexically scoped, like the rest of this programming language, and stored with the sandbox when it is constructed.
+    Definitions from "env" are lexically scoped like the rest of this programming language.  Looking up definitions from "env" does /not/ use the environment chain where the sandboxed evaluator is called.
 
-    Definitions from "env" are handled like other modules.  Redefining and mutating definitions from "env" does /not/ change the value outside the sandbox.
+    Definitions from "env" are handled like other modules.  Redefining or mutating definitions from "env" does /not/ change their values outside the sandbox.
 
-    A sandboxed evaluator is a function that accepts a form to evaluate, and returns the result of evaluation.  Sandboxed evaluators can evaluate any data that is equivalent to source code.
+    A sandboxed evaluator is a function that accepts a form to evaluate and returns the result of evaluation.  Sandboxed evaluators can evaluate any data that is equivalent to source code.
 
     All definitions from the "core" module, and any specified definitions from the "env" virtual module, are imported to the sandbox's environment before evaluation begins.  The form to be evaluated must "import" all other definitions.
 
