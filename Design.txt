@@ -74,7 +74,7 @@ Goals:
 
   As much as practical should be implemented in the programming language itself.  If it is too restrictive, this will reveal it.
 
-  It should be possible to implement a metacircular evaluator in the programming language without much code without much loss in efficiency.  This ensures the programming language's implementation is exposed in a useful way to programs written in it.
+  It should be possible to implement a metacircular evaluator in the programming language, without much code, without much loss in efficiency.  This ensures the programming language's implementation is exposed in a useful way to programs written in it.
 
 
 Non-Goals:
