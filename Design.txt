@@ -12,7 +12,7 @@ Goals:
 
   If the program does not handle an error, the programming language implementation should immediately halt execution and show what expectation was violated, where the error occurred, and the relevant values.
 
-  Errors should be classified such that errors due to defects are separate from input/output errors.  Only input/output errors should normally be handled.  This prevents defects from being hidden by accident.
+  Errors should be classified such that errors caused by defects are separate from input/output errors.  Only input/output errors should normally be handled.  This prevents defects from being hidden by accident.
 
   It should be possible, though normally discouraged, to handle all errors.  This makes writing interpreters possible.
 
