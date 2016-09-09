@@ -761,23 +761,21 @@ Noteworthy Features:
 
     Care has been taken to ensure that capabilities can only be obtained by initial conditions (the "core" module is implicitly imported by all modules), construction (e.g. constructing a list), and introduction (being imported, being a free variable, or being passed as an argument).  This is necessary and sufficient to support the capability security model.
 
-    Confinement of capabilities is achieved by the restrictions on how capabilities are obtained.
+    Confinement of capabilities is achieved by sandboxing.
 
     Revocation of capabilities is achieved by passing a mutable closure that can conditionally operate on the resource, instead of passing the resource directly.
 
-    "sb" is a function that evaluates a form in a sandbox, and returns the return value.
+    "sb" is a function that accepts a list in the same format as an "import" specification, and returns a sandboxed evaluator.  Only modules and variables in the specification can be imported inside the sandbox.  "sb" recognizes "env" as a module that contains the environment.  To avoid surprising behavior, user-defined modules cannot be named "env".
 
-    "sb"'s first argument is a form in the same format as a "take" specification.  "sb" recognizes "env" as a module that contains the environment.  To avoid surprising behavior, user-defined modules cannot be named "env".
-
-    "sb" is intended to be used with partial application to construct reusable sandboxes to evaluate multiple forms with the same capabilities.  This implies that "env" is lexically scoped, like the rest of this programming language, and stored with the sandbox when the "take" specification is passed.
+    "env" is lexically scoped, like the rest of this programming language, and stored with the sandbox when it is constructed.
 
     Definitions from "env" are handled like other modules.  Redefining and mutating definitions from "env" does /not/ change the value outside the sandbox.
 
-    "sb"'s second argument is a form to evaluate.  "sb" can evaluate any data that is equivalent to source code.
+    A sandboxed evaluator is a function that accepts a form to evaluate, and returns the result of evaluation.  Sandboxed evaluators can evaluate any data that is equivalent to source code.
 
-    All definitions from the "core" module, and any specified definitions from the "env" virtual module, are imported to the sandbox's environment before evaluation begins.  The form to be evaluated must "take" all other definitions.
+    All definitions from the "core" module, and any specified definitions from the "env" virtual module, are imported to the sandbox's environment before evaluation begins.  The form to be evaluated must "import" all other definitions.
 
-    "sb" is intended to evaluate normal source code, and therefore "take" is necessary.
+    Sandboxed evaluators are intended to evaluate normal source code, and therefore "import" is necessary.
 
     Sandboxes compose by nesting.  When a sandbox is constructed, and an outer sandbox exists, the inner sandbox's specification is compared to the outer sandbox's specification.  If the inner sandbox's specification is more permissive, it is a defect.  This normally involves ensuring that the outer sandbox's specification allows importing each variable or the entire corresponding module.  Importing variables from "env" is always allowed, because lexical scope ensures it cannot become more permissive.
 
