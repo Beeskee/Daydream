@@ -24,7 +24,7 @@ Goals:
 
 * consistent
 
-  Consistency means not having to learn, remember, and abstract over, differences that should not exist.
+  Consistency means not having to learn, remember, and abstract over differences that should not exist.
 
   Constructs should always compose with constructs that can satisfy their requirements.
 
@@ -34,7 +34,7 @@ Goals:
 
 * avoid conflation
 
-  Conflation means having to learn, remember, and abstract over, similarities that should not exist.  For example, many vector (array) operations only have useful semantics when sequential integer indexes are assumed, and therefore vectors and dictionaries should not be the same type.
+  Conflation means having to learn, remember, and abstract over similarities that should not exist.  For example, many vector (array) operations only have useful semantics when sequential integer indexes are assumed, and therefore vectors and dictionaries should not be the same type.
 
   Constructs should never compose with constructs that cannot satisfy their requirements.
 
