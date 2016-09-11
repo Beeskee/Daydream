@@ -784,9 +784,10 @@ Noteworthy Features:
     Most problems are effectively wanting to read or mutate variables across module boundaries.  These problems have associated solutions.
 
     Problem             | Solution
-    --------------------+---------------------------------------------------------
+    --------------------+-------------------------------------------------------
     read the variable   | implicitly import the variable
-    mutate the variable | cooperation or check the module file's write permissions
+    mutate the variable | cooperation or check the module file's write
+                        | permissions
 
     Implicitly importing variables must be an acceptable solution because implicitly importing "core" variables is necessary to define anything else.
 
