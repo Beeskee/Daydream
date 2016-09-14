@@ -696,7 +696,7 @@ Noteworthy Features:
 
     Dan Ingalls, who implemented the first several Smalltalk versions, said: "An operating system is a collection of things that don’t fit into a language.  There shouldn’t be one."
 
-    Conflating an operating system with a programming language harms composition, encapsulation, and security.
+    Conflating an operating system with a programming language prevents composition, encapsulation, and security.
 
     It prevents reusing the host operating system, if one exists (and it usually does).  The implementer of the programming language is burdened with also implementing an operating system.  The implementation may be inefficient because it differs from the host.
 
@@ -813,7 +813,7 @@ Noteworthy Features:
 
     The change I propose is providing the /option/ to install multiple programs in a shared environment.  The installation endowment of the shared environment is the set union of the installation endowments of all programs installed in it.  When multiple programs written in this programming language are installed in a shared environment, their module encapsulation boundaries are not enforced, except inside sandboxes.
 
-    Programs should not be installed in a shared environment by default.
+    Programs should /not/ be installed in a shared environment by default.
 
     This programming language's semantics would change in a backwards-compatible way.  Outside sandboxes, modules only indicate which file contains the definition of a variable.  All variables in the outermost scope can be imported.  All variables and call stack frames can be observed and mutated by the debugger.  All modules can be reloaded.  Variables in other modules cannot be mutated by "def" and "set!" because code may depend on their existing semantics.
 
