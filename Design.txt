@@ -1,4 +1,4 @@
-Goals:
+Goals
 
 * good error handling
 
@@ -77,7 +77,7 @@ Goals:
   It should be possible to implement a metacircular evaluator in the programming language, without much code, without much loss in efficiency.  This ensures the programming language's implementation is exposed in a useful way to programs written in it.
 
 
-Non-Goals:
+Non-Goals
 
 * familiarity or ease of learning by novice programmers
 
@@ -750,7 +750,7 @@ Noteworthy Features:
 
     Capabilities are used to implement sandboxed evaluation.
 
-    Sandboxed evaluation is useful for:
+    Sandboxed evaluation is useful for
     * executing untrusted code
     * deserialization
     * genetic programming
