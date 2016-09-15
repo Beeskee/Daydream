@@ -324,7 +324,7 @@ Non-Goals
   The input/output facilities of hosts vary.
 
 
-Noteworthy Features:
+Noteworthy Features
 
 * intended use
 
