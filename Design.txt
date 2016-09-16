@@ -626,7 +626,7 @@ Noteworthy Features
 
       Definitions that perform arithmetic and logic, define and mutate variables, and construct and mutate data structures are defined in the "core" module.
 
-      The foreign function interface is defined in the "ffi" module.  Access to the foreign function interface must be limited to libraries that wrap foreign code for use by this programming language.  Code with access to the foreign function interface could perform harmful output directly or bypass security by converting knowledge of a capability to possession of a capability (by converting a memory address to a reference).
+      The foreign function interface is defined in the "ffi" module.  Access to the foreign function interface must be limited to libraries that wrap foreign code for use by this programming language.  Code with access to the foreign function interface could perform harmful output directly or violate the capability security model by converting knowledge of a capability to possession of a capability (by converting a memory address to a reference).
 
       The internal runtime interface is defined in the "ri" module, which will be described later.
 
@@ -799,7 +799,7 @@ Noteworthy Features
 
     Implicitly importing variables must be an acceptable solution because implicitly importing "core" variables is necessary to define anything else.
 
-    A module must normally explicitly import all variables it uses from other modules, other than "core".  Macro generated code may contain variables from other modules that the module containing the generated code did not import.  If those variables had to be explicitly imported, modules would be dependent on implementation details of macros they use.  If those variables were always allowed, macros could violate the capability security model.  By implicitly importing those variables, only variables that violate the capability security model are denied.
+    A module must normally explicitly import all variables it uses from other modules, other than "core".  Macro generated code may contain variables from other modules that the module containing the generated code did not import.  If those variables had to be explicitly imported, modules would be dependent on implementation details of macros they use.  If those variables were always allowed, macros could violate the capability security model.  By implicitly importing those variables, only variables that would violate the capability security model are denied.
 
     Modules often provide hooks for other modules to attach callbacks to.  This is achieved by providing functions that mutate a data structure within the module containing the hook because it is normally impossible to directly mutate the contents of another module.  This has several beneficial effects.  It is possible to cause side effects when the contents of a hook changes.  Exposing the hook data structure could harm security.
 
