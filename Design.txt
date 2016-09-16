@@ -601,14 +601,14 @@ Noteworthy Features
   * purpose
 
     The module system serves multiple purposes:
-    * swapping implementations of interfaces - supports maintenance
-    * libraries                              - supports code reuse
-    * sandboxing                             - supports security
+    * swapping implementations of interfaces
+    * libraries
+    * sandboxing
 
     The module system features solve practical problems:
-    * selective import - prevents name collisions, enforces security
-    * renaming imports - resolves name collisions
-    * selective export - prevents dependence on implementation details, enforces security
+    * selective import -- prevents name collisions and enforces security
+    * renaming imports -- resolves name collisions
+    * selective export -- prevents dependence on implementation details, enforces security, and improves optimization
 
     This module system can support incremental compilation.
 
@@ -618,13 +618,23 @@ Noteworthy Features
 
       Modules encapsulate portions of the outermost scope.  Modules compose concatenatively, not by nesting.  Only one instance of a module exists at a time.
 
-      All definitions in this programming language are encapsulated in a module, even built-ins (in "core") and those entered in the top-level listener (in "user").  To avoid surprising behavior, user-defined modules cannot be named "core" or "user".
-
       The module system works with /variables/, not values.  If an exported variable is mutated, other modules that import it can read the current value.
+
+    * built-ins
+
+      /All/ definitions in this programming language are encapsulated in a module.
+
+      Definitions that perform arithmetic and logic, define and mutate variables, and construct and mutate data structures are defined in the "core" module.
+
+      The foreign function interface is defined in the "ffi" module.  Access to the foreign function interface must be limited to libraries that wrap foreign code for use by this programming language.  Code with access to the foreign function interface could perform harmful output directly or bypass security by converting knowledge of a capability to possession of a capability (by converting a memory address to a reference).
+
+      The internal runtime interface is defined in the "ri" module, which will be described later.
+
+      To avoid surprising behavior, user-defined modules cannot be named "core", "ffi", or "ri".
 
     * interfaces
 
-      Modules only implicitly import the "core" module, and do not implicitly export anything.  The programmer must explicitly specify the interface.  This encourages encapsulation, planning interfaces, and conscious interface change.
+      Modules only implicitly import the "core" module and do not implicitly export anything.  The programmer must explicitly specify the interface.  This encourages encapsulation, planning interfaces, and conscious interface change.
 
       Importing or exporting the same variable from the same module more than once is /not/ a defect.  No warnings are issued.  This makes macro use easier.
 
@@ -646,7 +656,7 @@ Noteworthy Features
 
       Modules are loaded by executing them.
 
-      While it is occasionally useful for macro expansion and loading to perform side effects, code /must not/ rely on the number of times a module is macro-expanded or loaded, or the time a module is loaded.
+      Even though it is occasionally useful for macro expansion and loading to perform side effects, code /must not/ rely on the number of times a module is macro-expanded or loaded, or the time a module is loaded.
 
       A module may be macro-expanded each time a program that depends on it runs.  Optimizing compilers may generate code that is equivalent to the module's code after macro expansion.
 
@@ -662,11 +672,9 @@ Noteworthy Features
 
       Reloading a module that has not changed, when a later version is not available, may have no effect.
 
-      A reloaded module's dependencies are /not/ reset to their initial states, because the point in reloading a module is usually to redefine the module without losing other state.
+      A reloaded module's dependencies are /not/ reset to their initial states because the point in reloading a module is usually to redefine the module without losing other state.
 
       Attempting to reload a module that is not loaded is a defect.
-
-      If the reloaded module does not export a superset of the variables the previous instance did, it is a defect.
 
       Be aware that references to out-of-date values may exist after reloading a module.  You should prefer to access imported values through imported variables.
 
