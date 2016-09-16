@@ -648,7 +648,7 @@ Noteworthy Features
 
       Modules may be versioned.  Unversioned modules are usually used for swapping implementations of interfaces.  Versioned modules are usually used for libraries.
 
-      A subset of the Semantic Versioning format is used.  A version number consists of non-negative decimal integers for major, minor, and patch version numbers, in that order, separated by periods.  The major version number is 0 before release, and incremented to 1 at release, then incremented by 1 each time backwards incompatible changes are made.  The minor version number is incremented by 1 each time features are added or depreciated.  The patch version number is incremented by 1 each time defects are corrected.  When the previous number is incremented by 1, the following numbers are reset to 0 (e.g. 1.2.15 to 1.3.0).  Trailing metadata is /not/ supported.
+      A subset of the Semantic Versioning format is used.  A version number consists of non-negative decimal integers for major, minor, and patch version numbers, in that order, separated by periods.  The major version number is 0 before release, then incremented to 1 at release, then incremented by 1 each time backwards incompatible changes are made.  The minor version number is incremented by 1 each time features are added or depreciated.  The patch version number is incremented by 1 each time defects are corrected.  When the previous number is incremented by 1, the following numbers are reset to 0 (e.g. 1.2.15 to 1.3.0).  Trailing metadata is /not/ supported.
 
       When (re)loading a versioned module the programming language will use the latest version that meets the specification.  The major version number must be = the requested number, and the minor and patch version numbers must be >= the requested numbers.  The programmer should not request a patch number other than 0 unless they know their implementation is affected by a defect that is corrected in a specific patch version.
 
@@ -656,17 +656,17 @@ Noteworthy Features
 
       Modules are loaded by executing them.
 
-      Even though it is occasionally useful for macro expansion and loading to perform side effects, code /must not/ rely on the number of times a module is macro-expanded or loaded, or the time a module is loaded.
+      Even though it is occasionally useful for macro expansion and loading to perform side effects, code /must not/ rely on the number of times a module is macro-expanded or loaded or the time a module is loaded.
 
       A module may be macro-expanded each time a program that depends on it runs.  Optimizing compilers may generate code that is equivalent to the module's code after macro expansion.
 
       Import specifications may be executed as they are encountered.  Optimizing compilers may generate code that executes all of a module's import specifications before the rest of the code.
 
-      All of a module's dependencies are recursively reset to their initial states when the module is macro-expanded.  All modules are reset to their initial states when transitioning from macro expansion time to run time.  Modules whose state did not change need not be reset.  The state may be reset by re-executing the macro-expanded code, or copying from a backup which may be freed at run time.  This prevents mutation within a module at macro expansion time from influencing the macro expansion of other modules, or from influencing run time.
+      All of a module's dependencies are recursively reset to their initial states when the module is macro-expanded.  All modules are reset to their initial states when transitioning from macro expansion time to run time.  Modules whose state did not change need not be reset.  The state may be reset by re-executing the macro-expanded code or copying from a backup (which may be freed at run time).  This prevents mutation within a module at macro expansion time from influencing the macro expansion of other modules or from influencing run time.
 
     * reloading
 
-      Modules can be reloaded at the listener and in modules.  This is useful for exploratory programming, or hot code swapping to correct a defect in, or add features to, a running program.
+      Modules can be reloaded at the listener and in modules.  This is useful for exploratory programming or hot code swapping to correct a defect in or add features to a running program.
 
       Modules are reloaded by rereading and executing them.
 
