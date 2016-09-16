@@ -688,9 +688,9 @@ Noteworthy Features
 
   * conventions
 
-    A module name consists of symbol names for an organization (optional), project, and the contents of the module, in that order, separated by periods.
+    A user-defined module name consists of symbol names for an organization (optional), project, and the contents of the module, in that order, separated by periods.
 
-    It is better to be descriptive than terse, to minimize the chance of name collisions.  Module names are not used in variable names or expressions.
+    It is better to be descriptive than terse, to minimize the chance of name collisions.  Using module names is only necessary in import specifications, so long module names should not annoy programmers.
 
     For example, "penguin-charity.population-tracker.map" or "population-tracker.map".
 
