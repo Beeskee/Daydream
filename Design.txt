@@ -781,9 +781,9 @@ Noteworthy Features
 
     A sandboxed evaluator is a function that accepts a form to evaluate and returns the result of evaluation.  Sandboxed evaluators can evaluate any data that is equivalent to source code.
 
-    All definitions from the "core" module and any specified definitions from the "env" virtual module are imported to the sandbox's environment before evaluation begins.  The form to be evaluated must "import" all other definitions.
+    All definitions from the "core" module and any specified definitions from the "env" virtual module are imported to the sandbox's environment before evaluation begins.  The form to be evaluated must normally "import" other definitions.
 
-    Sandboxed evaluators are intended to evaluate normal source code, and therefore "import" is necessary.
+    Sandboxed evaluators are intended to evaluate normal source code, and therefore normally "import" is necessary.
 
     Sandboxes compose by nesting.  When a sandbox is constructed, and an outer sandbox exists, the inner sandbox's specification is compared to the outer sandbox's specification.  If the inner sandbox's specification is more permissive, it is a defect.  This normally involves ensuring that the outer sandbox's specification allows importing each variable or the entire corresponding module.  Importing variables from "env" is always allowed because lexical scope ensures it cannot become more permissive.
 
@@ -793,13 +793,12 @@ Noteworthy Features
 
     Problem             | Solution
     --------------------+-------------------------------------------------------
-    read the variable   | implicitly import the variable
+    read the variable   | check that the variable can be imported
     mutate the variable | cooperation or check the module file's write
                         | permissions
 
-    Implicitly importing variables must be an acceptable solution because implicitly importing "core" variables is necessary to define anything else.
-
-    A module must normally explicitly import all variables it uses from other modules, other than "core".  Macro generated code may contain variables from other modules that the module containing the generated code did not import.  If those variables had to be explicitly imported, modules would be dependent on implementation details of macros they use.  If those variables were always allowed, macros could violate the capability security model.  By implicitly importing those variables, only variables that would violate the capability security model are denied.
+    A module must normally import variables it uses from other modules, other than "core".  Macro generated code may contain variables from other modules that the module containing the generated code did not import.  If those variables were always allowed, macros could violate the capability security model.  By checking that those variables can be imported, only variables that would violate the capability security model are denied.
+[not actually imported in this case, just permissions check]
 
     Modules often provide hooks for other modules to attach callbacks to.  This is achieved by providing functions that mutate a data structure within the module containing the hook because it is normally impossible to directly mutate the contents of another module.  This has several beneficial effects.  It is possible to cause side effects when the contents of a hook changes.  Exposing the hook data structure could harm security.
 
@@ -807,7 +806,7 @@ Noteworthy Features
 
     The debugger uses implicit import and module file write permissions checks.  Values and call stack frames from variables that can be imported and are associated with read-only module files can be observed by the debugger.  Values and call stack frames from variables that are associated with writable module files can be observed and mutated by the debugger.  If an unhandled error condition occurs in a call stack frame that cannot be observed by the debugger, the stack starts unwinding.  Stack unwinding automatically continues through call stack frames that cannot be observed by the debugger.  The debugger may execute upon reaching a call stack frame that can be observed.  Most programming languages behave similarly because debugging information is usually unavailable for built-in or third party modules.
 
-    Reloading uses module file write permissions checks.  Only module files that can be written can be reloaded.  In other words, being allowed to reload a module requires being allowed to mutate its contents.  Programs that use hot code swapping normally download their own updates, and therefore are allowed to write their reloadable module files.
+    Reloading uses module file write permissions checks.  Only module files that can be written can be reloaded.  In other words, being allowed to reload a module requires being allowed to mutate its contents.  Programs that use hot code swapping usually download their own updates, and therefore are allowed to write their reloadable module files.
 
   * a change to the capability security model
 
