@@ -640,7 +640,7 @@ Noteworthy Features
 
       A module can have any number of import and export specifications mingled with definitions and expressions.  The only restriction on order is that variables must be initialized by definition or importing before they are read.  This makes macro use easier.
 
-      An import or export specification inside an expression, except for (potentially nested) "do" forms, is a defect.  Module interfaces should not vary a run time.  Macros may expand into import and export specifications, which is sufficient to allow module implementations to vary at macro expansion time.  Import and export specifications are allowed in "do" forms so a single macro call can expand into a combination of import and export specifications, definitions, and expressions.  The value of an import or export specification is "null".
+      An import or export specification inside an expression, except for (potentially nested) "do" forms, is a defect.  Module interfaces should not vary at run time.  Macros may expand into import and export specifications, which is sufficient to allow module implementations to vary at macro expansion time.  Import and export specifications are allowed in "do" forms so a single macro call can expand into a combination of import and export specifications, definitions, and expressions.  The value of an import or export specification is "null".
 
       A dependency cycle is a defect.  It indicates two or more modules are badly decomposed.  Some definitions need to be combined into a single module to eliminate the cycle.  Others may need to be separated into other modules.
 
