@@ -536,7 +536,7 @@ Noteworthy Features
       This solution was chosen for several reasons:
       * Homoiconicity is preserved.  All symbol types support the name symbol interface.  Macros are able to pass values to and from normal functions with no effort.
       * Macros can easily perform processing and side effects.
-      * This macro system is not much more complex than Common Lisp's.  Most of the additional complexity is in implementation, not use.  Common Lisp already had name, gensymed, and module-qualified symbols, though with somewhat different semantics.  Those are still the only types of symbols that exist after macro expansion.
+      * This macro system is not much more complex than Common Lisp's.  The increased complexity is in implementation, not use.  Common Lisp already had name, gensymed, and module-qualified symbols, though with somewhat different semantics.  Those are still the only types of symbols that exist after macro expansion.
       * Macros are briefer in this this macro system than in Common Lisp's or Scheme's.  Hygienic macros are briefer than anaphoric macros.
       * The gensym counter is not observable outside each module without effort on the part of the programmer.  This avoids interfering with incremental compilation.
 
