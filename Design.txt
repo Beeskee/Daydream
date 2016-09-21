@@ -344,16 +344,6 @@ Noteworthy Features
 
   "true" and "false" are /values/, not variables.  To avoid surprising behavior, "true" and "false" are not valid variable names.
 
-* definition and mutation
-
-  Definition and mutation are different special forms so that this programming language can detect defects caused by typos in variable names.
-
-  Definition is much simpler than in most Lisp-like languages.  There is only one "def" form which can be used in any scope.  There are no "let" forms.  "let" forms are no improvement over using "fn" or "mac" directly.
-
-  Defining the same variable as different values (according to "eqv?") is normally a defect so that this programming language can detect accidental redefinition.  Defining the same variable more than once as equivalent values is /not/ a defect so that macros that generate definitions are easier to use.  Optimizing compilers may eliminate redundant definitions that do not cause observable side effects.
-
-  Mutating an undefined mutable place is a defect.
-
 * symbols
 
   To avoid surprising behavior, the same name in the same scope always refers to the same value, barring mutation.  This implies that variables and functions are not in separate namespaces.  It implies that the programming language is case-insensitive.  To prevent the use of symbols that jangle like bad typography, uppercase letters in a symbol is a defect.
@@ -373,6 +363,16 @@ Noteworthy Features
   There is no character type.  A string is effectively an immutable list of strings of 1 character.  This may result in more code reuse.  Strings cannot be mutated because they are frequently used as hash table keys.  Strings cannot be indexed because UTF-8 is a variable-length code.  Strings of 1 character can be converted to and from integers.
 
   Vectors are dynamic arrays.  Vectors may be used as stacks.  This makes vectors more general.  Bounds are checked.  Like singly-linked lists, dynamic arrays are used in most hash table implementations, which are used in most environment implementations, so it makes sense to expose them to programs written in the programming language.  That avoids unnecessarily restrictions.
+
+* definition and mutation
+
+  Definition and mutation are different special forms so that this programming language can detect defects caused by typos in variable names.
+
+  Definition is much simpler than in most Lisp-like languages.  There is only one "def" form which can be used in any scope.  There are no "let" forms.  "let" forms are no improvement over using "fn" or "mac" directly.
+
+  Defining the same variable as different values (according to "eqv?") is normally a defect so that this programming language can detect accidental redefinition.  Defining the same variable more than once as equivalent values is /not/ a defect so that macros that generate definitions are easier to use.  Optimizing compilers may eliminate redundant definitions that do not cause observable side effects.
+
+  Mutating an undefined mutable place is a defect.
 
 * generalized variables
 
