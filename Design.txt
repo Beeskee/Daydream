@@ -344,9 +344,15 @@ Noteworthy Features
 
   "true" and "false" are /values/, not variables.  To avoid surprising behavior, "true" and "false" are not valid variable names.
 
-* definition
+* definition and mutation
 
-  Definition is much simpler than in most Lisp-like languages.  There is only one "def" form, which can be used in any scope.  There are no "let" forms.  "let" forms are no improvement over using "fn" or "mac" directly.
+  Definition and mutation are different special forms so that this programming language can detect defects caused by typos in variable names.
+
+  Definition is much simpler than in most Lisp-like languages.  There is only one "def" form which can be used in any scope.  There are no "let" forms.  "let" forms are no improvement over using "fn" or "mac" directly.
+
+  Defining the same variable as different values (according to "eqv?") is normally a defect so that this programming language can detect accidental redefinition.  Defining the same variable more than once as equivalent values is /not/ a defect so that macros that generate definitions are easier to use.  Optimizing compilers may eliminate redundant definitions that do not cause observable side effects.
+
+  Mutating an undefined mutable place is a defect.
 
 * symbols
 
@@ -370,20 +376,20 @@ Noteworthy Features
 
 * generalized variables
 
-  The "set!" special form accepts any mutable place:
-  * variables
+  Mutation is much simpler than in most Lisp-like languages.  There is only one "set!" form which can be used with any mutable place.
+
+  A mutable place can be specified by
+  * a variable
   * a dictionary and key
   * a list and "'first" or "'rest"
   * a vector and index
 
-  This is much simpler than in Common Lisp.
-
-  For example:
+  For example
   "(set! (a-dict "x") 0)"
 
 * equality
 
-  Equality is much simpler than in most Lisp-like languages.  "=" compares values for immutable types, and identities (i.e. addresses) for mutable types, like "==" in most popular programming languages.  Dictionaries always use this form of equality, because it ensures keys remain associated with their values.  "equal?" compares values even for mutable types, and correctly handles reference cycles, like "equal?" in Scheme.  Pattern matching always uses this form of equality, because it handles immutable and mutable types consistently.
+  Equality is much simpler than in most Lisp-like languages.  "eqv?" compares values for immutable types and identities (i.e. memory addresses) for mutable types, like "==" in most popular programming languages.  Dictionaries always use this form of equality because it ensures keys remain associated with their values.  "equal?" compares values even for mutable types and correctly handles reference cycles, like "equal?" in Scheme.  Pattern matching always uses this form of equality because it handles immutable and mutable types consistently.
 
 * regular expressions
 
