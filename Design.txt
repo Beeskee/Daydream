@@ -787,9 +787,7 @@ Noteworthy Features
 
     A sandboxed evaluator is a function that accepts a form to evaluate and returns the result of evaluation.  Sandboxed evaluators can evaluate any data that is equivalent to source code.
 
-    All definitions from the "core" module and any specified definitions from the "env" virtual module are imported to the sandbox's environment before evaluation begins.  The form to be evaluated must normally "import" other definitions.
-
-    Sandboxed evaluators are intended to evaluate normal source code, and therefore normally "import" is necessary.
+    All definitions from the "core" module and any specified definitions from the "env" virtual module are imported to the sandbox's environment before evaluation begins.  If definitions from "core" and "env" cause name collisions, those from "env" have priority.  The form to be evaluated must normally "import" other definitions.  Sandboxed evaluators are intended to evaluate normal source code, and therefore normally "import" is necessary.
 
     Sandboxes compose by nesting.  When a sandbox is constructed, and an outer sandbox exists, the inner sandbox's specification is compared to the outer sandbox's specification.  If the inner sandbox's specification is more permissive, it is a defect.  This normally involves ensuring that the outer sandbox's specification allows importing each variable or the entire corresponding module.  Importing variables from "env" is always allowed because lexical scope ensures it cannot become more permissive.
 
