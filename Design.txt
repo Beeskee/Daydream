@@ -630,7 +630,7 @@ Noteworthy Features
 
       /All/ definitions in this programming language are encapsulated in a module.
 
-      Definitions that perform arithmetic and logic, define and mutate variables, and construct and mutate data structures are defined in the "core" module.
+      Definitions that define and mutate variables, construct and mutate data structures, perform arithmetic and logic, and perform control flow are defined in the "core" module.
 
       The foreign function interface is defined in the "ffi" module.  Access to the foreign function interface must be limited to libraries that wrap foreign code for use by this programming language.  Code with access to the foreign function interface could perform harmful output directly or violate the capability security model by converting knowledge of a capability to possession of a capability (by converting a memory address to a reference).
 
@@ -644,7 +644,7 @@ Noteworthy Features
 
       Importing different variables to the same name is normally a defect so that this programming language can detect accidental redefinition.  Importing the same variable more than once to the same name is /not/ a defect so that macros that generate importations are easier to use.  Optimizing compilers may eliminate redundant importations.
 
-      If importations and definitions cause name collisions, definitions normally have priority.  A warning is issued because name collisions are usually unintentional and always unnecessary.  The order of importations and definitions that cause name collisions is normally irrelevant.  This is consistent with how definitions from "core" and "env" are handled and lexical scope.  Otherwise, including new definitions in any module (not only "core") could break existing code that imports the whole module.  Imported definitions can be thought of as outside the outermost scope of a module.
+      If importations and definitions cause name collisions, definitions normally have priority.  A warning is issued because name collisions are usually unintentional.  The order of importations and definitions that cause name collisions is normally irrelevant.  This is consistent with how definitions from "core" and "env" are handled and lexical scope.  Otherwise, including new definitions in any module (not only "core") could break existing code that imports the whole module.  Imported definitions can be thought of as outside the outermost scope of a module.
 
     * interfaces
 
