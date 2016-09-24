@@ -646,6 +646,8 @@ Noteworthy Features
 
       If importations and definitions cause name collisions, definitions normally have priority.  A warning is issued because name collisions are usually unintentional.  The order of importations and definitions that cause name collisions is normally irrelevant.  This is consistent with how definitions from "core" and "env" are handled and lexical scope.  Otherwise, including new definitions in any module (not only "core") could break existing code that imports the whole module.  Imported definitions can be thought of as outside the outermost scope of a module.
 
+      Mutating an imported variable is normally a defect because it should not normally be necessary to violate encapsulation.  If the imported variable was overridden by a definition, mutating the variable is /not/ a defect because the variable is in the same module.
+
     * interfaces
 
       Modules only implicitly import the "core" module and do not implicitly export anything.  The programmer must explicitly specify the interface.  This encourages encapsulation, planning interfaces, and conscious interface change.
