@@ -652,7 +652,7 @@ Noteworthy Features
 
       Modules only implicitly import the "core" module and do not implicitly export anything.  The programmer must explicitly specify the interface.  This encourages encapsulation, planning interfaces, and conscious interface change.
 
-      An import or export specification inside an expression, except for (potentially nested) "do" forms, is a defect.  Module interfaces should not vary at run time.  Macros may expand into import and export specifications, which makes it possible for module implementations to vary at macro expansion time.  Import and export specifications in "do" forms make it possible for a single macro call to expand into a combination of import and export specifications, definitions, and expressions.  The value of an import or export specification is "null".
+      An import or export specification inside an expression, except for (potentially nested) "do" forms, is a defect.  Module interfaces should not vary at run time.  Macros may expand into import and export specifications, which makes it possible for module implementations to vary at macro expansion time.  Import and export specifications in "do" forms make it possible for a single macro call to expand into a combination of import and export specifications, definitions, and expressions.
 
       A dependency cycle is a defect.  It indicates two or more modules are badly decomposed.  Some definitions need to be combined into a single module to eliminate the cycle.  Others may need to be separated into other modules.
 
