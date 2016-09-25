@@ -661,8 +661,8 @@ Noteworthy Features
 
       Examples
       ";; Import the whole math module, and from the calculator module, import
-       ;; gui as display and buttons (as buttons).
-       (import (math) (calculator (gui display) buttons))"
+       ;; lcd as display and buttons (as buttons).
+       (import (math) (calculator (lcd display) buttons))"
       ";; Export money and inventory.
        (export money inventory)"
 
