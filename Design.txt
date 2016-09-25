@@ -384,8 +384,11 @@ Noteworthy Features
   * a list and "'first" or "'rest"
   * a vector and index
 
-  For example
-  "(set! (a-dict "x") 0)"
+  Examples
+  "(set! x 0)"
+  "(set! (dictionary 'x) 0)"
+  "(set! (list 'first) 0)"
+  "(set! (vector 0) 0)"
 
 * equality
 
@@ -640,19 +643,34 @@ Noteworthy Features
 
     * importation, exportation, definition, and mutation
 
-      Imports occur in topological order and, within that ordering, by the time they are encountered in the source code.  A topological ordering may not be unique, and imports may occur before they are encountered in the source code.  Programming languages without automatic dependency management invariably have an excess of incompatible tools to solve this problem.  Programming languages with predictable load ordering discourage encapsulation by making it easy to use side effects to create invisible dependencies between modules.  Optimizing compilers may generate code that executes all of a module's importations before the rest of the code.
+      The importation of a variable must appear before it is read in the source code.  Importations occur in topological order and, within that ordering, by the time they are encountered in the source code.  A topological ordering may not be unique, and importations may occur before they are encountered in the source code.  Programming languages without automatic dependency management invariably have an excess of incompatible tools to solve this problem.  Programming languages with predictable load ordering discourage encapsulation by making it easy to use side effects to create invisible dependencies between modules.  Optimizing compilers may generate code that executes all of a module's importations before the rest of the code.
 
       Importing different variables to the same name is normally a defect so that this programming language can detect accidental redefinition.  Importing the same variable more than once to the same name is /not/ a defect so that macros that generate importations are easier to use.  Optimizing compilers may eliminate redundant importations.
+
+      Importations return "null".
 
       If importations and definitions cause name collisions, definitions normally have priority.  A warning is issued because name collisions are usually unintentional.  The order of importations and definitions that cause name collisions is normally irrelevant.  This is consistent with how definitions from "core" and "env" are handled and lexical scope.  Otherwise, including new definitions in any module (not only "core") could break existing code that imports the whole module.  Imported definitions can be thought of as outside the outermost scope of a module.
 
       Mutating an imported variable is normally a defect because it should not normally be necessary to violate encapsulation.  If the imported variable was overridden by a definition, mutating the variable is /not/ a defect because the variable is in the same module.
 
+      The exportation of a variable may appear before or after its importation or definition.  Exportations occur when the associated module finishes loading.
+
+      Exporting the same variable more than once is /not/ a defect so that macros that generate exportations are easier to use.  Optimizing compilers may eliminate redundant exportations.
+
+      Exportations return "null".
+
+      Examples
+      ";; Import the whole math module, and from the calculator module, import
+       ;; gui as display and buttons (as buttons).
+       (import (math) (calculator (gui display) buttons))"
+      ";; Export money and inventory.
+       (export money inventory)"
+
     * interfaces
 
       Modules only implicitly import the "core" module and do not implicitly export anything.  The programmer must explicitly specify the interface.  This encourages encapsulation, planning interfaces, and conscious interface change.
 
-      An import or export specification inside an expression, except for (potentially nested) "do" forms, is a defect.  Module interfaces should not vary at run time.  Macros may expand into import and export specifications, which makes it possible for module implementations to vary at macro expansion time.  Import and export specifications in "do" forms make it possible for a single macro call to expand into a combination of import and export specifications, definitions, and expressions.
+      An importation or exportation inside an expression, except for (potentially nested) "do" forms, is a defect.  Module interfaces should not vary at run time.  Macros may expand into importations and exportations, which makes it possible for module implementations to vary at macro expansion time.  Importations and exportations in "do" forms make it possible for a single macro call to expand into a combination of importations, exportations, definitions, and expressions.
 
       A dependency cycle is a defect.  It indicates two or more modules are badly decomposed.  Some definitions need to be combined into a single module to eliminate the cycle.  Others may need to be separated into other modules.
 
@@ -700,7 +718,7 @@ Noteworthy Features
 
     A user-defined module name consists of symbol names for an organization (optional), project, and the contents of the module, in that order, separated by periods.
 
-    It is better to be descriptive than terse, to minimize the chance of name collisions.  Using module names is only necessary in import specifications, so long module names should not annoy programmers.
+    It is better to be descriptive than terse, to minimize the chance of name collisions.  Using module names is only necessary in importations, so long module names should not annoy programmers.
 
     For example, "penguin-charity.population-tracker.map" or "population-tracker.map".
 
@@ -783,7 +801,7 @@ Noteworthy Features
 
     Revocation of capabilities is achieved by passing a mutable closure that can conditionally operate on the resource, instead of passing the resource directly.
 
-    "sb" is a function that accepts a list in the same format as an "import" specification and returns a data structure containing, among other things, a sandboxed evaluator.  Only modules and variables in the specification can be imported inside the sandbox.  "sb" recognizes "env" as a module that contains the environment.  To avoid surprising behavior, user-defined modules cannot be named "env".
+    "sb" is a function that accepts a list in the same format as "import"'s arguments and returns a data structure containing, among other things, a sandboxed evaluator.  Only modules and variables in the sandbox's specification can be imported inside the sandbox.  "sb" recognizes "env" as a module that contains the environment.  To avoid surprising behavior, user-defined modules cannot be named "env".
 
     Definitions from "env" are lexically scoped like the rest of this programming language.  Looking up definitions from "env" does /not/ use the environment chain where the sandboxed evaluator is called.
 
