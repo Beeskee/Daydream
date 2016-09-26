@@ -34,7 +34,7 @@ Goals
 
 * avoid conflation
 
-  Conflation means having to learn, remember, and abstract over similarities that should not exist.  For example, many vector (array) operations only have useful semantics when sequential integer indexes are assumed, and therefore vectors and dictionaries should not be the same type.
+  Conflation means having to learn, remember, and abstract over similarities that should not exist.  For example, many vector (array) operations only have useful semantics when sequential integer indexes are assumed; therefore, vectors and dictionaries should not be the same type.
 
   Constructs should never compose with constructs that cannot satisfy their requirements.
 
@@ -524,7 +524,7 @@ Noteworthy Features
 
       If the name symbol is used in a base language binding form, all name symbols with the same name in the same scope are coerced to a gensymed symbol with the same counter value when returned from a macro.
 
-      Gensymed symbols construct unique places, for each gensymed symbol, for each macro expansion.  This avoids surprising behavior by preventing name collisions.  They are effectively symbols named by a global counter.  They are unique because symbols in source code are forbidden from following the gensymed symbol naming convention, and the global counter is incremented by 1 after each gensymed symbol is generated.
+      Gensymed symbols construct unique places, for each gensymed symbol, for each macro expansion.  This avoids surprising behavior by preventing name collisions.  They are effectively symbols named by a global counter.  They are unique because symbols in source code are forbidden from following the gensymed symbol naming convention and the global counter is incremented by 1 after each gensymed symbol is generated.
 
       Otherwise, the name symbol is coerced to a module-qualified symbol qualified with the macro's home module when returned from a macro.
 
@@ -559,7 +559,7 @@ Noteworthy Features
 
     * evaluation
 
-      Macros differ from functions in that their arguments are not evaluated before their body, and macros execute before run time.
+      Macros differ from functions in that their arguments are not evaluated before their body and macros execute before run time.
 
       If macro arguments were evaluated before their body, as in function application, macros could not inspect or transform their arguments.  Using a macro with function application (e.g. with folds, "map", or "filter") is a defect.
 
@@ -716,7 +716,7 @@ Noteworthy Features
 
   * conventions
 
-    A user-defined module name consists of symbol names for an organization (optional), project, and the contents of the module, in that order, separated by periods.
+    A user-defined module name consists of symbol names for an (optional) organization, project, and the contents of the module, in that order, separated by periods.
 
     It is better to be descriptive than terse, to minimize the chance of name collisions.  Using module names is only necessary in importations, so long module names should not annoy programmers.
 
@@ -809,7 +809,7 @@ Noteworthy Features
 
     A sandboxed evaluator is a function that accepts a form to evaluate and returns the result of evaluation.  Sandboxed evaluators can evaluate any data that is equivalent to source code.
 
-    All definitions from the "core" module and any specified definitions from the "env" virtual module are imported to the sandbox's environment before evaluation begins.  If definitions from "core" and "env" cause name collisions, those from "env" have priority.  The form to be evaluated must normally "import" other definitions.  Sandboxed evaluators are intended to evaluate normal source code, and therefore normally "import" is necessary.
+    All definitions from the "core" module and any specified definitions from the "env" virtual module are imported to the sandbox's environment before evaluation begins.  If definitions from "core" and "env" cause name collisions, those from "env" have priority.  The form to be evaluated must normally "import" other definitions.  Sandboxed evaluators are intended to evaluate normal source code; therefore, normally "import" is necessary.
 
     Sandboxes compose by nesting.  When a sandbox is constructed, and an outer sandbox exists, the inner sandbox's specification is compared to the outer sandbox's specification.  If the inner sandbox's specification is more permissive, it is a defect.  This normally involves ensuring that the outer sandbox's specification allows importing each variable or the entire corresponding module.  Importing variables from "env" is always allowed because lexical scope ensures it cannot become more permissive.
 
@@ -831,7 +831,7 @@ Noteworthy Features
 
     The debugger uses import and module file write permissions checks.  Values and call stack frames from variables that can be imported and are associated with read-only module files can be observed by the debugger.  Values and call stack frames from variables that are associated with writable module files can be observed and mutated by the debugger.  If an unhandled error condition occurs in a call stack frame that cannot be observed by the debugger, the stack starts unwinding.  Stack unwinding automatically continues through call stack frames that cannot be observed by the debugger.  The debugger may execute upon reaching a call stack frame that can be observed.  Most programming languages behave similarly because debugging information is usually unavailable for built-in or third party modules.
 
-    Reloading uses module file write permissions checks.  Only module files that can be written can be reloaded.  In other words, being allowed to reload a module requires being allowed to mutate its contents.  Programs that use hot code swapping usually download their own updates, and therefore are allowed to write their reloadable module files.
+    Reloading uses module file write permissions checks.  Only module files that can be written can be reloaded.  In other words, being allowed to reload a module requires being allowed to mutate its contents.  Programs that use hot code swapping usually download their own updates and therefore are allowed to write their reloadable module files.
 
   * a change to the capability security model
 
