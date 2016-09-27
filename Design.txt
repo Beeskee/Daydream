@@ -78,7 +78,7 @@ Goals
 
 * beware irreversible design decisions
 
-  When possible, avoid design decisions that make implementing or changing features impossible without reimplementing the programming language or programs written in it.
+  When possible, avoid design decisions that make including new or changing existing features impossible without reimplementing the programming language or programs written in it.
 
   Make irreversible design decisions consciously and cautiously.
 
