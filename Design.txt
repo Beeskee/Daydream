@@ -811,7 +811,7 @@ Noteworthy Features
 
     Definitions from "env" are lexically scoped like the rest of this programming language.  Looking up definitions from "env" does /not/ use the environment chain where the sandboxed evaluator is called.
 
-    Definitions from "env" are handled like other modules.  Redefining or mutating definitions from "env" does /not/ change their values outside the sandbox.
+    Definitions from "env" are encapsulated like other modules.  Redefining or mutating definitions from "env" does /not/ change their values outside the sandbox.
 
     A sandboxed evaluator is a function that accepts a form to evaluate and returns the result of evaluation.  Sandboxed evaluators can evaluate any data that is equivalent to source code.
 
