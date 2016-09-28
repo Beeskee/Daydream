@@ -2,10 +2,10 @@ A programming language designed to be embedded in other programs only has access
 
 If a programming language design does not standardize input/output facilities (mine does not), only code that is limited to processing is portable across hosts.
 
-While that may seem like a serious problem, and it is, it is more widespread than you may think.
+Although that may seem like a serious problem, and it is, it is more widespread than you may think.
 
 Even C has this problem.  Only file and teleprinter input/output are in the C standard.  C code that uses other input/output facilities may not run on other hosts (other computers and operating systems).
 
-Since all modern popular operating systems are implemented in C, all programs are ultimately embedded in the inadequate C runtime, causing problems with portability, calling and passing data across compilation boundaries, automatic resource management, transparent persistence, debugging, and security.  Lisp machines did not have many of these problems due to their more powerful runtime.  The cause is less obvious due to being ubiquitous.
+All modern, popular operating systems are implemented in C, so all programs are ultimately embedded in the inadequate C runtime.  That causes problems with portability, calling and passing data across compilation boundaries, automatic resource management, transparent persistence, debugging, and security.  Lisp machines did not have many of these problems due to their more powerful runtime.  The cause is less obvious due to being ubiquitous.
 
 It is possible to work around many of these problems with enough abstraction layers.  The unsolvable problems usually involve cooperation across compilation boundaries, and are analogous to cooperation between computers.
