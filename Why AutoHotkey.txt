@@ -19,7 +19,7 @@ Ideally, the operating system or applications would provide these features or el
 
 Most processes and many proprietary, constantly changing file formats and networking protocols are only accessible through a graphical user interface.
 
-Ideally, the runtime would allow you to access other programs' internals to work around these problems (as in Open Genera).  Unfortunately, all modern, popular operating systems are limited by the C runtime.
+Ideally, the runtime system would allow you to access other programs' internals to work around these problems (as in Open Genera).  Unfortunately, all modern, popular operating systems are limited by the C runtime system.
 
 AutoHotkey is better than nothing.
 
