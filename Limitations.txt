@@ -4,8 +4,6 @@ If a programming language design does not standardize input/output facilities (m
 
 Although that may seem like a serious problem, and it is, it is more widespread than you may think.
 
-Even C has this problem.  Only file and teleprinter input/output are in the C standard.  C code that uses other input/output facilities may not run on other hosts (other computers and operating systems).
-
 All modern, popular operating systems are implemented in C, so all programs are ultimately embedded in the inadequate C runtime.  That causes problems with portability, calling and passing data across compilation boundaries, automatic resource management, transparent persistence, debugging, and security.  Lisp machines did not have many of these problems because they had a more powerful runtime.  The problems C causes are less obvious because they are so ubiquitous.
 
 It is possible to work around many of these problems with enough abstraction layers.  The unsolvable problems usually involve cooperation across compilation boundaries and are analogous to cooperation between computers.
