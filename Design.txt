@@ -374,7 +374,7 @@ Noteworthy Features
 
   Definition and mutation are different special forms so that this programming language can detect defects caused by typos in variable names.
 
-  Definition is much simpler than in most Lisp-like languages.  There is only one "def" form which can be used in any scope.  There are no "let" forms.  "let" forms are no improvement over using "fn" or "mac" directly.
+  Definition is much simpler than in most Lisp-like languages.  There is only one "def" form which can be used in any scope.
 
   Defining the same variable as different values (according to "eqv?") is normally a defect so that this programming language can detect accidental redefinition.  Defining the same variable more than once as equivalent values is /not/ a defect so that macros that generate definitions are easier to use.  Optimizing compilers may eliminate redundant definitions that do not cause observable side effects.
 
@@ -595,7 +595,7 @@ Noteworthy Features
 
     "def" defines variables in the current scope.  Even though that is usually the expected and desired behavior, it may not be obvious how to define a local macro to simplify definitions in the outermost scope.
 
-    You could construct the macro in the outermost scope then call it immediately by surrounding the "mac" form and any arguments in parentheses.  The advantage is this does precisely what you want.  The disadvantage is this is complicated.
+    You could construct the macro in the outermost scope then call it immediately by surrounding the "mac" form and any arguments in parentheses (like "let" for macros).  The advantage is this does precisely what you want.  The disadvantage is this is complicated.
 
     You could define the macro in the outermost scope and not export it.  The advantage is this is simple.  The disadvantage is this pollutes the module's outermost scope.
 
@@ -811,7 +811,7 @@ Noteworthy Features
 
     Definitions from "env" are lexically scoped like other definitions.  Looking up definitions from "env" does /not/ use the environment chain where the sandboxed evaluator is called.
 
-    Definitions from "env" are encapsulated like other modules.  Redefining or mutating definitions from "env" does /not/ change their values outside the sandbox.
+    Definitions from "env" are encapsulated like other definitions.  Redefining or mutating definitions from "env" does /not/ change their values outside the sandbox.
 
     A sandboxed evaluator is a function that accepts a form to evaluate and returns the result of evaluation.  Sandboxed evaluators can evaluate any data that is equivalent to source code.
 
