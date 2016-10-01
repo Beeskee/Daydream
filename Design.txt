@@ -809,7 +809,7 @@ Noteworthy Features
 
     "sb" is a function that accepts a list in the same format as "import"'s arguments and returns a data structure containing, among other things, a sandboxed evaluator.  Only modules and variables in the sandbox's specification can be imported inside the sandbox.  "sb" recognizes "env" as a module that contains the environment.  To avoid surprising behavior, user-defined modules cannot be named "env".
 
-    Definitions from "env" are lexically scoped like the rest of this programming language.  Looking up definitions from "env" does /not/ use the environment chain where the sandboxed evaluator is called.
+    Definitions from "env" are lexically scoped like other definitions.  Looking up definitions from "env" does /not/ use the environment chain where the sandboxed evaluator is called.
 
     Definitions from "env" are encapsulated like other modules.  Redefining or mutating definitions from "env" does /not/ change their values outside the sandbox.
 
