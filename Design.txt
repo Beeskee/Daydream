@@ -817,7 +817,7 @@ Noteworthy Features
 
     All definitions from the "core" module and any specified definitions from the "env" virtual module are imported to the sandbox's environment before evaluation begins.  If definitions from "core" and "env" have name collisions, those from "env" have priority.  The form to be evaluated must normally "import" other definitions.  Sandboxed evaluators are intended to evaluate normal source code, so normally "import" is necessary.
 
-    Sandboxes compose by nesting.  When a sandbox is constructed, and an outer sandbox exists, the inner sandbox's specification is compared to the outer sandbox's specification.  If the inner sandbox's specification is more permissive, it is a defect.  This normally involves ensuring that the outer sandbox's specification allows importing each variable.  Importing variables from "env" is always allowed because lexical scope ensures it cannot become more permissive.
+    Sandboxes compose by nesting.  When a sandbox is constructed, and an outer sandbox exists, the inner sandbox's specification is compared to the outer sandbox's specification.  If the inner sandbox's specification is more permissive, it is a defect.  This normally involves ensuring that the outer sandbox's specification allows directly importing each variable.  Importing variables from "env" is always allowed because lexical scope ensures it cannot become more permissive.
 
     Using the capability security model has other, less beneficial, effects.  Strictly enforced encapsulation interferes with many desirable activities.  Fortunately, there are workarounds.
 
