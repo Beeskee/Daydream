@@ -807,7 +807,7 @@ Noteworthy Features
 
     Revocation of capabilities is achieved by passing a mutable closure that can conditionally operate on the resource, instead of passing the resource directly.
 
-    "sb" is a function that accepts a list in the same format as "import"'s arguments and returns a data structure containing, among other things, a sandboxed evaluator.  Only modules and variables in the sandbox's specification can be imported inside the sandbox.  "sb" recognizes "env" as a module that contains the environment.  To avoid surprising behavior, user-defined modules cannot be named "env".
+    "sb" is a function that accepts a list in the same format as "import"'s arguments and returns a data structure containing, among other things, a sandboxed evaluator.  Only modules and variables in the sandbox's specification can be directly imported inside the sandbox.  "sb" recognizes "env" as a module that contains the environment.  To avoid surprising behavior, user-defined modules cannot be named "env".
 
     Definitions from "env" are lexically scoped like other definitions.  Looking up definitions from "env" does /not/ use the environment chain where the sandboxed evaluator is called.
 
@@ -815,9 +815,9 @@ Noteworthy Features
 
     A sandboxed evaluator is a function that accepts a form to evaluate and returns the result of evaluation.  Sandboxed evaluators can evaluate any data that is equivalent to source code.
 
-    All definitions from the "core" module and any specified definitions from the "env" virtual module are imported to the sandbox's environment before evaluation begins.  If definitions from "core" and "env" cause name collisions, those from "env" have priority.  The form to be evaluated must normally "import" other definitions.  Sandboxed evaluators are intended to evaluate normal source code, so normally "import" is necessary.
+    All definitions from the "core" module and any specified definitions from the "env" virtual module are imported to the sandbox's environment before evaluation begins.  If definitions from "core" and "env" have name collisions, those from "env" have priority.  The form to be evaluated must normally "import" other definitions.  Sandboxed evaluators are intended to evaluate normal source code, so normally "import" is necessary.
 
-    Sandboxes compose by nesting.  When a sandbox is constructed, and an outer sandbox exists, the inner sandbox's specification is compared to the outer sandbox's specification.  If the inner sandbox's specification is more permissive, it is a defect.  This normally involves ensuring that the outer sandbox's specification allows importing each variable or the entire corresponding module.  Importing variables from "env" is always allowed because lexical scope ensures it cannot become more permissive.
+    Sandboxes compose by nesting.  When a sandbox is constructed, and an outer sandbox exists, the inner sandbox's specification is compared to the outer sandbox's specification.  If the inner sandbox's specification is more permissive, it is a defect.  This normally involves ensuring that the outer sandbox's specification allows importing each variable.  Importing variables from "env" is always allowed because lexical scope ensures it cannot become more permissive.
 
     Using the capability security model has other, less beneficial, effects.  Strictly enforced encapsulation interferes with many desirable activities.  Fortunately, there are workarounds.
 
@@ -825,17 +825,17 @@ Noteworthy Features
 
     Problem             | Solution
     --------------------+-------------------------------------------------------
-    read the variable   | check that the variable can be imported
+    read the variable   | check that the variable can be directly imported
     mutate the variable | cooperation or check the module file's write
                         | permissions
 
-    Macro generated code may contain variables from other modules that the module containing the generated code did not import.  If those variables were always allowed, macros could violate the capability security model.  By checking that those variables can be imported, only variables that would violate the capability security model are denied.
+    Macro generated code may contain variables from other modules that the module containing the generated code did not import.  If those variables were always allowed, macros could violate the capability security model.  By checking that those variables can be directly imported, only variables that would violate the capability security model are denied.
 
     Modules often provide hooks for other modules to attach callbacks to.  This is achieved by providing functions that mutate a data structure within the module containing the hook because it is normally impossible to directly mutate the contents of another module.  This has several beneficial effects.  It is possible to cause side effects when the contents of a hook changes.  Exposing the hook data structure could harm security.
 
-    If the process running this programming language can write to the module file, it can subvert the module.  If it can subvert the module, preventing it from observing or mutating the module's contents is an unnecessary restriction, which this programming language does not enforce.  This works well in practice.  Programmers cannot observe or mutate the contents of built-in modules.  Programmers can observe and mutate the contents of their own modules during development.  Encapsulation is strictly enforced in production because production ready modules are normally read-only.
+    If the process running this programming language can write to the module file, it can subvert the module.  If it can subvert the module, preventing it from observing or mutating the module's contents is an unnecessary restriction, which this programming language does not enforce.  This works well in practice.  Programmers cannot observe or mutate the contents of built-in modules.  Programmers can observe and mutate the contents of their own modules during development.  Encapsulation is strictly enforced in production because production-ready modules are normally read-only.
 
-    The debugger uses import and module file write permissions checks.  Values and call stack frames from variables that can be imported and are associated with read-only module files can be observed by the debugger.  Values and call stack frames from variables that are associated with writable module files can be observed and mutated by the debugger.  If an unhandled error condition occurs in a call stack frame that cannot be observed by the debugger, the stack starts unwinding.  Stack unwinding automatically continues through call stack frames that cannot be observed by the debugger.  The debugger may execute upon reaching a call stack frame that can be observed.  Most programming languages behave similarly because debugging information is usually unavailable for built-in or third party modules.
+    The debugger uses direct importation and module file write permissions checks.  Values and call stack frames from variables that can be directly imported and are associated with read-only module files can be observed by the debugger.  Values and call stack frames from variables that are associated with writable module files can be observed and mutated by the debugger.  If an unhandled error condition occurs in a call stack frame that cannot be observed by the debugger, the stack starts unwinding.  Stack unwinding automatically continues through call stack frames that cannot be observed by the debugger.  The debugger may execute upon reaching a call stack frame that can be observed.  Most programming languages behave similarly because debugging information is usually unavailable for built-in or third party modules.
 
     Reloading uses module file write permissions checks.  Only module files that can be written can be reloaded.  In other words, being allowed to reload a module requires being allowed to mutate its contents.  Programs that use hot code swapping usually download their own updates and therefore are allowed to write their reloadable module files.
 
@@ -853,6 +853,6 @@ Noteworthy Features
 
     Programs should /not/ be installed in a shared environment by default.
 
-    This programming language's semantics would change in a backwards-compatible way.  Outside sandboxes, modules only indicate which file contains the definition of a variable.  All variables in the outermost scope can be imported.  All variables and call stack frames can be observed and mutated by the debugger.  All modules can be reloaded.  Variables in other modules cannot be mutated by "def" and "set!" because code may depend on their existing semantics.
+    This programming language's semantics would change in a backwards-compatible way.  Outside sandboxes, modules only indicate which file contains the definition of a variable.  All variables in the outermost scope can be imported.  Imported variables can be mutated by "set!".  All variables and call stack frames can be observed and mutated by the debugger.  All modules can be reloaded.
 
     This change helps achieve the goal of avoiding unnecessary restrictions.
