@@ -504,7 +504,7 @@ Noteworthy Features
 
       If any module-qualified symbols in the macro's expansion do not refer to a variable in the outermost scope of the macro's home module (where the macro was defined), it is a defect.  Only variables in the outermost scope are always defined.
 
-      If a macro is called outside its home module and any module-qualified symbols in the macro's expansion do not refer to an exported variable, it is a defect.  This prevents dependence on implementation details.  The variable does not have to be exported from the macro's home module.  The variable only has to be exported from the variable's home module, which may not be the same as the macro's home module.  If modules had to import all variables their macro calls use, module interfaces would be dependent on implementation details of the macros they use.  If modules had to export all variables their macro expansions use, module interfaces would be cluttered with constructs implemented elsewhere (e.g. most modules would reexport most of the "core" module).  This encourages encapsulation.
+      If a macro is called outside its home module and any module-qualified symbols in the macro's expansion do not refer to an exported variable, it is a defect.  This prevents dependence on implementation details.  The variable does not have to be exported from the macro's home module.  The variable only has to be exported from the variable's home module, which may not be the same as the macro's home module.  If modules had to import all variables their macro calls use, module interfaces would be dependent on implementation details of the macros they use.  If modules had to export all variables their macro expansions use, module interfaces would be cluttered with constructs implemented elsewhere (e.g. most modules would reexport most of the "core" module).
 
     * hygiene
 
@@ -528,7 +528,7 @@ Noteworthy Features
 
       If the name symbol is quoted, it is not coerced when returned from a macro.
 
-      If the name symbol is used in a base language binding form, all name symbols with the same name in the same scope are coerced to a gensymed symbol with the same counter value when returned from a macro.
+      If the name symbol is bound by a base language binding form, all name symbols with the same name in the same scope are coerced to a gensymed symbol with the same counter value when returned from a macro.
 
       Gensymed symbols construct unique places, for each gensymed symbol, for each macro expansion.  This avoids surprising behavior by preventing name collisions.  They are effectively symbols named by a global counter.  They are unique because symbols in source code are forbidden from following the gensymed symbol naming convention and the global counter is incremented by 1 after each gensymed symbol is generated.
 
@@ -552,7 +552,7 @@ Noteworthy Features
       * Homoiconicity is preserved.  All symbol types support the name symbol interface.  Macros are able to pass values to and from normal functions with no effort.
       * Macros can easily perform processing and side effects.
       * This macro system is not much more complex than Common Lisp's.  The increased complexity is in implementation, not use.  Common Lisp already had name, gensymed, and module-qualified symbols, though with somewhat different semantics.  Those are still the only types of symbols that exist after macro expansion.
-      * Macros are briefer in this this macro system than in Common Lisp's or Scheme's.  Hygienic macros are briefer than anaphoric macros.
+      * Macros are briefer in this macro system than in Common Lisp's or Scheme's.  Hygienic macros are briefer than anaphoric macros.
       * The gensym counter is not observable outside each module without effort on the part of the programmer.  This avoids interfering with incremental compilation.
 
     * symbol macros
@@ -593,7 +593,7 @@ Noteworthy Features
 
   * local macro definition
 
-    "def" defines variables in the current scope.  Even though that is usually the expected and desired behavior, it may not be obvious how to define a local macro to simplify definitions in the outermost scope.
+    It may not be obvious how to define a local macro to simplify definitions in the outermost scope because "def" defines variables in the current scope.
 
     You could construct the macro in the outermost scope then call it immediately by surrounding the "mac" form and any arguments in parentheses (like "let" for macros).  The advantage is this does precisely what you want.  The disadvantage is this is complicated.
 
@@ -641,7 +641,7 @@ Noteworthy Features
 
       Definitions that define and mutate variables, construct and mutate data structures, perform arithmetic and logic, and perform control flow are defined in the "core" module.
 
-      The foreign function interface is defined in the "ffi" module.  Access to the foreign function interface must be limited to libraries that wrap foreign code for use by this programming language.  Code with access to the foreign function interface could perform harmful output directly or violate the capability security model by converting knowledge of a capability to possession of a capability (by converting a memory address to a reference).
+      The foreign function interface is defined in the "ffi" module.  Access to the foreign function interface must be restricted to libraries that wrap foreign code for use by this programming language.  Code with access to the foreign function interface could perform harmful output directly or violate the capability security model by converting knowledge of a capability to possession of a capability (by converting a memory address to a reference).
 
       The internal runtime system interface is defined in the "rsi" module, which will be described later.
 
@@ -807,7 +807,9 @@ Noteworthy Features
 
     Revocation of capabilities is achieved by passing a mutable closure that can conditionally operate on the resource, instead of passing the resource directly.
 
-    "sb" is a function that accepts a list in the same format as "import"'s arguments and returns a data structure containing, among other things, a sandboxed evaluator.  Only modules and variables in the sandbox's specification can be directly imported inside the sandbox.  "sb" recognizes "env" as a module that contains the environment.  To avoid surprising behavior, user-defined modules cannot be named "env".
+    "sb" is a function that accepts a list in the same format as "import"'s arguments and returns a data structure containing, among other things, a sandboxed evaluator.  Only variables in the sandbox's specification can be directly imported inside the sandbox.  "sb" recognizes "env" as a virtual module that contains the environment.  To avoid surprising behavior, user-defined modules cannot be named "env".
+
+    The "directly" qualifier in "directly imported" makes composing modules inside a sandbox possible.  The untrusted code in the anonymous virtual module inside a sandbox is restricted to importing variables in the sandbox's specification, but code in modules the untrusted code imports variables from may import variables not in the sandbox's specification.  For example, it is possible to grant untrusted code access to a function that calls functions from the "ffi" module /without/ granting the untrusted code access to any functions from the "ffi" module.
 
     Definitions from "env" are lexically scoped like other definitions.  Looking up definitions from "env" does /not/ use the environment chain where the sandboxed evaluator is called.
 
@@ -815,7 +817,7 @@ Noteworthy Features
 
     A sandboxed evaluator is a function that accepts a form to evaluate and returns the result of evaluation.  Sandboxed evaluators can evaluate any data that is equivalent to source code.
 
-    All definitions from the "core" module and any specified definitions from the "env" virtual module are imported to the sandbox's environment before evaluation begins.  If definitions from "core" and "env" have name collisions, those from "env" have priority.  The form to be evaluated must normally "import" other definitions.  Sandboxed evaluators are intended to evaluate normal source code, so normally "import" is necessary.
+    All definitions from the "core" module and any specified definitions from the "env" virtual module are imported to the sandbox's environment before evaluation begins.  If definitions from "core" and "env" have name collisions, those from "env" have priority.  The form to be evaluated must normally "import" definitions from other modules.  Sandboxed evaluators are intended to evaluate normal source code, so normally "import" is necessary.
 
     Sandboxes compose by nesting.  When a sandbox is constructed, and an outer sandbox exists, the inner sandbox's specification is compared to the outer sandbox's specification.  If the inner sandbox's specification is more permissive, it is a defect.  This normally involves ensuring that the outer sandbox's specification allows directly importing each variable.  Importing variables from "env" is always allowed because lexical scope ensures it cannot become more permissive.
 
@@ -826,18 +828,17 @@ Noteworthy Features
     Problem             | Solution
     --------------------+-------------------------------------------------------
     read the variable   | check that the variable can be directly imported
-    mutate the variable | cooperation or check the module file's write
-                        | permissions
+    mutate the variable | cooperation or check that the module can be subverted
 
     Macro-generated code may contain variables from other modules that the module containing the macro-generated code did not import.  If those variables were always allowed, macros could violate the capability security model.  By checking that those variables can be directly imported, only variables that would violate the capability security model are denied.
 
     Modules often provide hooks for other modules to attach callbacks to.  This is achieved by providing functions that mutate a data structure within the module containing the hook because it is normally impossible to directly mutate the contents of another module.  This has several beneficial effects.  It is possible to cause side effects when the contents of a hook changes.  Exposing the hook data structure could harm security.
 
-    If the process running this programming language can write to the module file, it can subvert the module.  If it can subvert the module, preventing it from observing or mutating the module's contents is an unnecessary restriction, which this programming language does not enforce.  This works well in practice.  Programmers cannot observe or mutate the contents of built-in modules.  Programmers can observe and mutate the contents of their own modules during development.  Encapsulation is strictly enforced in production because production-ready modules are normally read-only.
+    Code outside a sandbox that can write to a module file can subvert the module.  Code inside a sandbox can only subvert itself.  If code can subvert a module, preventing it from observing or mutating the module's contents is an unnecessary restriction, which this programming language does not enforce.  This works well in practice.  Programmers cannot observe or mutate the contents of built-in modules.  Programmers can observe and mutate the contents of their modules in development.  Encapsulation is strictly enforced in production because production-ready modules are normally read-only.
 
-    Values and call stack frames from variables that can be directly imported and are associated with read-only module files can be observed by the debugger.  Values and call stack frames from variables that are associated with writable module files can be observed and mutated by the debugger.  If an unhandled error condition occurs in a call stack frame that cannot be observed by the debugger, the stack starts unwinding.  Stack unwinding automatically continues through call stack frames that cannot be observed by the debugger.  The debugger may execute upon reaching a call stack frame that can be observed.  Most programming languages behave similarly because debugging information is usually unavailable for built-in or third-party modules.
+    Values and call stack frames from variables that can be directly imported and are associated with insubvertible modules can be observed by the debugger.  Values and call stack frames from variables that are associated with subvertible modules can be observed and mutated by the debugger.  If an unhandled error condition occurs in a call stack frame that cannot be observed by the debugger, the stack starts unwinding.  Stack unwinding automatically continues through call stack frames that cannot be observed by the debugger.  The debugger can execute upon reaching a call stack frame that can be observed.  Most programming languages behave similarly because debugging information is usually unavailable for built-in or third-party modules.
 
-    Only module files that can be written can be reloaded.  In other words, being allowed to reload a module requires being allowed to mutate its contents.  Programs that use hot code swapping usually download their own updates and therefore are allowed to write their reloadable module files.
+    Only module files that can be subverted can be reloaded.  In other words, being allowed to reload a module requires being allowed to mutate its contents.  Programs that use hot code swapping can subvert their reloadable modules.
 
   * a change to the capability security model
 
