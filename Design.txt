@@ -74,11 +74,11 @@ Goals
 
   As much as practical should be implemented in the programming language itself.  If it is too restrictive, this will reveal it.
 
-  It should be possible to implement a metacircular evaluator in the programming language, without much code, without much loss in efficiency.  This ensures the programming language's implementation is exposed in a useful way to programs written in it.
+  It should be possible to implement a metacircular evaluator in the programming language, without much code, without much loss in efficiency.  This ensures the programming language's implementation is exposed in a useful way to software written in it.
 
 * beware irreversible design decisions
 
-  When possible, avoid design decisions that make including new or changing existing features impossible without reimplementing the programming language or programs written in it.
+  When possible, avoid design decisions that make including new or changing existing features impossible without reimplementing the programming language or software written in it.
 
   Make irreversible design decisions consciously and cautiously.
 
