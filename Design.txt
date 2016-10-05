@@ -639,7 +639,7 @@ Noteworthy Features
 
       /All/ variables in this programming language are encapsulated in a module.
 
-      Variables that define and mutate variables, construct and mutate data structures, perform arithmetic and logic, and perform control flow are defined in the "core" module.
+      Forms that define and mutate variables, construct and mutate data structures, perform arithmetic and logic, and perform control flow are defined in the "core" module.
 
       The foreign function interface is defined in the "ffi" module.  Access to the foreign function interface must be restricted to libraries that wrap foreign code for use by this programming language.  Code with access to the foreign function interface could perform harmful output directly or violate the capability security model by converting knowledge of a capability to possession of a capability (by converting a memory address to a reference).
 
