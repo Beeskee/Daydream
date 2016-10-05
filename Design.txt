@@ -637,9 +637,9 @@ Noteworthy Features
 
     * built-ins
 
-      /All/ definitions in this programming language are encapsulated in a module.
+      /All/ variables in this programming language are encapsulated in a module.
 
-      Definitions that define and mutate variables, construct and mutate data structures, perform arithmetic and logic, and perform control flow are defined in the "core" module.
+      Variables that define and mutate variables, construct and mutate data structures, perform arithmetic and logic, and perform control flow are defined in the "core" module.
 
       The foreign function interface is defined in the "ffi" module.  Access to the foreign function interface must be restricted to libraries that wrap foreign code for use by this programming language.  Code with access to the foreign function interface could perform harmful output directly or violate the capability security model by converting knowledge of a capability to possession of a capability (by converting a memory address to a reference).
 
@@ -811,9 +811,9 @@ Noteworthy Features
 
     The "directly" qualifier in "directly imported" makes composing modules inside a sandbox possible.  The untrusted code in the anonymous virtual module inside a sandbox is restricted to importing variables in the sandbox's specification, but code in modules the untrusted code imports variables from may import variables not in the sandbox's specification.  For example, it is possible to grant untrusted code access to a function that calls functions from the "ffi" module /without/ granting the untrusted code access to any functions from the "ffi" module.
 
-    Variables from "env" are lexically scoped like other definitions.  Looking up variables from "env" does /not/ use the environment chain where the sandboxed evaluator is called.
+    Variables from "env" are lexically scoped like other variables.  Looking up variables from "env" does /not/ use the environment chain where the sandboxed evaluator is called.
 
-    Variables from "env" are encapsulated like other definitions.  Redefining or mutating variables from "env" does /not/ change their values outside the sandbox.
+    Variables from "env" are encapsulated like other variables.  Redefining or mutating variables from "env" does /not/ change their values outside the sandbox.
 
     A sandboxed evaluator is a function that accepts a form to evaluate and returns the result of evaluation.  Sandboxed evaluators can evaluate any data that is equivalent to source code.
 
