@@ -809,7 +809,7 @@ Noteworthy Features
 
     "sb" is a function that accepts a list in the same format as "import"'s arguments and returns a data structure containing, among other things, a sandboxed evaluator.  Only variables in the sandbox's specification can be directly imported inside the sandbox.  "sb" recognizes "env" as a virtual module that contains the environment.  To avoid surprising behavior, user-defined modules cannot be named "env".
 
-    The "directly" qualifier in "directly imported" makes composing modules inside a sandbox possible.  The untrusted code in the anonymous virtual module inside a sandbox is restricted to importing variables in the sandbox's specification, but code in modules the untrusted code imports variables from may import variables not in the sandbox's specification.  For example, it is possible to grant untrusted code access to a function that calls functions from the "ffi" module /without/ granting the untrusted code access to any functions from the "ffi" module.
+    Untrusted code in an anonymous virtual module inside a sandbox is restricted to importing variables in the sandbox's specification, but code in a module the untrusted code imports variables from may import variables not in the sandbox's specification.  For example, it is possible to grant untrusted code access to a function that calls functions from the "ffi" module /without/ granting the untrusted code access to any functions from the "ffi" module.
 
     Variables from "env" are lexically scoped like other variables.  Looking up variables from "env" does /not/ use the environment chain where the sandboxed evaluator is called.
 
