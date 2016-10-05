@@ -655,7 +655,7 @@ Noteworthy Features
 
       Importations return "null".
 
-      If importations and definitions cause name collisions, definitions normally have priority.  A warning is issued because name collisions are usually unintentional.  The order of importations and definitions that cause name collisions is normally irrelevant.  This is consistent with how definitions from "core" and "env" are handled and lexical scope.  Otherwise, including new definitions in any module (not only "core") could break existing code that imports the whole module.  Imported definitions can be thought of as outside the outermost scope of a module.
+      If importations and definitions cause name collisions, definitions normally have priority.  A warning is issued because name collisions are usually unintentional.  The order of importations and definitions that cause name collisions is normally irrelevant.  This is consistent with how variables from "core" and "env" are handled and lexical scope.  Otherwise, including new definitions in any module (not only "core") could break existing code that imports the whole module.  Imported definitions can be thought of as outside the outermost scope of a module.
 
       Mutating an imported variable is normally a defect because it should not normally be necessary to violate encapsulation.  If the imported variable was overridden by a definition, mutating the variable is /not/ a defect because the variable is in the same module.
 
@@ -811,13 +811,13 @@ Noteworthy Features
 
     The "directly" qualifier in "directly imported" makes composing modules inside a sandbox possible.  The untrusted code in the anonymous virtual module inside a sandbox is restricted to importing variables in the sandbox's specification, but code in modules the untrusted code imports variables from may import variables not in the sandbox's specification.  For example, it is possible to grant untrusted code access to a function that calls functions from the "ffi" module /without/ granting the untrusted code access to any functions from the "ffi" module.
 
-    Definitions from "env" are lexically scoped like other definitions.  Looking up definitions from "env" does /not/ use the environment chain where the sandboxed evaluator is called.
+    Variables from "env" are lexically scoped like other definitions.  Looking up variables from "env" does /not/ use the environment chain where the sandboxed evaluator is called.
 
-    Definitions from "env" are encapsulated like other definitions.  Redefining or mutating definitions from "env" does /not/ change their values outside the sandbox.
+    Variables from "env" are encapsulated like other definitions.  Redefining or mutating variables from "env" does /not/ change their values outside the sandbox.
 
     A sandboxed evaluator is a function that accepts a form to evaluate and returns the result of evaluation.  Sandboxed evaluators can evaluate any data that is equivalent to source code.
 
-    All definitions from the "core" module and any specified definitions from the "env" virtual module are imported to the sandbox's environment before evaluation begins.  If definitions from "core" and "env" have name collisions, those from "env" have priority.  The form to be evaluated must normally "import" definitions from other modules.  Sandboxed evaluators are intended to evaluate normal source code, so normally "import" is necessary.
+    All variables from the "core" module and any specified variables from the "env" virtual module are imported to the sandbox's environment before evaluation begins.  If variables from "core" and "env" have name collisions, those from "env" have priority.  The form to be evaluated must normally "import" variables from other modules.  Sandboxed evaluators are intended to evaluate normal source code, so normally "import" is necessary.
 
     Sandboxes compose by nesting.  When a sandbox is constructed, and an outer sandbox exists, the inner sandbox's specification is compared to the outer sandbox's specification.  If the inner sandbox's specification is more permissive, it is a defect.  This normally involves ensuring that the outer sandbox's specification allows directly importing each variable.  Importing variables from "env" is always allowed because lexical scope ensures it cannot become more permissive.
 
