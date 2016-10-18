@@ -54,7 +54,7 @@ Goals
 
   * composable
 
-    It should be possible to combine most constructs to construct new, useful, constructs.  The number of non-composable constructs should be minimized.
+    It should be possible to combine most constructs to construct new, useful constructs.  The number of non-composable constructs should be minimized.
 
   * brief
 
