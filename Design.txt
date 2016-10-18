@@ -376,7 +376,7 @@ Noteworthy Features
 
   Definition is much simpler than in most Lisp-like languages.  There is only one "def" form which can be used in any scope.
 
-  Defining the same variable as different values (according to "eqv?") is normally a defect so that this programming language can detect accidental redefinition.  Defining the same variable more than once as equivalent values is /not/ a defect so that macros that generate definitions are easier to use.  Optimizing compilers may eliminate redundant definitions that do not cause observable side effects.
+  Defining the same variable as different values (according to "eqv?") is normally a defect so that this programming language can detect accidental redefinition.  Redundant definitions are /not/ defects so that macros that generate definitions are easier to use.  Optimizing compilers may eliminate redundant definitions that do not cause observable side effects.
 
   Mutating an undefined mutable place is a defect.
 
@@ -649,28 +649,17 @@ Noteworthy Features
 
     * importation, exportation, definition, and mutation
 
-      The importation of a variable must appear before it is read in the source code.  Importations occur in topological order and, within that ordering, by the time they are encountered in the source code.  A topological ordering may not be unique, and importations may occur before they are encountered in the source code.  Programming languages without automatic dependency management invariably have an excess of incompatible tools to solve this problem.  Programming languages with predictable load ordering discourage encapsulation by making it easy to use side effects to create invisible dependencies between modules.  Optimizing compilers may generate code that executes all of a module's importations before the rest of the code.
+      Multiple, redundant, or unused importations and exportations are /not/ defects so that macros that generate importations or exportations are easier to use.  Importations and exportations return null.  Optimizing compilers may generate code that evaluates all of a module's importations and exportations, with redundant or unused importations and exportations eliminated, before the rest of the code.
 
-      Importing different variables to the same name is normally a defect so that this programming language can detect accidental redefinition.  Importing the same variable more than once to the same name is /not/ a defect so that macros that generate importations are easier to use.  Optimizing compilers may eliminate redundant importations.
+      The importation of a variable must appear before the variable is read in the source code.  Importations are evaluated in topological order and, within that ordering, by the time they are encountered in the source code.  A topological ordering may not be unique, and importations may be evaluated before they are encountered in the source code.  Programming languages without automatic dependency management invariably have an excess of incompatible tools to solve this problem.  Programming languages with predictable load ordering discourage encapsulation by making it easy to use side effects to create invisible dependencies between modules.
 
-      Importations return "null".
+      If implicit definitions or importations (from "core" or "env") cause name collisions with explicit definitions or importations, explicit definitions and importations have priority.  A warning is issued because name collisions are usually unintentional.
 
-      If importations and definitions cause name collisions, definitions normally have priority.  A warning is issued because name collisions are usually unintentional.  The order of importations and definitions that cause name collisions is normally irrelevant.  This is consistent with how variables from "core" and "env" are handled and lexical scope.  Otherwise, including new definitions in any module (not only "core") could break existing code that imports the whole module.  Imported definitions can be thought of as outside the outermost scope of a module.
+      If explicit definitions or importations cause name collisions with each other, they are normally defects.  Name collisions between explicit definitions or importations normally indicate accidental redefinition.
 
       Mutating an imported variable is normally a defect because it should not normally be necessary to violate encapsulation.  If the imported variable was overridden by a definition, mutating the variable is /not/ a defect because the variable is in the same module.
 
-      The exportation of a variable may appear before or after its importation or definition.  Exportations occur when the associated module finishes loading.
-
-      Exporting the same variable more than once is /not/ a defect so that macros that generate exportations are easier to use.  Optimizing compilers may eliminate redundant exportations.
-
-      Exportations return "null".
-
-      Examples
-      ";; Import the whole math module, and from the calculator module, import
-       ;; lcd as display and buttons (as buttons).
-       (import (math) (calculator (lcd display) buttons))"
-      ";; Export money and inventory.
-       (export money inventory)"
+      The exportation of a variable may appear before or after the variable is defined or imported in the source code.  Exportations are evaluated by the time the associated module finishes loading.
 
     * interfaces
 
@@ -712,13 +701,13 @@ Noteworthy Features
 
       Be aware that references to out-of-date values may exist after reloading a module.  You should prefer to access imported values through imported variables.
 
-  * files
+  * files and paths
 
     An unversioned module filename consists of the module name.  A versioned module filename consists of the module name and version number, in that order, separated by a hyphen.  The filename extension for source code in this programming language is appended in both cases.
 
     Only one instance of a module exists at a time, even if there is an unversioned and versioned file, or multiple versioned files, for it.  An unversioned module file is necessary if no version was specified.  A versioned module file that meets the specification is necessary if a version was specified.
 
-    The programming language searches for modules in the directory the program loaded from then a directory for libraries if that fails.
+    This programming language searches for modules in the directory the program loaded from then a directory for libraries if that fails.
 
   * conventions
 
