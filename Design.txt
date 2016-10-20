@@ -665,7 +665,7 @@ Noteworthy Features
 
     * loading
 
-      Modules are loaded by executing them.
+      "import" causes modules to be executed.
 
       Even though it is occasionally useful for macro expansion and loading to perform side effects, code /must not/ rely on the time a module is loaded or the number of times a module is macro-expanded or loaded.
 
@@ -677,7 +677,7 @@ Noteworthy Features
 
       Modules can be reloaded at the listener and in modules.  This is useful for exploratory programming or hot code swapping to correct a defect in or add features to a running program.
 
-      Modules are reloaded by rereading and executing them.
+      "reload" causes modules to be reread and executed.
 
       Reloading a module that has not changed, when a later version is not available, may have no effect.
 
