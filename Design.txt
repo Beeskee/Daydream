@@ -113,13 +113,13 @@ Non-Goals
 
   I hope to take most syntax from existing Lisp-like languages.  I want to keep the amount of punctuation very low.  I /like/ the simple, regular, appearance of Lisp source code.
 
-  I may use some original names if I cannot find acceptable existing names.  I want frequently used constructs to have very short, but meaningful, names so expressions remain readable.
+  I may use some original names if I cannot find acceptable existing names.  I want frequently used constructs to have very short, but meaningful, names so that expressions remain readable.
 
   It is better for built-in constructs to have abbreviated names than user-defined constructs.  Programmers are likely to be familiar with built-in constructs.
 
   Abbreviating the names of built-in constructs makes the longer names available for programmers to use.  This is the most beneficial for constructors.  For example, Lisp programmers often want to name a variable "list", but that is usually the name of a list constructor.
 
-  I will try to follow the conventions for abbreviated names in Lisp.  They are usually the first syllable.  They do not usually omit internal vowels, unlike abbreviated names in C.  Names consisting of multiple abbreviated names do not usually have hyphens separating them and usually remove repeated letters (e.g. define function is "defn").  Popular abbreviations may violate these norms, however (e.g. define is "def", function is "fn", and list is "lst").
+  I will try to follow the conventions for abbreviating names in Lisp.  They are usually the first syllable.  They do not usually omit internal vowels, unlike abbreviated names in C.  Names consisting of multiple abbreviated names do not usually have hyphens separating them and usually remove repeated letters (e.g. define function is "defn").  Popular abbreviations sometimes violate these conventions, however (e.g. define is "def", function is "fn", and list is "lst").
 
 * parentheses reduction
 
@@ -297,7 +297,7 @@ Non-Goals
 
   Some hosts do not support parallelism.
 
-  To this day most code is not thread-safe.  This programming language performs input/output by calling foreign code.
+  To this day most code is not thread-safe.  This programming language performs input/output by using foreign code.
 
   I am unlikely to ever implement this.
 
@@ -346,9 +346,9 @@ Noteworthy Features
 
   Types are rarely converted implicitly and never when it could be surprising.  This is typical of Lisp-like languages, but surprising type coercion is typical of most programming languages.
 
-  Only "true" and "false" are true and false.  Integers can be converted to (0 is false, anything else is true) and from (true is 1, false is 0) Booleans, explicitly.  This should make debugging easier, and I have always found treating non-Boolean values as Boolean surprising.
+  Only "true" and "false" are true and false.  Integers can be converted to (0 is false, anything else is true) and from (false is 0, true is 1) Booleans, explicitly.  This should make debugging easier, and I have always found treating non-Boolean values as Boolean surprising.
 
-  Data structures can be applied to arguments to access elements.  Like 'normal' functions they map their domain to their range.  Dictionaries map keys to values.  Lists and strings map the symbols "first" and "rest" to values.  Vectors map 0-based integer indexes to values.  This is more consistent and brief than most Lisp-like programming languages.
+  Data structures can be applied to arguments to access elements.  Like 'normal' functions they map their domain to their range.  Dictionaries map keys to values.  Lists and strings map the symbols "first" and "rest" to values.  Vectors map 0-based integer indexes to values.  This is more consistent and brief than most Lisp-like languages.
 
   Improper lists are not supported.  Any operation that would produce one is a defect.  Improper lists seem to be inferior to proper lists or vectors for all purposes, and the infix syntax used to specify them is inconsistent with the rest of Lisp.
 
