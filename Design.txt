@@ -528,7 +528,7 @@ Noteworthy Features
 
       If the name symbol is quoted, it is not coerced when returned from a macro.
 
-      If the name symbol is bound by a base language binding form ("def" or "fn"), all name symbols with the same name in the same scope are coerced to a gensymed symbol with the same counter value when returned from a macro.
+      If the name symbol is bound by a base language binding form, all name symbols with the same name in the same scope are coerced to a gensymed symbol with the same counter value when returned from a macro.
 
       Gensymed symbols construct unique places, for each gensymed symbol, for each macro expansion.  This avoids surprising behavior by preventing name collisions.  They are effectively symbols named by a global counter.  They are unique because symbols in source code are forbidden from following the gensymed symbol naming convention and the global counter is incremented by 1 after each gensymed symbol is generated.
 
