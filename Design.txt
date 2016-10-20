@@ -677,7 +677,7 @@ Noteworthy Features
 
       Modules can be reloaded at the listener and in modules.  This is useful for exploratory programming or hot code swapping to correct a defect in or add features to a running program.
 
-      "reload" causes modules to be reread and executed.
+      "reload" causes modules to be reread and executed.  "reload" returns null.
 
       Reloading a module that has not changed, when a later version is not available, may have no effect.
 
