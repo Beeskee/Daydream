@@ -18,7 +18,7 @@ Internal Resource Management
 
 Because of the limitations imposed by C and C++, only resources which are not observable by other processes can be managed automatically.  That is, effectively, memory.
 
-Modules must be garbage collected.  Reloading a module may cause the previous instance to become unreachable.
+Modules must be garbage collected.  Reloading a module may cause the previous instance and some of its dependencies to become unreachable.
 
 This garbage collector is continuous, generational, and incremental (i.e. marking and sweeping are decomposed into multiple steps).
 
