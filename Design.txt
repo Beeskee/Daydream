@@ -87,63 +87,67 @@ Non-Goals
 
 * familiarity or ease of learning by novice programmers
 
-  The syntax used in Lisp-like languages is not familiar to the average person.  Writing Lisp source code is difficult without an editor that helps with matching parentheses, and only Lisp programmers are likely to be familiar with one.  Many concepts, like closures, are also unfamiliar.  This makes Lisp-like languages more difficult to learn than most popular programming languages, because there is more to learn.
+  The syntax used in Lisp-like languages is not familiar to the average person.  Writing Lisp source code is difficult without an editor that helps with matching parentheses, and only Lisp programmers are likely to be familiar with one.  Many concepts, like closures, are also unfamiliar.  This makes Lisp-like languages more difficult to learn than most popular programming languages because there is more to learn.
 
-  The same features that make Lisp-like languages difficult to learn are what makes them superior to popular programming languages.  The syntax makes macros practical.  It makes macro calls look and act like built-in constructs without a lot of effort on the part of the macro author.  If macro authors had to avoid conflicting with syntax reserved for built-in constructs, and define custom mixfix syntax for their macros, few would bother.  Fully parenthesized syntax prevents defects due to forgetting operator precedence and associativity.  The unfamiliar concepts make it easier to build abstractions that are difficult to express in other programming languages.  For example, object-oriented programming support is usually built into popular programming languages, but is usually derived from mutable closures in Lisp-like languages.
+  The same features that make Lisp-like languages difficult to learn are what makes them superior to popular programming languages.  The syntax makes macros practical.  It makes macro calls look and act like built-in constructs without a lot of effort on the part of the macro author.  If macro authors had to avoid conflicting with syntax reserved for built-in constructs, and define custom mixfix syntax for their macros, few would bother.  Fully parenthesized syntax prevents defects caused by forgetting operator precedence and associativity.  The unfamiliar concepts make it easier to build abstractions that are difficult to express in other programming languages.  For example, object-oriented programming support is usually built into popular programming languages, but it is usually derived from mutable closures in Lisp-like languages.
 
-  When a designer must choose whether to favor novices or experts, favoring experts is almost always the correct decision.  You are only a novice once, and spend more time as an expert than a novice.
+  When a designer must choose whether to favor novices or experts, favoring experts is almost always the correct decision.  You normally spend more time as an expert than a novice.
 
   However, I do not intend to go out of my way to make it difficult to learn for novice programmers.
 
-* compatibility with any existing Lisp-like languages
+* compatibility with any existing programming languages
 
-  Being compatible with an existing Lisp-like language means accepting all of their design decisions.  I am unaware of any Lisp-like languages where I agree with all of their design decisions.
+  Being compatible with an existing programming language means accepting /all/ of their design decisions.  I am unaware of any programming languages where I agree with all of their design decisions.
 
-  If I am going to implement my own Lisp-like language, I am going to try to improve upon existing designs as much as possible.
+  If I am going to design my own programming language, I am going to try to improve upon existing designs as much as possible.
+
+* implement Scheme's numerical tower
+
+  This is not immediately useful to me.
+
+  If I implement this, I would be likely to include dynamic unit and dimensional analysis.
+
+  I may eventually implement this.
 
 * syntactic innovation
 
   I hope to take most syntax from existing Lisp-like languages.  I want to keep the amount of punctuation very low.  I /like/ the simple, regular, appearance of Lisp source code.
 
-  I may use some original names if I cannot find acceptable existing names.  I want frequently used constructs to have very short, but meaningful, names, so expressions remain readable.
+  I may use some original names if I cannot find acceptable existing names.  I want frequently used constructs to have very short, but meaningful, names so expressions remain readable.
 
-  It is better for built-in constructs to have abbreviated names than user-defined constructs.  Programmers are more likely to know the meaning of the abbreviation for a built-in construct, due to having encountered it before.
+  It is better for built-in constructs to have abbreviated names than user-defined constructs.  Programmers are likely to be familiar with built-in constructs.
 
   Abbreviating the names of built-in constructs makes the longer names available for programmers to use.  This is the most beneficial for constructors.  For example, Lisp programmers often want to name a variable "list", but that is usually the name of a list constructor.
 
-  I will try to follow the conventions for abbreviating names in Lisp.  They are usually the first syllable.  They do not usually omit internal vowels, unlike abbreviated names in C.  Names consisting of multiple abbreviated names do not usually have hyphens separating them, and usually remove repeated letters (e.g. define function is "defn").  Popular abbreviations may override these rules, however.  For example, the abbreviation for define is "def", function is "fn", and list is "lst".
+  I will try to follow the conventions for abbreviated names in Lisp.  They are usually the first syllable.  They do not usually omit internal vowels, unlike abbreviated names in C.  Names consisting of multiple abbreviated names do not usually have hyphens separating them and usually remove repeated letters (e.g. define function is "defn").  Popular abbreviations may violate these norms, however (e.g. define is "def", function is "fn", and list is "lst").
 
 * parentheses reduction
 
   Parentheses shaming (e.g. "Lisp stands for Lots of Irritating Superfluous Parentheses") has inspired the authors of several Lisp-like languages (e.g. Arc and Clojure) to remove parentheses anywhere they could be inferred (e.g. around key-value pairs in a dictionary).
 
-  This reduces the utility of structure editors and source code formatting tools, because parentheses inference is not possible in the general case (e.g. in macro calls).
+  This reduces the utility of structure editors and source code formatting tools because parentheses inference is not possible in the general case (e.g. in macro calls).
 
-  It makes source code difficult to understand, because the human has to infer the parentheses to understand the grouping.
+  It makes source code difficult to understand because the human has to infer the parentheses to understand the grouping.
 
   Lisp programmers should not mutilate their programming language in an attempt to please programmers that reject Lisp syntax.  They will not like it any more with less parentheses.  They will only be satisfied when it looks like C.
 
 * raw strings
 
-  Raw strings are only useful for Windows paths and regular expressions.
-
-  This programming language uses "/" as the path delimiter, even on Windows.
+  Raw strings are only useful for regular expressions and Windows paths.
 
   SREs are the best solution for regular expressions.  I plan to support them.
 
+  This programming language uses "/" as the path delimiter, even on Windows.
+
 * dictionary and vector literals
 
-  Having dictionary and vector literals raises the question of whether their elements are evaluated or not, and causes defects by programmers incorrectly assuming they are or are not.
+  Having dictionary and vector literals raises the question of whether their elements are evaluated or not and causes defects by programmers incorrectly assuming they are or are not.
 
-  It is necessary to use 'constructor syntax' (e.g. "(lst x y z)") for lists to prevent ambiguity in pattern matching.  Otherwise it is impossible to tell the difference between a pattern construct and trying to bind a variable with the same name as a pattern construct.
-
-  While the ambiguity would be limited to lists, using a different syntax in pattern matching for everything but lists is not consistent.
-
-  Having two syntaxes for the same thing is not simple.
+  It is necessary to use 'constructor syntax' (e.g. "(lst x y z)") for lists to prevent ambiguity in pattern matching.  Otherwise, it is impossible to tell the difference between a pattern construct and trying to bind a variable with the same name as a pattern construct.  Although the ambiguity would be limited to lists, using a different syntax in pattern matching for everything but lists is not consistent.  Having two syntaxes for the same thing is not simple.
 
 * reader macros
 
-  Reader macros do not seem useful to me.  Without the ability to create new types and new human-readable representations, there is little motivation for new literal syntax.
+  Reader macros do not seem useful to me.  Without user-defined types and user-defined representations, there is little motivation for user-defined literal syntax.
 
 * overcomplicated macros
 
@@ -153,23 +157,31 @@ Non-Goals
 
   Some Scheme hygienic macro systems are limited to templates that are impractical to use for processing.
 
-  Other Scheme hygienic macro systems are practical to use for processing, but include runaway complexity (e.g. phase separation).
+  Other Scheme hygienic macro systems are practical to use for processing but include runaway complexity (e.g. phase separation).
 
   I have attempted to design a macro system that merely solves the problems with Common Lisp's macro system.
 
+* object-oriented programming
+
+  I believe object-oriented programming usually does more harm than good.  Mutable global variables make code difficult to maintain.  When a global variable becomes corrupt, it is difficult to tell what code was responsible.  Mutable objects are mutable global variables.  Implementation inheritance makes code difficult to maintain.  Changing a method's implementation can break subtypes because subtypes' implementations may depend on side effects of supertypes' methods.  Of course programmers can limit themselves to using immutable objects, and inheriting interfaces and using composition, but then objects are no improvement over records or dictionaries.
+
+  This programming language has mutable closures, and it should be possible to implement a CLOS-like system using them, which is more powerful than popular programming languages' object-oriented programming support, but I do not plan to write that myself.
+
+  That does imply that this programming language will have a fixed set of types.  It is better to have a small number of types and a large number of procedures that operate on each, than to have a large number of types and a small number of procedures that operate on each because more code can be reused.  Dictionaries are used in place of new types.
+
 * mandatory static type checking
 
-  Programmers often worry too much about whether their programming language is dynamically or statically type checked, and do not worry enough about whether their code is very dynamic or static.  The more general code is, the more dynamic it must be, because it must handle more possibilities at run time.  The more safe and efficient code is, the more static it must be, because it must prevent more possibilities at run time.  Generality, safety, and efficiency are all desirable properties, so the question should be which is more important for your code's intended use, not which is always superior.  It is easier to write dynamic code with dynamic type checking, and static code with static type checking, but either kind of code can be written with either kind of type checking.
+  Programmers often worry too much about whether their programming language is dynamically or statically type checked and do not worry enough about whether their code is very dynamic or static.  The more general code is, the more dynamic it must be because it must handle more possibilities at run time.  The more safe and efficient code is, the more static it must be because it must prevent more possibilities at run time.  Generality, safety, and efficiency are all desirable properties, so the question should be which is more important for your code's purpose, not which is always superior.  It is easier to write dynamic code with dynamic type checking and static code with static type checking, but either kind of code can be written with either kind of type checking.
 
   A mandatory static type system causes several problems.
 
   Static type systems are incompatible with exploratory programming.  They require you to specify, explicitly or implicitly, the type of a value before you know all of the operations that need to be performed with that value.  They are only useful for verifying known solutions.
 
-  Programmers define an excess of types, and a small number of functions to work with each type, because using a separate type for each purpose minimizes the chance of operating on an invalid value.  It also minimizes code reuse.
+  Programmers define an excess of types and a small number of functions to work with each type because using a separate type for each purpose minimizes the chance of operating on an invalid value.  It also minimizes code reuse.
 
-  Type annotations make source code more verbose.  In theory, type inference, combined with a programming language design that ensures type inference is always possible, can eliminate the need for type annotations.  In practice, even in programming languages with type inference, most definitions in the outermost scope must have type annotations, because most will be exported, and code in other modules would break if their type changed.
+  Type annotations make source code more verbose.  In theory, type inference, combined with a programming language design that ensures type inference is always possible, can eliminate the need for type annotations.  In practice, even in programming languages with type inference, most definitions in the outermost scope must have type annotations because most will be exported, and code in other modules would break if their type changed.
 
-  Making changes requires more effort, because you must change the type annotations everywhere a variable is used when you want to change its type.
+  Making changes requires more effort because you must change the type annotations everywhere a variable is used when you want to change its type.
 
   Generic static type systems often have poor payoff per effort ratios for improving safety and efficiency.
 
@@ -177,32 +189,14 @@ Non-Goals
 
   A static type system is not necessary nor sufficient to eliminate run time type checks.  Most variables in code written in dynamically type checked languages are used with a single type of value, and compilers can use type inference to eliminate most run time type checks.  Lisp compilers have been doing that for decades.  When sum types (a.k.a. tagged unions) are used in statically type checked languages, run time type checks (reading the tag) determine what code to run.
 
-  What features should be included in a static type system?  Most are primarily or exclusively concerned with type specifiers: what type a value is.  I rarely make mistakes involving operating on the wrong type of value, and when I do it is almost always easy to detect and correct.  Making mistakes with units of measure is an exception.  I consider unit and dimensional analysis, especially with safe type coercion, very helpful.  I would prefer a static type system to be more concerned with type qualifiers: what qualities a value has.  For example, inferring and checking the immutability of variables and values, taint checking, and typestate checking.  Mistakes involving those are almost always difficult to detect and correct.  Forcing side effects to be clustered near execution entry and exit points, by preventing referentially transparent procedures from calling non-referentially transparent procedures (which would make them not referentially transparent), results in designs where most procedures compose, the code is easier to maintain and optimize, and most procedures can be evaluated when live coding.  Something like checked exceptions, but for a condition system, is probably the right way to ensure input/output errors are handled.  Whatever you decide, if you include a mandatory static type system, everyone that uses your programming language is forced to learn and use it, even if it does not help solve their problems.  Trying to solve everyone's problems in a mandatory static type system results in runaway complexity.
+  What features should be included in a static type system?  Most are primarily or exclusively concerned with type specifiers: what type a value is.  I rarely make mistakes involving operating on the wrong type of value, and when I do it is almost always easy to detect and correct.  Making mistakes with units of measure is an exception.  I consider unit and dimensional analysis, especially with safe type coercion, very helpful.  I would prefer a static type system to be more concerned with type qualifiers: what qualities a value has.  For example, inferring and checking the immutability of variables and values, taint checking, and typestate checking.  Mistakes involving those are almost always difficult to detect and correct.  Forcing side effects to be clustered near execution entry and exit points by preventing referentially transparent procedures from calling non-referentially transparent procedures (which would make them not referentially transparent), results in designs where most procedures compose, the code is easier to maintain and optimize, and most procedures can be evaluated when live coding.  Something like checked exceptions, but for a condition system, is probably the right way to ensure input/output errors are handled.  Whatever you decide, if you include a mandatory static type system, everyone that uses your programming language is forced to learn and use it, even if it does not help solve their problems.  Trying to solve everyone's problems in a mandatory static type system results in runaway complexity.
 
-  For all these reasons, and more, a dynamically type checked language with a Lisp macro system is "the right thing".  Macros can describe any static type system you want, if you want one.  Static type checking becomes optional and pluggable.  Functions written with different type systems can call each other with no effort.
-
-* introduce a null type
-
-  Do not confuse this with Scheme's terminology for the empty list.  The empty list will still exist in this programming language, and will be called "null".
-
-  The absence of an equivalent to the null type in most Lisp-like languages results in abusing other types or values as sentinel values.  The empty list is the most common choice, but false is usually chosen when an empty list could be confused with a meaningful value.  This feels like a kludge, but it is the cleanest solution.
-
-  If lists are described in terms of null references, the length of "'(null)" becomes ambiguous, because it is equivalent to "'()".  List operations lose useful semantics.  Converting vectors with trailing nulls to lists will result in lists that have less elements than the corresponding vector.  "cons"ing a value to a list does not necessarily result in a longer list, because that value might have been null.
-
-  This does raise the question of what the "first" and "rest" of the empty list is.  In this programming language they are defects, as in Scheme and most Lisp-like languages other than Common Lisp (where they are the empty list).  This is consistent with trying to access a vector out of bounds.  The "rest" of a 1 element list is the empty list, and "null?" can be used to test for that.
-
-* implement Scheme's numerical tower
-
-  This is not immediately useful to me.
-
-  I would be inclined to add dynamic unit and dimensional analysis.
-
-  I may eventually implement this.
+  For all these reasons and more, a dynamically type checked language with a Lisp macro system is "the right thing".  Macros can describe any static type system you want, if you want one.  Static type checking becomes optional and pluggable.  Functions written with different type systems can call each other with no effort.
 
 * mandatory referential transparency
 
-  A programming language that enforces global referential transparency can:
-  * Lie.  For example, claim to only generate a sequence of actions, and that the runtime performs the side effects the actions instruct it to.  If you believe that, then C also enforces global referential transparency in exactly the same way.  The actions are system calls.  The runtime is the operating system kernel and drivers.  It just has very convenient syntax for the IO and state monads.
+  A programming language that enforces global referential transparency can
+  * Lie.  For example, claim to only generate a sequence of actions, and that the runtime system performs the side effects the actions instruct it to.  If you believe that, then C also enforces global referential transparency in exactly the same way.  The actions are system calls.  The runtime system is the operating system kernel and drivers.  It just has very convenient syntax for the IO and state monads.
   * Be limited to behaving like a fancy calculator, where all variables and data structures are immutable, and no input/output is possible.  Code written in a more capable programming language could show the return values of the non-interactive programs.
 
   I want to use this programming language for interactive programs.
@@ -212,14 +206,6 @@ Non-Goals
   Functions that mutate their local variables, but not their arguments or free variables, are as composable and maintainable as those written in programming languages with mandatory immutability, and are sometimes shorter, easier to understand, and more efficient.
 
   At least one free variable /must/ be mutated to share state between event handlers.
-
-* object-oriented programming
-
-  I believe object-oriented programming usually does more harm than good.  Mutable global variables make code difficult to maintain.  When a global variable becomes corrupt, it is difficult to tell what code was responsible.  Mutable objects are mutable global variables.  Implementation inheritance makes code difficult to maintain.  Changing a method's implementation can break subtypes, because subtypes' implementations may depend on side effects of supertypes' methods.  Of course programmers can limit themselves to using immutable objects, and inheriting interfaces and using composition, but then objects are no improvement over records or dictionaries.
-
-  This programming language has mutable closures, and it should be possible to implement a CLOS-like system using them, which is more powerful than popular programming languages' object-oriented programming support, but I do not plan to write that myself.
-
-  That does imply that this programming language will have a fixed set of types.  It is better to have a small number of types and a large number of procedures that operate on each, than to have a large number of types and a small number of procedures that operate on each, because more code can be reused.  Dictionaries are used in place of new types.
 
 * transparent (as in Smalltalk) or non-transparent (as in Common Lisp) persistence
 
@@ -231,23 +217,23 @@ Non-Goals
 
   The data used to resume execution is usually stored in an image file.  An image contains the set of all reachable data in a program (including the program counter and call stack frames).
 
-  Image files are not just memory written to disk.  They may be versioned, so the image file format can be changed.  References may be stored in a relocatable format, like how the listener shows cyclical references.  Recovering from an image requires applying fix-ups to data associated with external resources, like files and network sockets.
+  Image files are not just memory written to disk.  They may be versioned so that the image file format can be changed.  References may be stored in a relocatable format, like how the listener shows cyclical references.  Recovering from an image requires applying fix-ups to data associated with external resources, like files and network sockets.
 
-  Images must be updated atomically.  Otherwise a power or hardware failure during an update to the image would corrupt it.  If the operating system provides transactional file access, that can be used to safely update the image.  Otherwise an updated image must be written to another file, then the original file must be replaced with the updated file.
+  Images must be updated atomically.  Otherwise, a power or hardware failure during an update to the image would corrupt it.  If the operating system provides transactional file access, that can be used to safely update the image.  Otherwise, an updated image must be written to another file, then the original file must be replaced with the updated file.
 
-  It must be possible to associate external resources with recovery procedures.  The recovery procedures are executed when recovering from an image.  In most cases a recovery procedure should put the datum into a state that will cause an input/output error condition when it is written or read.  That is appropriate for most uses of files and network sockets, because the files may have changed and the network connections may have closed since the program terminated.  That is not appropriate for graphical user interfaces, because they could not have changed since the program terminated.
+  It must be possible to associate external resources with recovery procedures.  The recovery procedures are executed when recovering from an image.  In most cases a recovery procedure should put the datum into a state that will cause an input/output error condition when it is written or read.  That is appropriate for most uses of files and network sockets because the files may have changed and the network connections may have closed since the program terminated.  That is not appropriate for graphical user interfaces because they could not have changed since the program terminated.
 
-  Several hooks would be useful for implementing transparent persistence.  The garbage collector could have a hook for allocating a datum, and another for deallocating a datum.  Those could be used to tell the transparent persistence implementation when to save a datum to or delete a datum from the image.  The runtime could have a hook for mutating a datum.  That could be used to tell the transparent persistence implementation when to change a value associated with a datum.  These hooks would be useful for implementing other things (e.g. space profilers; invariant inferencers; record, rewind, and replay debuggers).
+  Several hooks would be useful for implementing transparent persistence.  The garbage collector could have a hook for allocating a datum and another for deallocating a datum.  Those could be used to tell the transparent persistence implementation when to save a datum to or delete a datum from the image.  The runtime system could have a hook for mutating a datum.  That could be used to tell the transparent persistence implementation when to change a value associated with a datum.  These hooks would be useful for implementing other things (e.g. space profilers; invariant inferencers; record, rewind, and replay debuggers).
 
   Transparent persistence requires integration with the garbage collector.
 
   Transparent persistence requires the host to have certain features to be efficient:
-  * Parallelism.  Otherwise allocation, mutation, and deallocation, which require updating the image, occur at disk write speed.
-  * Transactional file access.  Otherwise updating the image requires twice the time and space.
+  * Parallelism.  Otherwise, allocation, mutation, and deallocation, which require updating the image, occur at disk write speed.
+  * Transactional file access.  Otherwise, updating the image requires twice the time and space.
 
   Transparent persistence is not helpful if the host uses its own state recovery mechanism.  For example, a word processor might save the location of each document file, the location of the cursor in each document file, and the contents of each document file, when they change, and use this data to recover its state whenever it is executed.  If this programming language were embedded in the word processor just described (for scripting), transparent persistence would provide no additional benefit.
 
-  Transparent persistence is harmful if the host uses a flash drive to store the image.  The frequent writes will rapidly wear out the drive.
+  Transparent persistence is /harmful/ if the host uses a flash drive to store the image.  The frequent writes will rapidly wear out the drive.
 
   Those are enough reasons to not require transparent persistence.
 
@@ -255,25 +241,25 @@ Non-Goals
 
 * implicit control flow
 
-  In theory, declarative programming is specifying what to do, not how to do it.  In practice, you usually have to specify how to do it, because there are too many possible solutions, and most are too inefficient or would have harmful side effects.
+  In theory, declarative programming is specifying what to do, not how to do it.  In practice, you usually have to specify how to do it because there are too many possible solutions, and most are too inefficient or would have harmful side effects.
 
-  Most programming languages considered to be declarative have implicit control flow, which allows you to avoid specifying how to do control flow, so long as the implicit control flow is what you need.
+  Most programming languages considered to be declarative have implicit control flow, which makes it possible to avoid specifying how to do control flow when the implicit control flow is helpful.
 
-  Some people consider functional programming languages with strict evaluation to be declarative, but they require specifying how to do everything like imperative programming languages.  Programming languages with lazy or speculative evaluation, or goal-directed evaluation (like Icon), are more deserving of the title, but still require specifying how to do most control flow.  Good examples include constraint, pull and push dataflow, deductive, inductive, and abductive logic, and string, term, and graph rewriting programming languages.
+  Some people consider functional programming languages with strict evaluation to be declarative, but they require specifying how to do everything like imperative programming languages.  Programming languages with lazy or speculative evaluation, or goal-directed evaluation (like Icon), are more deserving of the title, but still require specifying how to do most control flow.  Good examples include constraint; pull and push dataflow; deductive, inductive, and abductive logic; and string, term, and graph rewriting programming languages.
 
   Which implicit control flow algorithm should be included?  Each one is useful in some situations.  Whatever you decide, if you include an implicit control flow algorithm, everyone that uses your programming language is forced to learn and use it, even if it does not help solve their problems.
 
-  When the implicit control flow is /not/ what is needed, it requires a lot of effort to work around it.
+  When the implicit control flow is /harmful/, a lot of effort is required to work around it.
 
   Implicit control flow makes it difficult to predict the time and space efficiency of code.  Optimizing compilers for programming languages with implicit control flow spend a lot of effort working around it.
 
   Except for push dataflow, implicit control flow is unsafe to use with side effects.  It becomes difficult to determine if, or in what order, each side effect will occur.
 
-  For all these reasons, and more, a strictly evaluated language with a Lisp macro system is "the right thing".  Macros can describe any implicit control flow algorithm you want, if you want one.  Implicit control flow becomes optional and pluggable.  Functions written with different implicit control flow algorithms can call each other with no effort.
+  For all these reasons and more, a strictly evaluated language with a Lisp macro system is "the right thing".  Macros can describe any implicit control flow algorithm you want, if you want one.  Implicit control flow becomes optional and pluggable.  Functions written with different implicit control flow algorithms can call each other with no effort.
 
 * overcomplicated pattern matching
 
-  I will limit pattern matching to destructuring and tests for equality in patterns, arbitrary test expressions in "when" guards, and dispatching to code associated with a pattern.  New pattern matching features will not be added unless they help achieve the goals I set for this programming language.
+  I will limit pattern matching to destructuring and tests for equality in patterns, arbitrary test expressions in "when" guards, and dispatching to code associated with a pattern.  New pattern matching features will not be included unless they help achieve the goals I set for this programming language.
 
   A discussion of pattern matching features that have been rejected follows.
 
@@ -285,9 +271,9 @@ Non-Goals
 
   The only advantage pattern guards have (views have none) over fixing the code is short-circuit evaluation.  That is an optimization for a situation that is too rare to justify its inclusion in a programming language.
 
-  Variable-length patterns, like those in Racket, are redundant.  Processing data structures of variable depth or length is best done with recursion.  Recursion is more general, because it can be used for more than pattern matching.  Racket uses variable-length patterns to construct, and sometimes filter, lists and bind them.  Pattern matching should be used for destructuring, not structuring (constructing data structures) or restructuring (transforming data structures).  Structuring and restructuring is best done in the code associated with a pattern.
+  Variable-length patterns, like those in Racket, are redundant.  Processing data structures of variable depth or length is best done with recursion.  Recursion is more general because it can be used for more than pattern matching.  Racket uses variable-length patterns to construct, and sometimes filter, lists and bind them.  Pattern matching should be used for destructuring, not structuring (constructing data structures) or restructuring (transforming data structures).  Structuring and restructuring is best done in the code associated with a pattern.
 
-  Some of Racket's pattern matching features are made redundant by "when" guards, which Racket also supports.  It includes a pattern construct that matches if a function passed the value returns true, which is equivalent to putting the same function call in the "when" guard.  It includes a pattern construct that matches if a regular expression matches the string value, which is equivalent to putting the same test in the "when" guard.  "when" guards are more general, because they can perform tests involving multiple values.
+  Some of Racket's pattern matching features are made redundant by "when" guards, which Racket also supports.  It includes a pattern construct that matches if a function passed the value returns true, which is equivalent to putting the same function call in the "when" guard.  It includes a pattern construct that matches if a regular expression matches the string value, which is equivalent to putting the same test in the "when" guard.  "when" guards are more general because they can perform tests involving multiple values.
 
 * comprehensions
 
@@ -301,9 +287,9 @@ Non-Goals
 
   Transducers are transformations from one reducing (folding) function to another.
 
-  Transducers are unnecessarily restrictive, because they are limited to one order of traversal (usually "foldl1").
+  Transducers are unnecessarily restrictive because they are limited to one order of traversal (usually "foldl1").
 
-  Transducers cause surprising behavior in a programming language with partial application, because it is ambiguous whether functions that can return transducers return a transducer or partially applied function when they are passed less than the maximum number of arguments.
+  Transducers cause surprising behavior in a programming language with partial application because it is ambiguous whether functions that can return transducers return a transducer or partially applied function when they are passed less than the maximum number of arguments.
 
   To avoid the construction and traversal of intermediate data structures, use streams.
 
@@ -311,7 +297,7 @@ Non-Goals
 
   Some hosts do not support parallelism.
 
-  To this day most code is not thread-safe.  This programming language performs input/output by calling foreign functions.
+  To this day most code is not thread-safe.  This programming language performs input/output by calling foreign code.
 
   I am unlikely to ever implement this.
 
@@ -321,7 +307,7 @@ Non-Goals
 
   So long as the implementation is not too wasteful, it should still be usable.
 
-  While I do not plan to implement an optimizing compiler for this programming language, I have attempted to avoid design decisions that would make that more difficult.
+  Although I do not plan to implement an optimizing compiler for this programming language, I have attempted to avoid design decisions that would make that more difficult.
 
   If code needs to be very efficient, it should be written for the Vulkan API.  Hosts can expose that to this programming language.
 
@@ -332,43 +318,43 @@ Non-Goals
 
 Noteworthy Features
 
-* intended use
+* purpose
 
-  This programming language is intended to be embedded in other programs.
-
-* documentation
-
-  Docstrings can be associated with modules, variables in the outermost scope, functions, and macros.  Functions are provided for searching for combinations of patterns in module names, variable names (including parameters), and docstrings, types, and values.  While this was common in the past, modern Lisp-like languages seem to be becoming more static, and less useful interactively, thus losing one of their advantages over other programming languages.  Functions are provided to load all code in a directory, or in a directory hierarchy, to make searching easier.
+  This programming language is designed to be embedded in other programs.
 
 * modernization
 
-  Lisp parachronisms have been replaced or removed, because we use IBM PC compatibles instead of IBM 704s, and monitors instead of teleprinters.  "car" is replaced with "first", "cdr" is replaced with "rest", and "car" and "cdr" compositions (like "caddar") have been removed.  You "show" things on the monitor, not "print" them.  You do exploratory programming at the listener, not the REPL.
+  Lisp parachronisms have been replaced or removed because we use IBM PC compatibles instead of IBM 704s and monitors instead of teleprinters.  "car" is replaced with "first", "cdr" is replaced with "rest", and "car" and "cdr" compositions (like "caddar") have been removed.  You "show" things on the monitor, not "print" them.  You do exploratory programming at the listener, not the REPL.
 
-* syntax
+* documentation
+
+  Docstrings can be associated with modules, variables in the outermost scope, functions, and macros.  Functions are provided for searching for combinations of patterns in module names, variable names (including parameters), and docstrings, types, and values.  Although this was common in the past, modern Lisp-like languages seem to be becoming more static, and less useful interactively, thus losing one of their advantages over other programming languages.  Functions are provided to load all code in a directory, or in a directory hierarchy, to make searching easier.
+
+* symbols
+
+  To avoid surprising behavior, the same name in the same scope always refers to the same value, barring mutation.  This implies that variables and functions are not in separate namespaces and the programming language is case-insensitive.  To prevent the use of symbols that jangle like bad typography, uppercase letters in a symbol is a defect.
+
+  To avoid surprising behavior, a symbol always looks like a symbol.  Any characters that have special meaning to the parser, such as whitespace or parentheses, cannot be included in a symbol.
+
+* literals
 
   The syntax for Booleans ("true" and "false") and integers in bases other than 10 ("0b101" and "0xF00") is similar to popular programming languages.
 
   "true" and "false" are /values/, not variables.  To avoid surprising behavior, "true" and "false" are not valid variable names.
 
-* symbols
-
-  To avoid surprising behavior, the same name in the same scope always refers to the same value, barring mutation.  This implies that variables and functions are not in separate namespaces.  It implies that the programming language is case-insensitive.  To prevent the use of symbols that jangle like bad typography, uppercase letters in a symbol is a defect.
-
-  To avoid surprising behavior, a symbol always looks like a symbol.  Any characters that have special meaning to the parser, such as whitespace or parentheses, cannot be included in a symbol.
-
 * types
 
-  Types are rarely converted implicitly, and never when it could be surprising.  This is typical of Lisp-like languages, but surprising type coercion is typical of most programming languages.
+  Types are rarely converted implicitly and never when it could be surprising.  This is typical of Lisp-like languages, but surprising type coercion is typical of most programming languages.
 
   Only "true" and "false" are true and false.  Integers can be converted to (0 is false, anything else is true) and from (true is 1, false is 0) Booleans, explicitly.  This should make debugging easier, and I have always found treating non-Boolean values as Boolean surprising.
 
-  Data structures can be called with an argument to access elements.  Like 'normal' functions they map their domain to their range.  Dictionaries map keys to values.  Lists and strings map the symbols "first" and "rest" to values.  Vectors map 0-based integer indexes to values.  This is more consistent and brief than most Lisp-like programming languages.
+  Data structures can be applied to arguments to access elements.  Like 'normal' functions they map their domain to their range.  Dictionaries map keys to values.  Lists and strings map the symbols "first" and "rest" to values.  Vectors map 0-based integer indexes to values.  This is more consistent and brief than most Lisp-like programming languages.
 
-  Improper lists are not supported.  Any operation that would produce one is a defect.  Improper lists seem to be inferior to proper lists or vectors for all purposes, and the infix syntax they use is unlike everything else in Lisp.
+  Improper lists are not supported.  Any operation that would produce one is a defect.  Improper lists seem to be inferior to proper lists or vectors for all purposes, and the infix syntax used to specify them is inconsistent with the rest of Lisp.
 
   There is no character type.  A string is effectively an immutable list of strings of 1 character.  This may result in more code reuse.  Strings cannot be mutated because they are frequently used as hash table keys.  Strings cannot be indexed because UTF-8 is a variable-length code.  Strings of 1 character can be converted to and from integers.
 
-  Vectors are dynamic arrays.  Vectors may be used as stacks.  This makes vectors more general.  Bounds are checked.  Like singly-linked lists, dynamic arrays are used in most hash table implementations, which are used in most environment implementations, so it makes sense to expose them to programs written in the programming language.  That avoids unnecessarily restrictions.
+  Vectors are dynamic arrays.  Vectors may be used as stacks.  This makes vectors more general.  Bounds are checked.  Like singly-linked lists, dynamic arrays are used in most hash table implementations, which are used in most environment implementations.  Exposing them to programs written in the programming language avoids unnecessarily restrictions.
 
 * definition and mutation
 
@@ -402,23 +388,23 @@ Noteworthy Features
 
 * regular expressions
 
-  SREs (s-expression regular expressions) are supported.  They may be missing features the host programming language's regular expression implementation does not support, because I plan to reuse that.  I do not plan to support features the host programming language does, but Schs's SREs do not.
+  SREs (s-expression regular expressions) are supported.  They may be missing features the host programming language's regular expression implementation does not support because I plan to reuse that.  I do not plan to support features the host programming language does, but Schs's SREs do not.
 
 * control flow
 
   * sequence
 
-    "do" evaluates a sequence of forms in order and returns the value of the last expression.  An empty "do" is a defect, because the value is uninitialized.  Control flow sequences are implicit in most places where you might want to use them, except for "if".  "do" can be used by macros to generate multiple definitions and expressions in the same scope, because it does not create a new scope.
+    "do" evaluates a sequence of forms in order and returns the value of the last expression.  An empty "do" is a defect because the value is uninitialized.  Control flow sequences are implicit in most places where you might want to use them, except for "if".  "do" can be used by macros to generate multiple expressions in the same scope because it does not create a new scope.
 
   * branch
 
     * if
 
-      One-armed "if" is a defect, because the value is uninitialized when the test expression is false.  Equivalents which return "null" when the test expression is false, "when" and "unless", are supported for side effects.  Programmers are often wrong when they believe nothing needs to be done when the test expression is false.  "when" and "unless" act as warning signs of potential defects.
+      One-armed "if" is a defect because the value is uninitialized when the test expression is false.  Equivalents which return "null" when the test expression is false, "when" and "unless", are supported for side effects.  Programmers are often wrong when they believe nothing needs to be done when the test expression is false.  "when" and "unless" act as warning signs of potential defects.
 
     * cond
 
-      Non-exhaustive "cond" clauses is a defect, because the value is uninitialized when all test expressions are false.  This implies an empty "cond" is a defect.
+      Non-exhaustive "cond" clauses is a defect because the value is uninitialized when all test expressions are false.  This implies an empty "cond" is a defect.
 
     * pattern matching
 
@@ -426,13 +412,13 @@ Noteworthy Features
 
       Some aspects of OCaml's, Racket's, and this programming language's pattern matching are the same, but should still be mentioned.
 
-      Non-exhaustive patterns is a defect, because the value is uninitialized when no patterns match.
+      Non-exhaustive patterns is a defect because the value is uninitialized when no patterns match.
 
-      Not matching every element of a data structure is a defect, because allowing that would prevent defining patterns that match data structures with different numbers of elements.
+      Not matching every element of a data structure is a defect because that would make it impossible to use a pattern to match a data structure with a specific number of elements.
 
-      Not binding the same variables in every pattern in an "or" pattern construct is a defect, because the values of the variables are uninitialized when a pattern matches that does not bind them.
+      Not binding the same variables in every pattern in an "or" pattern construct is a defect because the values of the variables are uninitialized when a pattern matches that does not bind them.
 
-      Pattern constructs can be nested.  While recursive functions could be used instead, the inability to describe patterns more than one level deep would prevent a common usage of pattern matching from working: pattern matching function arguments.  You could put the arguments into a data structure to pattern match, but then you could not destructure their contents.  You could pattern match the arguments individually, but then you could not easily dispatch to the appropriate code for the combination of pattern matches.
+      Pattern constructs can be nested.  Whereas recursive functions could be used instead, the inability to describe patterns more than one level deep would prevent a common usage of pattern matching from working: pattern matching function arguments.  You could put the arguments into a data structure to pattern match, but then you could not destructure their contents.  You could pattern match the arguments individually, but then you could not easily dispatch to the appropriate code for the combination of pattern matches.
 
       Some aspects of this programming language's pattern matching differs from OCaml's, Racket's, or both, and should be mentioned.
 
@@ -442,45 +428,47 @@ Noteworthy Features
 
       Racket's "cons" pattern construct refers to mutable cons cells in this programming language.  This programming language only has mutable cons cells.
 
-      Racket's "and" pattern construct is supported.  It is more general than the "as" pattern construct in other programming languages.  It is useful for binding "or" and "inr" pattern matches, in addition to destructuring and equality testing.
+      Racket's "and" pattern construct is supported.  It is more general than the "as" pattern construct in other programming languages.  It is useful for binding "or" and "inr" pattern matches, as well as destructuring and equality testing.
 
-      OCaml's closed interval pattern construct is supported, and named "inr".  It has two parameters, the first for the low bound, the second for the high bound.  It is more convenient than specifying each element of a closed interval of numbers or single-character strings in an "or" pattern construct.
+      OCaml's closed interval pattern construct is supported and named "inr".  It has two parameters, the first for the low bound, the second for the high bound.  It is more convenient than specifying each element of a closed interval of numbers or single-character strings in an "or" pattern construct.
 
-      "when" guards use s-expression prefix syntax, because this programming language does not support keyword parameters.  They cannot appear inside a pattern, because all variables must be bound before a "when" guard can be evaluated.  They are useful for testing individual variables for something more complex than equality, or testing relationships between variables.
+      "when" guards use s-expression prefix syntax because this programming language does not support keyword parameters.  They cannot appear inside a pattern because all variables must be bound before a "when" guard can be evaluated.  They are useful for testing individual variables for something more complex than equality, or testing relationships between variables.
 
-* functions
+    * functions and macros
 
-  * scope
+      * scope
 
-    Only lexical scope is supported.  Dynamic scope prevents composition and makes code difficult to maintain.  Closures and partial application are a composable, maintainable, alternative to dynamic scope for avoiding repeatedly specifying an argument.
+        Only lexical scope is supported.  Dynamic scope prevents composition and makes code difficult to maintain.  Closures and partial application are a composable, maintainable alternative to dynamic scope for avoiding repeatedly specifying an argument.
 
-  * calls
+      * definitions
 
-    While (trailing) optional and rest parameters are supported, most forms are of fixed-arity.  Partial application only works with fixed-arity forms.  If a form cannot be used with partial application (special forms and macros), and variable-arity could be useful, it is used.  Most constructors (e.g. "dict", "lst", and "vctr") are variadic, because if they were not it would be impossible to create data structures with different numbers of elements.  "do" (explicit and implicit) is variadic, because if it were not it would be impossible to create control flow sequences with different numbers of expressions.  Optional parameters follow "?", while the rest parameter follows "&".  To avoid surprising behavior, "?" and "&" are not valid variable names.  Keyword parameters are not supported.  They cannot be used with partial application, and interact in surprising ways with optional and rest parameters.  Data structures are often used where optional, rest, and keyword parameters would be used in other Lisp-like languages.
+      * calls
 
-    Function arguments are evaluated once, from left to right, as in Common Lisp.  It is bad style to depend on that, but it seems better to standardize it than to have it be implementation-defined as it is in so many programming languages.  Optimizing compilers may generate code that evaluates arguments without side effects in any order.
+        Even though (trailing) optional and rest parameters are supported, most forms are of fixed-arity.  Partial application only works with fixed-arity functions.  If a form cannot be used with partial application (special forms and macros), and variable-arity could be useful, it is used.  Most constructors (e.g. "dict", "lst", and "vctr") are variadic because if they were not it would be impossible to create data structures with different numbers of elements.  "do" (explicit and implicit) is variadic because if it were not it would be impossible to create control flow sequences with different numbers of expressions.  Optional parameters follow "?", whereas the rest parameter follows "&".  To avoid surprising behavior, "?" and "&" are not valid variable names.  Keyword parameters are not supported.  They cannot be used with partial application, and interact in surprising ways with optional and rest parameters.  Data structures are often used where optional, rest, and keyword parameters would be used in other Lisp-like languages.
 
-    Partial application is used where "apply" would be used in other Lisp-like languages.  If you call a fixed-arity function with less than the number of arguments it expects, it will return a closure that will accept the remaining arguments and has the closed-over arguments in its environment.  Parameters should appear in order from the most to least likely to be reused.  This makes using closures much more convenient.  Calling a fixed-arity function with the expected number of arguments causes it to run normally.  Calling a function with too many arguments is a defect.
+        Function arguments are evaluated once, from left to right, as in Common Lisp.  It is bad style to depend on that, but it seems better to standardize it than to have it be implementation-defined as it is in so many programming languages.  Optimizing compilers may generate code that evaluates arguments that do not cause observable side effects in any order.
 
-    "fix-arity" creates a fixed-arity copy of a variadic form to make it easier to build closures with.
+        Partial application is used where "apply" would be used in other Lisp-like languages.  If you call a fixed-arity function with less than the number of arguments it expects, it will return a closure that will accept the remaining arguments and has the closed-over arguments in its environment.  Parameters should appear in order from the most to least likely to be reused.  This makes using closures much more convenient.  Calling a fixed-arity function with the expected number of arguments causes it to run.  Calling a function with too many arguments is a defect.
 
-    If you want to omit values in the middle of a function's arguments, instead of only at the end, you can use "_" in their place.  The resulting closure will expect the remaining arguments in the same order.  To avoid surprising behavior, "_" is not a valid variable name.
+        "fix-arity" creates a fixed-arity copy of a variadic function to make it easier to build closures with.
 
-    Function parameters can be rearranged to ease closure creation like so "#(bad-fn %2 %1)".  The rest parameter can be passed with "%&".  To avoid surprising behavior, "%" followed by an integer and "%&" are not valid variable names.
+        If you want to omit values in the middle of a function's arguments, instead of only at the end, you can use "_" in their place.  The resulting closure will expect the remaining arguments in the same order.  To avoid surprising behavior, "_" is not a valid variable name.
 
-    Recursion is properly supported.  Call stack frames are heap allocated, so non-tail recursion will succeed unless memory is exhausted.  Tail call elimination is performed, so loops can be defined recursively.
+        Function parameters can be rearranged to ease closure creation like so "#(bad-fn %2 %1)".  The rest parameter can be passed with "%&".  To avoid surprising behavior, "%" followed by an integer and "%&" are not valid variable names.
 
-  * continuations
+        Recursion is properly supported.  Call stack frames are heap allocated so that non-tail recursion will succeed unless memory is exhausted.  Tail call elimination is performed so that loops can be defined recursively.
 
-    Delimited continuations and dynamic-wind are supported.  Undelimited continuations are not.  Delimited continuations compose.  Undelimited continuations do not.
+      * continuations
 
-    The delimited continuations will be similar to the ones in Racket.
+        Delimited continuations and dynamic-wind are supported.  Undelimited continuations are not.  Delimited continuations compose.  Undelimited continuations do not.
 
-  * returns
+        The delimited continuations will be similar to the ones in Racket.
 
-    Everything returns a value.  Forms that perform definition or mutation return the value that they used.  Forms that involve a control flow sequence return the value returned by the last expression in the control flow sequence.  This, along with combining allocation and initialization, prevents uninitialized values.
+      * returns
 
-    Multiple return values are not supported.  Programming languages that allow them must provide constructs to bind them, which are less general than destructuring constructs.  Evaluation should reduce a tree of expressions to a single value.  Pattern matching makes binding multiple values inside a data structure trivial.
+        Everything returns a value.  Forms that perform definition or mutation return the value that they used.  Forms that involve a control flow sequence return the value returned by the last expression in the control flow sequence.  This, along with combining allocation and initialization, prevents uninitialized values.
+
+        Multiple return values are not supported.  Programming languages that support them must provide constructs to bind them, which are less general than destructuring constructs.  Evaluation should reduce a tree of expressions to a single value.  Pattern matching makes binding multiple values inside a data structure trivial.
 
 * quoting
 
@@ -488,7 +476,7 @@ Noteworthy Features
 
   "unquote" or "unquote-splicing" outside of "quasiquote" is a defect.
 
-  Destructive unquote-splicing is not supported, because it seems to be only useful for causing defects.
+  Destructive unquote-splicing is not supported because it seems to be only useful for causing defects.
 
 * macros
 
