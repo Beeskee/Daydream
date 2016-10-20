@@ -526,9 +526,9 @@ Noteworthy Features
 
       A name symbol at the beginning of a list that is coerced to a module-qualified symbol with the value of "quote", "quasiquote", "unquote", "unquote-splicing", "def", or "fn" causes some name symbols that follow to be handled differently.  This is a test for identity so that they are correctly recognized when rebound.
 
-      If the name symbol is quoted, it is not coerced when returned from a macro.
+      If the name symbol is quoted or bound in the outermost scope, it is not coerced when returned from a macro.
 
-      If the name symbol is bound by a base language binding form, all name symbols with the same name in the same scope are coerced to a gensymed symbol with the same counter value when returned from a macro.
+      If the name symbol is bound in an inner scope, all name symbols with the same name in the same scope are coerced to a gensymed symbol with the same counter value when returned from a macro.
 
       Gensymed symbols construct unique places, for each gensymed symbol, for each macro expansion.  This avoids surprising behavior by preventing name collisions.  They are effectively symbols named by a global counter.  They are unique because symbols in source code are forbidden from following the gensymed symbol naming convention and the global counter is incremented by 1 after each gensymed symbol is generated.
 
