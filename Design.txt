@@ -273,7 +273,7 @@ Non-Goals
 
   Variable-length patterns, like those in Racket, are redundant.  Processing data structures of variable depth or length is best done with recursion.  Recursion is more general because it can be used for more than pattern matching.  Racket uses variable-length patterns to construct, and sometimes filter, lists and bind them.  Pattern matching should be used for destructuring, not structuring (constructing data structures) or restructuring (transforming data structures).  Structuring and restructuring is best done in the code associated with a pattern.
 
-  Some of Racket's pattern matching features are made redundant by "when" guards, which Racket also supports.  It includes a pattern construct that matches if a function passed the value returns true, which is equivalent to putting the same function call in the "when" guard.  It includes a pattern construct that matches if a regular expression matches the string value, which is equivalent to putting the same test in the "when" guard.  "when" guards are more general because they can perform tests involving multiple values.
+  Some of Racket's pattern matching features are made redundant by "when" guards, which Racket also supports.  It includes a pattern construct that matches if a function passed the value returns "true", which is equivalent to putting the same function call in the "when" guard.  It includes a pattern construct that matches if a regular expression matches the string value, which is equivalent to putting the same test in the "when" guard.  "when" guards are more general because they can perform tests involving multiple values.
 
 * comprehensions
 
@@ -346,7 +346,7 @@ Noteworthy Features
 
   Types are rarely converted implicitly and never when it could be surprising.  This is typical of Lisp-like languages, but surprising type coercion is typical of most programming languages.
 
-  Only "true" and "false" are true and false.  Integers can be converted to (0 is false, anything else is true) and from (false is 0, true is 1) Booleans, explicitly.  This should make debugging easier, and I have always found treating non-Boolean values as Boolean surprising.
+  Only "true" and "false" are true and false.  Integers can be converted to ("0" is "false", anything else is "true") and from ("false" is "0", "true" is "1") Booleans, explicitly.  This should make debugging easier, and I have always found treating non-Boolean values as Boolean surprising.
 
   Data structures can be applied to arguments to access elements.  Like 'normal' functions they map their domain to their range.  Dictionaries map keys to values.  Lists and strings map the symbols "first" and "rest" to values.  Vectors map 0-based integer indexes to values.  This is more consistent and brief than most Lisp-like languages.
 
@@ -400,7 +400,7 @@ Noteworthy Features
 
     * if
 
-      One-armed "if" is a defect because the value is uninitialized when the test expression is false.  Equivalents which return "null" when the test expression is false, "when" and "unless", are supported for side effects.  Programmers are often wrong when they believe nothing needs to be done when the test expression is false.  "when" and "unless" act as warning signs of potential defects.
+      One-armed "if" is a defect because the value is uninitialized when the predicate returns "false".  Equivalents which return "null" when the predicate returns "false", "when" and "unless", are supported for side effects.  Programmers are often wrong when they believe nothing needs to be done when the predicate returns "false".  "when" and "unless" act as warning signs of potential defects.
 
     * cond
 
@@ -464,7 +464,7 @@ Noteworthy Features
 
       * returns
 
-        Everything returns a value.  Forms that perform definition or mutation return null.  Forms that involve a control flow sequence return the value returned by the last expression in the control flow sequence.  This, along with combining allocation and initialization, prevents uninitialized values.
+        Everything returns a value.  Forms that perform definition or mutation return "null".  Forms that involve a control flow sequence return the value returned by the last expression in the control flow sequence.  This, along with combining allocation and initialization, prevents uninitialized values.
 
         Multiple return values are not supported.  Programming languages that support them must provide constructs to bind them, which are less general than destructuring constructs.  Evaluation should reduce a tree of expressions to a single value.  Pattern matching makes binding multiple values inside a data structure trivial.
 
@@ -571,7 +571,7 @@ Noteworthy Features
 
     "(expand-hide form symbols)" recursively expands macro calls in the form unless their symbol names match the symbol names in the sequence.  This is primarily useful to reduce clutter caused by specific macro expansions when trying to understand other macro expansions.
 
-    "(expand-when form predicate)" recursively expands macro calls in the form when the predicate function returns true.  The function parameters are "(symbol args)" for the macro call's symbol and arguments.  This is primarily useful when writing code walking macros that inspect or transform constructs (including macro calls).
+    "(expand-when form predicate)" recursively expands macro calls in the form when the predicate returns "true".  The predicate function parameters are "(symbol args)" for the macro call's symbol and arguments.  This is primarily useful when writing code walking macros that inspect or transform constructs (including macro calls).
 
     These functions use the current environment to determine the value associated with a symbol, like a macro call.  That is usually the expected and desired behavior.
 
