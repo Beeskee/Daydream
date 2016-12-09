@@ -679,9 +679,13 @@ Noteworthy Features
 
       Modules can be reloaded at the listener and in modules.  This is useful for exploratory programming or hot code swapping to correct a defect in or add features to a running program.
 
-      "reload" causes modules to be reread and executed.  "reload" returns null.
+      "reload" causes modules to be reread and executed.  "reload" is a function that accepts a list in the same format as "import"'s arguments and returns "null".
 
-      Reloading a module that has not changed, when a later version is not available, may have no effect.
+      Reloads are evaluated when they are encountered in the source code.  If a "reload" expression reloads multiple modules, they are reloaded in topological order.
+
+      If a version is specified, this programming language will reload that version.  This makes downgrading possible.  If the specified version fails to reload, it is a defect.  Otherwise, module files are selected for reloading as in normal loading.
+
+      Reloading may have no effect in several situations.  If the same module file would be selected (e.g. by versioning) for reloading and its contents are unchanged, reloading it is unnecessary.  Multiple or redundant reloads are /not/ defects so that macros that generate reloads are easier to use.  If a "reload" expression attempts to reload the same module more than once, it is only reloaded once.  If a "reload" expression specifies different versions of the same module, the highest specified version is reloaded.
 
       A reloaded module's dependencies are /not/ reset to their initial states because the purpose of reloading a module is usually to redefine the module without losing other state.
 
