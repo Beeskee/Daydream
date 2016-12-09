@@ -639,6 +639,8 @@ Noteworthy Features
 
       The importation of a variable must appear before the variable is read in the source code.  Importations are evaluated in topological order and, within that ordering, by the time they are encountered in the source code.  A topological ordering may not be unique, and importations may be evaluated before they are encountered in the source code.  Programming languages without automatic dependency management invariably have an excess of incompatible tools to solve this problem.  Programming languages with predictable load ordering discourage encapsulation by making it easy to use side effects to create invisible dependencies between modules.
 
+      If implicit definitions or importations cause name collisions with each other, "env" has priority over "core".  That is usually the expected and desired behavior.
+
       If implicit definitions or importations (from "core" or "env") cause name collisions with explicit definitions or importations, explicit definitions and importations have priority.  A warning is issued because name collisions are usually unintentional.
 
       If explicit definitions or importations cause name collisions with each other, they are normally defects.  Name collisions between explicit definitions or importations normally indicate accidental redefinition.
