@@ -679,7 +679,7 @@ Noteworthy Features
 
       Modules can be reloaded at the listener and in modules.  This is useful for exploratory programming or hot code swapping to correct a defect in or add features to a running program.
 
-      "reload" causes modules to be reread and executed.  "reload" is a function that accepts a list in the same format as "import"'s arguments and returns "null".
+      "reload" causes modules to be reread and executed.  "reload" is a function that accepts a sequence in the same format as "import"'s arguments and returns "null".
 
       Reloads are evaluated when they are encountered in the source code.  If a "reload" expression reloads multiple modules, they are reloaded in topological order.
 
@@ -788,7 +788,7 @@ Noteworthy Features
 
     Revocation of capabilities is achieved by passing a mutable closure that can conditionally operate on the resource, instead of passing the resource directly.
 
-    "sb" is a function that accepts a list in the same format as "import"'s arguments and returns a data structure containing, among other things, a sandboxed evaluator.  Only variables in the sandbox's specification can be directly imported inside the sandbox.  "sb" recognizes "env" as a virtual module that contains the environment.  To avoid surprising behavior, user-defined modules cannot be named "env".
+    "sb" is a function that accepts a sequence in the same format as "import"'s arguments and returns a data structure containing, among other things, a sandboxed evaluator.  Only variables in the sandbox's specification can be directly imported inside the sandbox.  "sb" recognizes "env" as a virtual module that contains the environment.  To avoid surprising behavior, user-defined modules cannot be named "env".
 
     Untrusted code in the anonymous virtual module inside a sandbox is restricted to importing variables in that sandbox's specification, but code in modules that untrusted code imports variables from may import variables not in that sandbox's specification.  For example, it is possible to grant untrusted code access to a function that calls functions from the "ffi" module /without/ granting that untrusted code access to any functions from the "ffi" module.
 
