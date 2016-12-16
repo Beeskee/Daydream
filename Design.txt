@@ -137,7 +137,7 @@ Non-Goals
 
   SREs are the best solution for regular expressions.  I plan to support them.
 
-  This programming language uses "/" as the path delimiter, even on Windows.
+  Macroni uses "/" as the path delimiter, even on Windows.
 
 * dictionary and vector literals
 
@@ -161,13 +161,19 @@ Non-Goals
 
   I have attempted to design a macro system that merely solves the problems with Common Lisp's macro system.
 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* user-defined types
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 * object-oriented programming
 
   I believe object-oriented programming usually does more harm than good.  Mutable global variables make code difficult to maintain.  When a global variable becomes corrupt, it is difficult to tell what code was responsible.  Mutable objects are mutable global variables.  Implementation inheritance makes code difficult to maintain.  Changing a method's implementation can break subtypes because subtypes' implementations may depend on side effects of supertypes' methods.  Of course programmers can limit themselves to using immutable objects, and inheriting interfaces and using composition, but then objects are no improvement over records or dictionaries.
 
-  This programming language has mutable closures, and it should be possible to implement a CLOS-like system using them, which is more powerful than popular programming languages' object-oriented programming support, but I do not plan to write that myself.
+  Macroni has mutable closures, and it should be possible to implement a CLOS-like system using them, which is more powerful than popular programming languages' object-oriented programming support, but I do not plan to write that myself.
 
-  That does imply that this programming language will have a fixed set of types.  It is better to have a small number of types and a large number of procedures that operate on each, than to have a large number of types and a small number of procedures that operate on each because more code can be reused.  Dictionaries are used in place of new types.
+  That does imply that Macroni will have a fixed set of types.  It is better to have a small number of types and a large number of procedures that operate on each, than to have a large number of types and a small number of procedures that operate on each because more code can be reused.  Dictionaries are used in place of new types.
 
 * mandatory static type checking
 
@@ -199,7 +205,7 @@ Non-Goals
   * Lie.  For example, claim to only generate a sequence of actions, and that the runtime system performs the side effects the actions instruct it to.  If you believe that, then C also enforces global referential transparency in exactly the same way.  The actions are system calls.  The runtime system is the operating system kernel and drivers.  It just has very convenient syntax for the IO and state monads.
   * Be limited to behaving like a fancy calculator, where all variables and data structures are immutable, and no input/output is possible.  Code written in a more capable programming language could show the return values of the non-interactive programs.
 
-  I want to use this programming language for interactive programs.
+  I want to use Macroni for interactive programs.
 
 * mandatory immutability
 
@@ -231,13 +237,13 @@ Non-Goals
   * Parallelism.  Otherwise, allocation, mutation, and deallocation, which require updating the image, occur at disk write speed.
   * Transactional file access.  Otherwise, updating the image requires twice the time and space.
 
-  Transparent persistence is not helpful if the host uses its own state recovery mechanism.  For example, a word processor might save the location of each document file, the location of the cursor in each document file, and the contents of each document file, when they change, and use this data to recover its state whenever it is executed.  If this programming language were embedded in the word processor just described (for scripting), transparent persistence would provide no additional benefit.
+  Transparent persistence is not helpful if the host uses its own state recovery mechanism.  For example, a word processor might save the location of each document file, the location of the cursor in each document file, and the contents of each document file, when they change, and use this data to recover its state whenever it is executed.  If Macroni were embedded in the word processor just described (for scripting), transparent persistence would provide no additional benefit.
 
   Transparent persistence is /harmful/ if the host uses a flash drive to store the image.  The frequent writes will rapidly wear out the drive.
 
   Those are enough reasons to not require transparent persistence.
 
-  If this programming language were implemented in a host without tracing garbage collection, and with the ability to support efficient transparent persistence, I would consider implementing it.
+  If Macroni were implemented in a host without tracing garbage collection, and with the ability to support efficient transparent persistence, I would consider implementing it.
 
 * implicit control flow
 
@@ -259,7 +265,7 @@ Non-Goals
 
 * overcomplicated pattern matching
 
-  I will limit pattern matching to destructuring and tests for equality in patterns, arbitrary test expressions in "when" guards, and dispatching to code associated with a pattern.  New pattern matching features will not be included unless they help achieve the goals I set for this programming language.
+  I will limit pattern matching to destructuring and tests for equality in patterns, arbitrary test expressions in "when" guards, and dispatching to code associated with a pattern.  New pattern matching features will not be included unless they help achieve the goals I set for Macroni.
 
   A discussion of pattern matching features that have been rejected follows.
 
@@ -297,7 +303,7 @@ Non-Goals
 
   Some hosts do not support parallelism.
 
-  To this day most code is not thread-safe.  This programming language performs input/output by using foreign code.
+  To this day most code is not thread-safe.  Macroni performs input/output by using foreign code.
 
   I am unlikely to ever implement this.
 
@@ -307,9 +313,9 @@ Non-Goals
 
   So long as the implementation is not too wasteful, it should still be usable.
 
-  Although I do not plan to implement an optimizing compiler for this programming language, I have attempted to avoid design decisions that would make that more difficult.
+  Although I do not plan to implement an optimizing compiler for Macroni, I have attempted to avoid design decisions that would make that more difficult.
 
-  If code needs to be very efficient, it should be written for the Vulkan API.  Hosts can expose that to this programming language.
+  If code needs to be very efficient, it should be written for the Vulkan API.  Hosts can expose that to Macroni.
 
 * standardized input/output facilities
 
@@ -320,7 +326,7 @@ Noteworthy Features
 
 * purpose
 
-  This programming language is designed to be embedded in other programs.
+  Macroni is designed to be embedded in other programs.
 
 * modernization
 
@@ -358,17 +364,17 @@ Noteworthy Features
 
 * definition and mutation
 
-  Definition and mutation are different special forms so that this programming language can detect defects caused by typos in variable names.
+  Definition and mutation are different special forms so that Macroni can detect defects caused by typos in variable names.
 
-  Definition is much simpler than in most Lisp-like languages.  There is only one "def" form which can be used in any scope.
+  Definition is much simpler in Macroni than in most Lisp-like languages.  There is only one "def" form which can be used in any scope.
 
-  Defining the same variable as different values (according to "eqv?") is normally a defect so that this programming language can detect accidental redefinition.  Redundant definitions are /not/ defects so that macros that generate definitions are easier to use.  Optimizing compilers may eliminate redundant definitions that do not cause observable side effects.
+  Defining the same variable as different values (according to "eqv?") is normally a defect so that Macroni can detect accidental redefinition.  Redundant definitions are /not/ defects so that macros that generate definitions are easier to use.  Optimizing compilers may eliminate redundant definitions that do not cause observable side effects.
 
   Mutating an undefined mutable place is a defect.
 
 * generalized variables
 
-  Mutation is much simpler than in most Lisp-like languages.  There is only one "set!" form which can be used with any mutable place.
+  Mutation is much simpler in Macroni than in most Lisp-like languages.  There is only one "set!" form which can be used with any mutable place.
 
   A mutable place can be specified by
   * a variable
@@ -384,7 +390,7 @@ Noteworthy Features
 
 * equality
 
-  Equality is much simpler than in most Lisp-like languages.  "eqv?" compares values for immutable types and identities (i.e. memory addresses) for mutable types, like "==" in most popular programming languages.  Dictionaries always use this form of equality because it ensures keys remain associated with their values.  "equal?" compares values even for mutable types and correctly handles reference cycles, like "equal?" in Scheme.  Pattern matching always uses this form of equality because it handles immutable and mutable types consistently.
+  Equality is much simpler in Macroni than in most Lisp-like languages.  "eqv?" compares values for immutable types and identities (i.e. memory addresses) for mutable types, like "==" in most popular programming languages.  Dictionaries always use this form of equality because it ensures keys remain associated with their values.  "equal?" compares values even for mutable types and correctly handles reference cycles, like "equal?" in Scheme.  Pattern matching always uses this form of equality because it handles immutable and mutable types consistently.
 
 * regular expressions
 
@@ -410,7 +416,7 @@ Noteworthy Features
 
       Pattern matching is used for destructuring.  The features supported are very similar to OCaml's.  The syntax is very similar to Racket's.
 
-      Some aspects of OCaml's, Racket's, and this programming language's pattern matching are the same, but should still be mentioned.
+      Some aspects of OCaml's, Racket's, and Macroni's pattern matching are the same, but should still be mentioned.
 
       Non-exhaustive patterns is a defect because the value is uninitialized when no patterns match.
 
@@ -420,19 +426,19 @@ Noteworthy Features
 
       Pattern constructs can be nested.  Whereas recursive functions could be used instead, the inability to describe patterns more than one level deep would prevent a common usage of pattern matching from working: pattern matching function arguments.  You could put the arguments into a data structure to pattern match, but then you could not destructure their contents.  You could pattern match the arguments individually, but then you could not easily dispatch to the appropriate code for the combination of pattern matches.
 
-      Some aspects of this programming language's pattern matching differs from OCaml's, Racket's, or both, and should be mentioned.
+      Some aspects of Macroni's pattern matching differs from OCaml's, Racket's, or both, and should be mentioned.
 
       Racket's non-linear pattern matching is supported.  If an identifier is used multiple times within a pattern, the corresponding matches must be the same according to "equal?", except that instances of an identifier in different "or" sub-patterns are independent.
 
       The Haskell pattern matching extension record puns is supported for dictionaries.  It uses syntax like "("x")" to bind variables with the same name as string or symbol keys for the associated keys.  Using string keys that do not contain valid symbol names with this feature is a defect.
 
-      Racket's "cons" pattern construct refers to mutable cons cells in this programming language.  This programming language only has mutable cons cells.
+      Racket's "cons" pattern construct refers to mutable cons cells in Macroni.  Macroni only has mutable cons cells.
 
       Racket's "and" pattern construct is supported.  It is more general than the "as" pattern construct in other programming languages.  It is useful for binding "or" and "inr" pattern matches, as well as destructuring and equality testing.
 
       OCaml's closed interval pattern construct is supported and named "inr".  It has two parameters, the first for the low bound, the second for the high bound.  It is more convenient than specifying each element of a closed interval of numbers or single-character strings in an "or" pattern construct.
 
-      "when" guards use s-expression prefix syntax because this programming language does not support keyword parameters.  They cannot appear inside a pattern because all variables must be bound before a "when" guard can be evaluated.  They are useful for testing individual variables for something more complex than equality, or testing relationships between variables.
+      "when" guards use s-expression prefix syntax because Macroni does not support keyword parameters.  They cannot appear inside a pattern because all variables must be bound before a "when" guard can be evaluated.  They are useful for testing individual variables for something more complex than equality, or testing relationships between variables.
 
     * functions and macros
 
@@ -561,7 +567,7 @@ Noteworthy Features
 
   * explicit macro expansion
 
-    This programming language provides several functions to perform macro expansion explicitly.  They can be used to observe a macro expansion.  They can be used by macros that inspect or transform constructs.
+    Macroni provides several functions to perform macro expansion explicitly.  They can be used to observe a macro expansion.  They can be used by macros that inspect or transform constructs.
 
     "(expand-defs form)" recursively expands macro calls in the form when the macros are defined (not imported) in the current module.  This is primarily useful to reduce clutter when trying to understand your own macro expansions.
 
@@ -623,11 +629,11 @@ Noteworthy Features
 
     * built-ins
 
-      /All/ variables in this programming language are encapsulated in a module.
+      /All/ variables in Macroni are encapsulated in a module.
 
       Forms that define and mutate variables, construct and mutate data structures, perform arithmetic and logic, and perform control flow are defined in the "core" module.
 
-      The foreign function interface is defined in the "ffi" module.  Access to the foreign function interface must be restricted to libraries that wrap foreign code for use by this programming language.  Code with access to the foreign function interface could perform harmful output directly or violate the capability security model by converting knowledge of a capability to possession of a capability (by converting a memory address to a reference).
+      The foreign function interface is defined in the "ffi" module.  Access to the foreign function interface must be restricted to libraries that wrap foreign code for use by Macroni.  Code with access to the foreign function interface could perform harmful output directly or violate the capability security model by converting knowledge of a capability to possession of a capability (by converting a memory address to a reference).
 
       The internal runtime system interface is defined in the "rsi" module, which will be described later.
 
@@ -683,7 +689,7 @@ Noteworthy Features
 
       Reloads are evaluated when they are encountered in the source code.  If a "reload" expression reloads multiple modules, they are reloaded in topological order.
 
-      If a version is specified, this programming language will reload that version.  This makes downgrading possible.  If the specified version fails to reload, it is a defect.  Otherwise, module files are selected for reloading as in normal loading.
+      If a version is specified, Macroni will reload that version.  This makes downgrading possible.  If the specified version fails to reload, it is a defect.  Otherwise, module files are selected for reloading as in normal loading.
 
       Reloading may have no effect in several situations.  If the same module file would be selected (e.g. by versioning) for reloading and its contents are unchanged, reloading it is unnecessary.  Multiple or redundant reloads are /not/ defects so that macros that generate reloads are easier to use.  If a "reload" expression attempts to reload the same module more than once, it is only reloaded once.  If a "reload" expression specifies different versions of the same module, the highest specified version is reloaded.
 
@@ -695,11 +701,11 @@ Noteworthy Features
 
   * files and paths
 
-    An unversioned module filename consists of the module name.  A versioned module filename consists of the module name and version number, in that order, separated by a hyphen.  The filename extension for source code in this programming language is appended in both cases.
+    An unversioned module filename consists of the module name.  A versioned module filename consists of the module name and version number, in that order, separated by a hyphen.  The filename extension for source code in Macroni is appended in both cases.
 
     Only one instance of a module exists at a time, even if there is an unversioned and versioned file, or multiple versioned files, for it.  An unversioned module file is necessary if no version was specified.  A versioned module file that meets the specification is necessary if a version was specified.
 
-    This programming language searches for modules in the directory the program loaded from then a directory for libraries if that fails.
+    Macroni searches for modules in the directory the program loaded from then a directory for libraries if that fails.
 
   * conventions
 
@@ -713,7 +719,7 @@ Noteworthy Features
 
   The security problem must be solved at the operating system level, not the programming language level.
 
-  However, this programming language was designed with security in mind.
+  However, Macroni was designed with security in mind.
 
   * avoid conflation of operating systems and programming languages
 
@@ -769,7 +775,7 @@ Noteworthy Features
 
     Security is effectively encapsulation.
 
-    Therefore, this programming language uses its module system to enforce internal capabilities.  This programming language does not attempt to enforce external capabilities because that would be futile.
+    Therefore, Macroni uses its module system to enforce internal capabilities.  Macroni does not attempt to enforce external capabilities because that would be futile.
 
     Capabilities are used to implement sandboxed evaluation.
 
@@ -778,7 +784,7 @@ Noteworthy Features
     * deserialization
     * genetic programming
 
-    Using the capability security model has other beneficial effects.  Strictly enforced encapsulation encourages better design of this programming language and software written in it.  In theory, software written in this programming language could run on capability-based operating systems, but this programming language would need to be extended to support external capabilities.  In theory, capability-based operating systems could be written in this programming language, but this programming language would need to be extended to support low-level operations.
+    Using the capability security model has other beneficial effects.  Strictly enforced encapsulation encourages better design of Macroni and software written in it.  In theory, software written in Macroni could run on capability-based operating systems, but Macroni would need to be extended to support external capabilities.  In theory, capability-based operating systems could be written in Macroni, but Macroni would need to be extended to support low-level operations.
 
     Internal capabilities are references.
 
@@ -815,7 +821,7 @@ Noteworthy Features
 
     Modules often provide hooks for other modules to attach callbacks to.  This is achieved by providing functions that mutate a data structure within the module containing the hook because it is normally impossible to directly mutate the contents of another module.  This has several beneficial effects.  It is possible to cause side effects when the contents of a hook changes.  Exposing the hook data structure could harm security.
 
-    Code outside a sandbox that can write to a module file can subvert the module.  Code inside a sandbox can only subvert itself.  If code can subvert a module, preventing it from observing or mutating the module's contents is an unnecessary restriction, which this programming language does not enforce.  This works well in practice.  Programmers cannot observe or mutate the contents of built-in modules.  Programmers can observe and mutate the contents of their modules in development.  Encapsulation is strictly enforced in production because production-ready modules are normally read-only.
+    Code outside a sandbox that can write to a module file can subvert the module.  Code inside a sandbox can only subvert itself.  If code can subvert a module, preventing it from observing or mutating the module's contents is an unnecessary restriction, which Macroni does not enforce.  This works well in practice.  Programmers cannot observe or mutate the contents of built-in modules.  Programmers can observe and mutate the contents of their modules in development.  Encapsulation is strictly enforced in production because production-ready modules are normally read-only.
 
     Values and call stack frames from variables that can be directly imported and are associated with insubvertible modules can be observed by the debugger.  Values and call stack frames from variables that are associated with subvertible modules can be observed and mutated by the debugger.  If an unhandled error condition occurs in a call stack frame that cannot be observed by the debugger, the stack starts unwinding.  Stack unwinding automatically continues through call stack frames that cannot be observed by the debugger.  The debugger can execute upon reaching a call stack frame that can be observed.  Most programming languages behave similarly because debugging information is usually unavailable for built-in or third-party modules.
 
@@ -831,10 +837,10 @@ Noteworthy Features
 
     The separation of capabilities and data gives rise to the term "partitioned capability system".  This has several beneficial effects.  Insecure programming languages like assembly (for most processors), C, and C++ can be used without allowing them to violate security.  Confinement of capabilities (/not/ data) can be achieved without using dynamic or static analysis, by the operating system not transmitting them.  Revocation of capabilities can be achieved without using proxy closures, by the operating system removing them.
 
-    The change I propose is providing the /option/ to install multiple programs in a shared environment.  The installation endowment of the shared environment is the set union of the installation endowments of all programs installed in it.  When multiple programs written in this programming language are installed in a shared environment, their module encapsulation boundaries are not enforced, except inside sandboxes.
+    The change I propose is providing the /option/ to install multiple programs in a shared environment.  The installation endowment of the shared environment is the set union of the installation endowments of all programs installed in it.  When multiple programs written in Macroni are installed in a shared environment, their module encapsulation boundaries are not enforced, except inside sandboxes.
 
     Programs should /not/ be installed in a shared environment by default.
 
-    This programming language's semantics would change in a backwards-compatible way.  Outside sandboxes, modules only indicate which file contains the definition of a variable.  All variables in the outermost scope can be imported.  Imported variables can be mutated by "set!".  All variables and call stack frames can be observed and mutated by the debugger.  All modules can be reloaded.
+    Macroni's semantics would change in a backwards-compatible way.  Outside sandboxes, modules only indicate which file contains the definition of a variable.  All variables in the outermost scope can be imported.  Imported variables can be mutated by "set!".  All variables and call stack frames can be observed and mutated by the debugger.  All modules can be reloaded.
 
     This change helps achieve the goal of avoiding unnecessary restrictions.
