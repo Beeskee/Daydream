@@ -653,7 +653,7 @@ Noteworthy Features
 
       Modules only implicitly import the "core" module and do not implicitly export anything.  The programmer must explicitly specify the interface.  This encourages encapsulation, planning interfaces, and conscious interface change.
 
-      An importation or exportation inside an expression, except for (potentially nested) "do" forms, is a defect.  Module interfaces should not vary at run-time.  Macros may expand into importations and exportations, which makes it possible for module implementations to vary at macro-expansion-time.  Importations and exportations in "do" forms make it possible for a single macro call to expand into a combination of importations, exportations, definitions, and function and macro calls.
+      An importation or exportation inside an expression, except for (potentially nested) "do" forms, is a defect.  Module interfaces should not vary at run-time.  Macros may expand into importations and exportations, which makes it possible for module implementations to vary at macro expansion time.  Importations and exportations in "do" forms make it possible for a single macro call to expand into a combination of importations, exportations, definitions, and function and macro calls.
 
       A dependency cycle is a defect.  It indicates two or more modules are badly decomposed.  Some definitions need to be combined into a single module to eliminate the cycle.  Others may need to be separated into other modules.
 
@@ -673,7 +673,7 @@ Noteworthy Features
 
       A module may be macro-expanded each time a program that depends on it runs.  Optimizing compilers may generate code that is equivalent to the module's code after macro expansion.
 
-      All of a module's dependencies are recursively reset to their initial states when the module is macro-expanded.  All modules are reset to their initial states when transitioning from macro-expansion-time to run-time.  Modules whose state did not change need not be reset.  The state may be reset by re-executing the macro-expanded code or copying from a backup.  This prevents mutation within a module at macro-expansion-time from influencing the macro expansion of other modules or from influencing run-time.
+      All of a module's dependencies are recursively reset to their initial states when the module is macro-expanded.  All modules are reset to their initial states when transitioning from macro expansion time to run-time.  Modules whose state did not change need not be reset.  The state may be reset by re-executing the macro-expanded code or copying from a backup.  This prevents mutation within a module at macro expansion time from influencing the macro expansion of other modules or from influencing run-time.
 
     * reloading
 
