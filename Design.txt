@@ -161,12 +161,6 @@ Non-Goals
 
   I have attempted to design a macro system that merely solves the problems with Common Lisp's macro system.
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-* user-defined types
-
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
 * object-oriented programming
 
   I believe object-oriented programming usually does more harm than good.  Mutable global variables make code difficult to maintain.  When a global variable becomes corrupt, it is difficult to tell what code was responsible.  Mutable objects are mutable global variables.  Implementation inheritance makes code difficult to maintain.  Changing a method's implementation can break subtypes because subtypes' implementations may depend on side effects of supertypes' methods.  Of course programmers can limit themselves to using immutable objects, and inheriting interfaces and using composition, but then objects are no improvement over records or dictionaries.
