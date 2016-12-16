@@ -171,7 +171,7 @@ Non-Goals
 
 * mandatory static type checking
 
-  Programmers often worry too much about whether their programming language is dynamically or statically type checked and do not worry enough about whether their code is very dynamic or static.  The more general code is, the more dynamic it must be because it must handle more possibilities at run time.  The more safe and efficient code is, the more static it must be because it must prevent more possibilities at run time.  Generality, safety, and efficiency are all desirable properties, so the question should be which is more important for your code's purpose, not which is always superior.  It is easier to write dynamic code with dynamic type checking and static code with static type checking, but either kind of code can be written with either kind of type checking.
+  Programmers often worry too much about whether their programming language is dynamically or statically type checked and do not worry enough about whether their code is very dynamic or static.  The more general code is, the more dynamic it must be because it must handle more possibilities at run-time.  The more safe and efficient code is, the more static it must be because it must prevent more possibilities at run-time.  Generality, safety, and efficiency are all desirable properties, so the question should be which is more important for your code's purpose, not which is always superior.  It is easier to write dynamic code with dynamic type checking and static code with static type checking, but either kind of code can be written with either kind of type checking.
 
   A mandatory static type system causes several problems.
 
@@ -187,7 +187,7 @@ Non-Goals
 
   Simple static type systems are not sufficient to prove code correct.  Dependent type systems are sufficient, but require heavy annotation.  It is often easier to write a program to derive correct efficient code from your specification than to annotate correct handwritten code enough to satisfy a dependent type system.
 
-  A static type system is not necessary nor sufficient to eliminate run time type checks.  Most variables in code written in dynamically type checked languages are used with a single type of value, and compilers can use type inference to eliminate most run time type checks.  Lisp compilers have been doing that for decades.  When sum types (a.k.a. tagged unions) are used in statically type checked languages, run time type checks (reading the tag) determine what code to run.
+  A static type system is not necessary nor sufficient to eliminate run-time type checks.  Most variables in code written in dynamically type checked languages are used with a single type of value, and compilers can use type inference to eliminate most run-time type checks.  Lisp compilers have been doing that for decades.  When sum types (a.k.a. tagged unions) are used in statically type checked languages, run-time type checks (reading the tag) determine what code to run.
 
   What features should be included in a static type system?  Most are primarily or exclusively concerned with type specifiers: what type a value is.  I rarely make mistakes involving operating on the wrong type of value, and when I do it is almost always easy to detect and correct.  Making mistakes with units of measure is an exception.  I consider unit and dimensional analysis, especially with safe type coercion, very helpful.  I would prefer a static type system to be more concerned with type qualifiers: what qualities a value has.  For example, inferring and checking the immutability of variables and values, taint checking, and typestate checking.  Mistakes involving those are almost always difficult to detect and correct.  Forcing side effects to be clustered near execution entry and exit points by preventing referentially transparent procedures from calling non-referentially transparent procedures (which would make them not referentially transparent), results in designs where most procedures compose, the code is easier to maintain and optimize, and most procedures can be safely evaluated with immediate feedback.  Something like checked exceptions, but for a condition system, is probably the right way to ensure input/output errors are handled.  Whatever you decide, if you include a mandatory static type system, everyone that uses your programming language is forced to learn and use it, even if it does not help solve their problems.  Trying to solve everyone's problems in a mandatory static type system results in runaway complexity.
 
@@ -530,7 +530,7 @@ Noteworthy Features
 
       Captured symbols are coerced to name symbols when returned from a macro.
 
-      Calling "cap" at run time, outside of a listener or sandbox, is a defect.  Captured symbols only have useful semantics at macro expansion time.
+      Calling "cap" at run-time, outside of a listener or sandbox, is a defect.  Captured symbols only have useful semantics at macro-expansion-time.
 
       This is sufficient for the expansion of anaphoric macros.
 
@@ -551,11 +551,11 @@ Noteworthy Features
 
     * evaluation
 
-      Macros differ from functions in that their arguments are not evaluated before their body and macros execute before run time.
+      Macros differ from functions in that their arguments are not evaluated before their body and macros execute before run-time.
 
       If macro arguments were evaluated before their body, as in function application, macros could not inspect or transform their arguments.  Using a macro with function application (e.g. with folds, "map", or "filter") is a defect.
 
-      If macros did not execute before run time, they would be less useful.  They could not be used for static analysis or optimization.  They could not be used for extending the language in ways that are easy to statically analyze or optimize.  Executing before run time and reducing the extended language to the base language (the language without macros) is what makes them superior to fexprs.  Calling a macro at run time, outside of a listener or sandbox, is a defect.  Optimizing compilers may eliminate macros before run time.
+      If macros did not execute before run-time, they would be less useful.  They could not be used for static analysis or optimization.  They could not be used for extending the language in ways that are easy to statically analyze or optimize.  Executing before run-time and reducing the extended language to the base language (the language without macros) is what makes them superior to fexprs.  Calling a macro at run-time, outside of a listener or sandbox, is a defect.  Optimizing compilers may eliminate macros before run-time.
 
       Macros are like functions in all other respects.  They can be constructed inside arbitrary expressions, be defined locally, use free variables, call functions or macros (including themselves), perform input/output, and be passed as arguments to and be returned from functions.  Be aware that, like functions, macros cannot be passed as arguments to or be returned from macros because they are not equivalent to source code.  Symbols for functions and macros can be passed as arguments to or be returned from macros, however.
 
@@ -575,7 +575,7 @@ Noteworthy Features
 
     These functions use the current environment to determine the value associated with a symbol, like a macro call.  That is usually the expected and desired behavior.
 
-    Calling these functions at run time, outside of a listener or sandbox, is a defect.  Macros only have useful semantics at macro expansion time.
+    Calling these functions at run-time, outside of a listener or sandbox, is a defect.  Macros only have useful semantics at macro-expansion-time.
 
   * local macro definition
 
@@ -653,7 +653,7 @@ Noteworthy Features
 
       Modules only implicitly import the "core" module and do not implicitly export anything.  The programmer must explicitly specify the interface.  This encourages encapsulation, planning interfaces, and conscious interface change.
 
-      An importation or exportation inside an expression, except for (potentially nested) "do" forms, is a defect.  Module interfaces should not vary at run time.  Macros may expand into importations and exportations, which makes it possible for module implementations to vary at macro expansion time.  Importations and exportations in "do" forms make it possible for a single macro call to expand into a combination of importations, exportations, definitions, and function and macro calls.
+      An importation or exportation inside an expression, except for (potentially nested) "do" forms, is a defect.  Module interfaces should not vary at run-time.  Macros may expand into importations and exportations, which makes it possible for module implementations to vary at macro-expansion-time.  Importations and exportations in "do" forms make it possible for a single macro call to expand into a combination of importations, exportations, definitions, and function and macro calls.
 
       A dependency cycle is a defect.  It indicates two or more modules are badly decomposed.  Some definitions need to be combined into a single module to eliminate the cycle.  Others may need to be separated into other modules.
 
@@ -673,7 +673,7 @@ Noteworthy Features
 
       A module may be macro-expanded each time a program that depends on it runs.  Optimizing compilers may generate code that is equivalent to the module's code after macro expansion.
 
-      All of a module's dependencies are recursively reset to their initial states when the module is macro-expanded.  All modules are reset to their initial states when transitioning from macro expansion time to run time.  Modules whose state did not change need not be reset.  The state may be reset by re-executing the macro-expanded code or copying from a backup.  This prevents mutation within a module at macro expansion time from influencing the macro expansion of other modules or from influencing run time.
+      All of a module's dependencies are recursively reset to their initial states when the module is macro-expanded.  All modules are reset to their initial states when transitioning from macro-expansion-time to run-time.  Modules whose state did not change need not be reset.  The state may be reset by re-executing the macro-expanded code or copying from a backup.  This prevents mutation within a module at macro-expansion-time from influencing the macro expansion of other modules or from influencing run-time.
 
     * reloading
 
@@ -687,7 +687,7 @@ Noteworthy Features
 
       Reloading may have no effect in several situations.  If the same module file would be selected (e.g. by versioning) for reloading and its contents are unchanged, reloading it is unnecessary.  Multiple or redundant reloads are /not/ defects so that macros that generate reloads are easier to use.  If a "reload" expression attempts to reload the same module more than once, it is only reloaded once.  If a "reload" expression specifies different versions of the same module, the highest specified version is reloaded.
 
-      Reloaded modules are macro-expanded with /copies/ of their dependencies that are reset to their initial states.  Reloading a module does /not/ effect the state of other modules at run time, and the state of other modules at run time does /not/ effect the macro expansion of a reloaded module.  This avoids surprising behavior by ensuring modules behave the same when initially loaded as when reloaded.
+      Reloaded modules are macro-expanded with /copies/ of their dependencies that are reset to their initial states.  Reloading a module does /not/ effect the state of other modules at run-time, and the state of other modules at run-time does /not/ effect the macro expansion of a reloaded module.  This avoids surprising behavior by ensuring modules behave the same when initially loaded as when reloaded.
 
       Attempting to reload a module that is not loaded is a defect.
 
