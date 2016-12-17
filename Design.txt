@@ -661,7 +661,7 @@ Noteworthy Features
 
       Modules may be versioned.  Unversioned modules are usually used for swapping implementations of interfaces.  Versioned modules are usually used for libraries.
 
-      A subset of the Semantic Versioning format is used.  A version number consists of non-negative decimal integers for major, minor, and patch version numbers, in that order, separated by periods.  The major version number is 0 before release, then incremented to 1 at release, and then incremented by 1 each time backwards incompatible changes are made.  The minor version number is incremented by 1 each time new features are included.  The patch version number is incremented by 1 each time defects are corrected.  When the previous number is incremented by 1, the following numbers are reset to 0 (e.g. 1.2.15 to 2.0.0).  Trailing metadata is /not/ supported.
+      A subset of the Semantic Versioning format is used.  A version number consists of non-negative decimal integers for major, minor, and patch version numbers (in that order) separated by periods.  The major version number is 0 before release, then incremented to 1 at release, and then incremented by 1 each time backwards incompatible changes are made.  The minor version number is incremented by 1 each time new features are included.  The patch version number is incremented by 1 each time defects are corrected.  When the previous number is incremented by 1, the following numbers are reset to 0 (e.g. 1.2.15 to 2.0.0).  Trailing metadata is /not/ supported.
 
       When loading a versioned module the programming language will use the latest version that meets the specification.  The major version number must be = the requested number, and the minor and patch version numbers must be >= the requested numbers.  The programmer should not request a patch number other than 0 unless they know their implementation is affected by a defect that is corrected in a specific patch version.
 
@@ -695,7 +695,7 @@ Noteworthy Features
 
   * files and paths
 
-    An unversioned module filename consists of the module name.  A versioned module filename consists of the module name and version number, in that order, separated by a hyphen.  The filename extension for source code in Macroni is appended in both cases.
+    An unversioned module filename consists of the module name.  A versioned module filename consists of the module name and version number (in that order) separated by a hyphen.  The filename extension for source code in Macroni is appended in both cases.
 
     Only one instance of a module exists at a time, even if there is an unversioned and versioned file, or multiple versioned files, for it.  An unversioned module file is necessary if no version was specified.  A versioned module file that meets the specification is necessary if a version was specified.
 
@@ -703,7 +703,7 @@ Noteworthy Features
 
   * conventions
 
-    A user-defined module name consists of symbol names for an (optional) organization, project, and the contents of the module, in that order, separated by periods.
+    A user-defined module name consists of symbol names for an (optional) organization, project, and the contents of the module (in that order) separated by periods.
 
     It is better to be descriptive than terse, to minimize the chance of name collisions.  Using module names is only necessary in importations, so long module names should not annoy programmers.
 
