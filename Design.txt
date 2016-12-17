@@ -464,7 +464,7 @@ Noteworthy Features
 
       * returns
 
-        Everything returns a value.  Forms that perform definition or mutation return "null".  Forms that involve a control flow sequence return the value returned by the last expression in the control flow sequence.  This, along with combining allocation and initialization, prevents uninitialized values.
+        Everything returns a value.  Forms that perform definition or mutation return "null".  Forms that involve a control flow sequence return the value returned by the last expression in the control flow sequence.  Forms that perform conditional evaluation return the value returned by the branch taken.  This, along with combining allocation and initialization, prevents uninitialized values.
 
         Multiple return values are not supported.  Programming languages that support them must provide constructs to bind them, which are less general than destructuring constructs.  Evaluation should reduce a tree of expressions to a single value.  Pattern matching makes binding multiple values inside a data structure trivial.
 
