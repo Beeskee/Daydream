@@ -115,6 +115,12 @@ Non-Goals
 
   I may use some original names if I cannot find acceptable existing names.  I want frequently used constructs to have very short, but meaningful, names so that expressions remain readable.
 
+  In Macroni
+  * macros have no naming conventions because they can describe other programming languages with their own conventions
+  * 'constructors' are nouns, which are usually abbreviated
+  * normal functions and restarts are verbs
+  * event handlers begin with "on-" and are named after occurrences
+
   It is better for built-in constructs to have abbreviated names than user-defined constructs.  Programmers are likely to be familiar with built-in constructs.
 
   Abbreviating the names of built-in constructs makes the longer names available for programmers to use.  This is the most beneficial for constructors.  For example, Lisp programmers often want to name a variable "list", but that is usually the name of a list constructor.
@@ -687,7 +693,17 @@ Noteworthy Features
 
       Reloading may have no effect in several situations.  If the same module file would be selected (e.g. by versioning) for reloading and its contents are unchanged, reloading it is unnecessary.  Multiple or redundant reloads are /not/ defects so that macros that generate reloads are easier to use.  If a "reload" expression attempts to reload the same module more than once, it is only reloaded once.  If a "reload" expression specifies different versions of the same module, the highest specified version is reloaded.
 
-      Reloaded modules are macro-expanded with /copies/ of their dependencies that are reset to their initial states.  Reloading a module does /not/ effect the state of other modules at run-time, and the state of other modules at run-time does /not/ effect the macro expansion of a reloaded module.  This avoids surprising behavior by ensuring modules behave the same when initially loaded as when reloaded.
+      Reloading a module does /not/ effect the state of other modules at run-time, and the state of other modules at run-time does /not/ effect the macro expansion of a reloaded module.  This avoids surprising behavior by ensuring modules behave the same when initially loaded as when reloaded.
+
+      Reloaded modules are macro-expanded with /copies/ of their dependencies that are reset to their initial states.
+
+      If, instead of passing the symbol for the module to reload, you pass a sequence containing the symbol for the module to reload and the module's state (in that order), Macroni will attempt to migrate the module's run-time state to the updated copy of the module.  This makes updating modules (even the 'main' one) without restarting the program possible.
+
+      State migration is performed by calling the function "(on-code-change from-version state)" in the outermost scope of the updated copy of the module after it is macro-expanded.  The "from-version" argument is automatically provided by Macroni.  If the module is versioned, the argument is a list of integers representing the major, minor, and patch version numbers (in that order) of the currently loaded version, else the argument is "null".  The "state" argument is what the programmer provided in the sequence passed to "reload".
+
+      "on-code-change" is an event handler.  "code" is before "change" because it makes more sense to group events by their subject than the verb that happens to them.  "from-version" is less confusing than "current-version" (which could be mistaken for the updated module's version) or "previous-version" (which could be a subsequent version when downgrading).  "state" is the standard term for what is being migrated.
+
+      "on-code-change"'s purpose is to use "from-version" to dispatch to the code to convert "state" to the format the updated module uses (if necessary) then assign the result to one or more variables in the outermost scope of the updated module.
 
       Attempting to reload a module that is not loaded is a defect.
 
