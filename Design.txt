@@ -400,7 +400,7 @@ Noteworthy Features
 
   * sequence
 
-    "do" evaluates a sequence of forms in order and returns the value of the last expression.  An empty "do" is a defect because the value is uninitialized.  Control flow sequences are implicit in most places where you might want to use them, except for "if".  "do" can be used by macros to generate multiple expressions in the same scope because it does not create a new scope.
+    "do" evaluates a sequence of forms in order and returns the value of the last expression.  An empty "do" returns "null".  Control flow sequences are implicit in most places where you might want to use them, except for "if".  "do" can be used by macros to generate multiple expressions in the same scope because it does not create a new scope.
 
   * branch
 
