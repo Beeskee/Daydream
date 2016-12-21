@@ -410,7 +410,7 @@ Noteworthy Features
 
     * cond
 
-      Non-exhaustive "cond" clauses is a defect because the value is uninitialized when all test expressions are false.  This implies an empty "cond" is a defect.
+      Non-exhaustive "cond" clauses is a defect because it almost always indicates a logic error and the value is uninitialized when all test expressions are false.  This implies an empty "cond" is a defect
 
     * pattern matching
 
@@ -418,7 +418,7 @@ Noteworthy Features
 
       Some aspects of OCaml's, Racket's, and Macroni's pattern matching are the same, but should still be mentioned.
 
-      Non-exhaustive patterns is a defect because the value is uninitialized when no patterns match.
+      Non-exhaustive patterns is a defect because it almost always indicates a logic error and the value is uninitialized when no patterns match.  This implies an empty pattern matching is a defect.
 
       Not matching every element of a data structure is a defect because that would make it impossible to use a pattern to match a data structure with a specific number of elements.
 
