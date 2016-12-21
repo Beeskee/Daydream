@@ -703,6 +703,8 @@ Noteworthy Features
 
       "on-code-change" is an event handler.  "code" is before "change" because it makes more sense to group events by their subject than the verb that happens to them.  "from-version" is less confusing than "current-version" (which could be mistaken for the updated module's version) or "previous-version" (which could be a subsequent version when downgrading).  "state" is the standard term for what is being migrated.
 
+      A set of reloaded modules replace the corresponding currently loaded versions atomically after their macros have been expanded and their state has been migrated (if necessary).  Afterward, variables imported from modules with the corresponding name will be looked up in the reloaded modules.  It is impossible to observe a partially loaded module or a partially loaded set of modules reloaded by the same "reload" call.
+
       Attempting to reload a module that is not loaded is a defect.
 
       Be aware that references to out-of-date values may exist after reloading a module.  You should prefer to access imported values through imported variables.
