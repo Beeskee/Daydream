@@ -577,7 +577,7 @@ Noteworthy Features
 
     "(expand-hide form symbols)" recursively expands macro calls in the form unless their symbol names match the symbol names in the sequence.  This is primarily useful to reduce clutter caused by specific macro expansions when trying to understand other macro expansions.
 
-    "(expand-when form predicate)" recursively expands macro calls in the form when the predicate returns "true".  The predicate function parameters are "(symbol args)" for the macro call's symbol and arguments.  This is primarily useful when writing code walking macros that inspect or transform constructs (including macro calls).
+    "(expand-when form predicate)" recursively expands macro calls in the form when the predicate returns "true".  The predicate function parameters are "(symbol args)" for the macro call's symbol and arguments.  This is primarily useful when writing code-walking macros that inspect or transform constructs (including macro calls).
 
     These functions use the current environment to determine the value associated with a symbol, like a macro call.  That is usually the expected and desired behavior.
 
@@ -587,7 +587,7 @@ Noteworthy Features
 
     It may not be obvious how to define a local macro to simplify definitions in the outermost scope because "def" defines variables in the current scope.
 
-    You could construct the macro in the outermost scope then call it immediately by surrounding the "mac" form and any arguments in parentheses (like "let" for macros).  The advantage is this does precisely what you want.  The disadvantage is this is complicated.
+    You could construct the macro in the outermost scope then call it immediately by surrounding the "mac" form and any arguments in parentheses (like "let" for macros).  The advantage is this does exactly what you want.  The disadvantage is this is complicated.
 
     You could define the macro in the outermost scope and not export it.  The advantage is this is simple.  The disadvantage is this pollutes the module's outermost scope.
 
@@ -697,7 +697,7 @@ Noteworthy Features
 
       Macro-expanding reloaded modules uses /copies/ of the module's dependencies that are reset to their initial states.
 
-      If, instead of passing the symbol for the module to reload, you pass a sequence containing the symbol for the module to reload and the module's state (in that order), Macroni will attempt to migrate the module's run-time state to the updated copy of the module.  This makes updating modules (even the 'main' one) without restarting the program possible.
+      If, instead of passing the symbol or string for the module to reload, you pass a sequence containing the symbol or string for the module to reload and the module's state (in that order), Macroni will attempt to migrate the module's run-time state to the updated copy of the module.  This makes updating modules (even the 'main' one) without restarting the program possible.
 
       State migration is performed by calling the user-defined function "(on-code-change from-version state)" in the outermost scope of the updated copy of the module after it is macro-expanded.  The "from-version" argument is automatically provided by Macroni.  If the module is versioned, the argument is a list of integers representing the major, minor, and patch version numbers (in that order) of the currently loaded version, else the argument is "null".  The "state" argument is what the programmer provided in the sequence passed to "reload".  The function body should use "from-version" to dispatch to code to convert "state" to the format the updated module uses (if necessary) then assign the result to one or more variables in the outermost scope of the updated copy of the module.  The return value is unused.  State migration uses /copies/ of the module's dependencies that are reset to their initial states.
 
