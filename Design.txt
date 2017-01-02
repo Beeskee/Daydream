@@ -368,7 +368,7 @@ Noteworthy Features
 
   Definition is much simpler in Macroni than in most Lisp-like languages.  There is only one "def" form which can be used in any scope.
 
-  Defining the same variable as different values (according to "eqv?") is normally a defect so that Macroni can detect accidental redefinition.  Redundant definitions are /not/ defects so that macros that generate definitions are easier to use.  Optimizing compilers may eliminate redundant definitions that do not cause observable side effects.
+  Defining the same variable as different values (according to "eqv?") is normally a defect so that Macroni can detect accidental redefinition.  Redundant definitions are /not/ defects so that macros that generate definitions are easier to write.  Optimizing compilers may eliminate redundant definitions that do not cause observable side effects.
 
   Mutating an undefined mutable place is a defect.
 
@@ -400,7 +400,7 @@ Noteworthy Features
 
   * sequence
 
-    "do" evaluates a sequence of forms in order and returns the value of the last expression.  An empty "do" returns "null".  Control flow sequences are implicit in most places where you might want to use them, except for "if".  "do" can be used by macros to generate multiple expressions in the same scope because it does not create a new scope.
+    "do" evaluates a sequence of forms in order and returns the value of the last expression.  An empty "do" returns "null" so that macros that generate control flow sequences are easier to write.  Control flow sequences are implicit in most places where you might want to use them, except for "if".  "do" can be used by macros to generate multiple expressions in the same scope because it does not create a new scope.
 
   * branch
 
@@ -641,7 +641,7 @@ Noteworthy Features
 
     * importation, exportation, definition, and mutation
 
-      Multiple, redundant, or unused importations and exportations are /not/ defects so that macros that generate importations or exportations are easier to use.  Importations and exportations return "null".  Optimizing compilers may generate code that evaluates all of a module's importations and exportations, with redundant or unused importations and exportations eliminated, before the rest of the code.
+      Multiple, redundant, or unused importations and exportations are /not/ defects so that macros that generate importations or exportations are easier to write.  Importations and exportations return "null".  Optimizing compilers may generate code that evaluates all of a module's importations and exportations, with redundant or unused importations and exportations eliminated, before the rest of the code.
 
       The importation of a variable must appear before the variable is read in the source code.  Importations are evaluated in topological order and, within that ordering, by the time they are encountered in the source code.  A topological ordering may not be unique, and importations may be evaluated before they are encountered in the source code.  Programming languages without automatic dependency management invariably have an excess of incompatible tools to solve this problem.  Programming languages with predictable load ordering discourage encapsulation by making it easy to use side effects to create invisible dependencies between modules.
 
@@ -691,7 +691,7 @@ Noteworthy Features
 
       If a version is specified, Macroni will reload that version.  This makes upgrading to a higher major version and downgrading possible.  If the specified version fails to reload, it is a defect.  Otherwise, module files are selected for reloading as in normal loading.
 
-      Reloading may have no effect in several situations.  If the same module file would be selected (e.g. by versioning) for reloading and its contents are unchanged, reloading it is unnecessary.  Multiple or redundant reloads are /not/ defects so that macros that generate reloads are easier to use.  If a "reload" expression attempts to reload the same module more than once, it is only reloaded once.  If a "reload" expression specifies different versions of the same module, the highest specified version is reloaded.
+      Reloading may have no effect in several situations.  If the same module file would be selected (e.g. by versioning) for reloading and its contents are unchanged, reloading it is unnecessary.  Multiple or redundant reloads are /not/ defects so that macros that generate reloads are easier to write.  If a "reload" expression attempts to reload the same module more than once, it is only reloaded once.  If a "reload" expression specifies different versions of the same module, the highest specified version is reloaded.
 
       Reloading a module does /not/ effect the state of other modules at run-time, and the state of other modules at run-time does /not/ effect the macro expansion of a reloaded module.  This avoids surprising behavior by ensuring modules behave the same when initially loaded as when reloaded.
 
