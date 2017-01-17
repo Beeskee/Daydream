@@ -647,7 +647,7 @@ Noteworthy Features
 
       If implicit definitions or importations cause name collisions with each other, "env" has priority over "core".  That is usually the expected and desired behavior.
 
-      If implicit definitions or importations (from "core" or "env") cause name collisions with explicit definitions or importations, explicit definitions and importations have priority.  A warning is issued because name collisions are usually unintentional.
+      If implicit definitions or importations (from "core" or "env") cause name collisions with explicit definitions or importations, explicit definitions and importations have priority.  A warning is issued because these name collisions are usually unintentional.
 
       If explicit definitions or importations cause name collisions with each other, they are normally defects.  Name collisions between explicit definitions or importations normally indicate accidental redefinition.
 
@@ -675,15 +675,15 @@ Noteworthy Features
 
       "import" causes modules to be executed.
 
-      Even though it is occasionally useful for macro expansion and loading to perform side effects, code /must not/ rely on the time a module is loaded or the number of times a module is macro-expanded or loaded.
-
-      A module may be macro-expanded each time a program that depends on it runs.  Optimizing compilers may generate code that is equivalent to the module's code after macro expansion.
-
-      All of a module's dependencies are recursively reset to their initial states when the module is macro-expanded.  All modules are reset to their initial states when transitioning from macro-expansion-time to run-time.  Modules whose state did not change need not be reset.  The state may be reset by re-executing the macro-expanded code or copying from a backup.  This prevents mutation within a module at macro-expansion-time from influencing the macro expansion of other modules or from influencing run-time.
+      Each module is effectively macro-expanded in a separate instance of the runtime system.  This prevents mutation within a module at macro-expansion-time from influencing the macro expansion of other modules or from influencing run-time.
 
     * reloading
 
-      Modules can be reloaded at the listener and in modules.  This is useful for exploratory programming or hot code swapping to correct a defect in or add features to a running program.
+      "reload" causes modules to be reread and executed.
+
+      Reloading is useful to correct defects or include new features in a running program.
+
+      "(reload module state)" is a function that returns "null".
 
       "reload" causes modules to be reread and executed.  "reload" is a function that accepts a sequence in the same format as "import"'s arguments and returns "null".
 
