@@ -675,7 +675,7 @@ Noteworthy Features
 
       "import" causes modules to be executed.
 
-      Each module is effectively macro-expanded in a separate instance of the runtime system.  This prevents mutation within a module at macro-expansion-time from influencing the macro expansion of other modules or from influencing run-time.
+      Each module is macro-expanded in what is effectively a separate instance of the runtime system.  This prevents mutation within a module at macro-expansion-time from influencing the macro expansion of other modules or from influencing run-time.
 
     * reloading
 
@@ -685,29 +685,19 @@ Noteworthy Features
 
       "(reload module state)" is a function that returns "null".
 
-      "reload" causes modules to be reread and executed.  "reload" is a function that accepts a sequence in the same format as "import"'s arguments and returns "null".
+      If a version is specified, that module file is selected.  This makes upgrading to a higher major version and downgrading possible.  Otherwise, the module file is selected as in initial loading.
 
-      Reloads are evaluated when they are encountered in the source code.  If a "reload" expression reloads multiple modules, they are reloaded in topological order.
+      Reloaded modules are macro-expanded the same way as in initial loading.
 
-      If a version is specified, Macroni will reload that version.  This makes upgrading to a higher major version and downgrading possible.  If the specified version fails to reload, it is a defect.  Otherwise, module files are selected for reloading as in normal loading.
+      Then what is effectively another separate instance of the runtime system calls "(on-code-change from-version state)" in the outermost scope of the reloaded module, if it exists.  This makes updating stateful modules (even the 'main' one) without restarting the program possible.  Using a separate instance of the runtime system prevents reloading a module from affecting the state of other modules.
 
-      Reloading may have no effect in several situations.  If the same module file would be selected (e.g. by versioning) for reloading and its contents are unchanged, reloading it is unnecessary.  Multiple or redundant reloads are /not/ defects so that macros that generate reloads are easier to write.  If a "reload" expression attempts to reload the same module more than once, it is only reloaded once.  If a "reload" expression specifies different versions of the same module, the highest specified version is reloaded.
+      The "from-version" argument is provided by Macroni.  If the module is versioned, the argument is a list of integers representing the major, minor, and patch version numbers (in that order) of the currently loaded version, else the argument is "null".
 
-      Reloading a module does /not/ effect the state of other modules at run-time, and the state of other modules at run-time does /not/ effect the macro expansion of a reloaded module.  This avoids surprising behavior by ensuring modules behave the same when initially loaded as when reloaded.
+      The "state" argument is what was passed to "reload".
 
-      Macro-expanding reloaded modules uses /copies/ of the module's dependencies that are reset to their initial states.
+      The function body should use "from-version" to dispatch to code to convert "state" to the format the updated module uses (if necessary) then assign the result to one or more variables in the outermost scope.
 
-      If, instead of passing the symbol or string for the module to reload, you pass a sequence containing the symbol or string for the module to reload and the module's state (in that order), Macroni will attempt to migrate the module's run-time state to the updated copy of the module.  This makes updating modules (even the 'main' one) without restarting the program possible.
-
-      State migration is performed by calling the user-defined function "(on-code-change from-version state)" in the outermost scope of the updated copy of the module after it is macro-expanded.  The "from-version" argument is automatically provided by Macroni.  If the module is versioned, the argument is a list of integers representing the major, minor, and patch version numbers (in that order) of the currently loaded version, else the argument is "null".  The "state" argument is what the programmer provided in the sequence passed to "reload".  The function body should use "from-version" to dispatch to code to convert "state" to the format the updated module uses (if necessary) then assign the result to one or more variables in the outermost scope of the updated copy of the module.  The return value is unused.  State migration uses /copies/ of the module's dependencies that are reset to their initial states.
-
-      "on-code-change" is an event handler.  "code" is before "change" because it makes more sense to group events by their subject than the verb that happens to them.  "from-version" is less confusing than "current-version" (which could be mistaken for the updated module's version) or "previous-version" (which could be a subsequent version when downgrading).  "state" is the standard term for what is being migrated.
-
-      A set of reloaded modules replace the corresponding currently loaded versions atomically after their macros have been expanded and their state has been migrated (if necessary).  Afterward, variables imported from modules with corresponding names will be looked up in the reloaded modules.  It is impossible to observe a partially loaded module or a partially loaded set of modules reloaded by the same "reload" call.
-
-      Attempting to reload a module that is not loaded is a defect.
-
-      Be aware that references to out-of-date values may exist after reloading a module.  You should prefer to access imported values through imported variables.
+      The return value is unused.
 
   * files and paths
 
