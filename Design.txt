@@ -691,7 +691,7 @@ Noteworthy Features
 
       Then what is effectively another separate instance of the runtime system calls "(on-code-change from-version state)" in the outermost scope of the reloaded module, if it exists.  This makes reloading stateful modules (even the 'main' one) without restarting the program possible.  Using a separate instance of the runtime system prevents reloading a module from affecting the state of other modules.
 
-      The "from-version" argument is provided by Macroni.  If the module is versioned, the argument is a list of integers representing the major, minor, and patch version numbers (in that order) of the currently loaded version, else the argument is "null".
+      The "from-version" argument is provided by Macroni.  If the module is versioned, the argument is a list of integers representing the major, minor, and patch version numbers (in that order) of the corresponding module in the 'main' instance of the runtime system, else the argument is "null".
 
       The "state" argument is what was passed to "reload".
 
