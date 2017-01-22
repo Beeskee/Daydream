@@ -689,17 +689,17 @@ Noteworthy Features
 
       Reloaded modules are macro-expanded as when initially loading.
 
-      Then what is effectively another separate instance of the runtime system calls "(on-code-change from-version state)" in the outermost scope of the reloaded module, if it exists.  This makes updating stateful modules (even the 'main' one) without restarting the program possible.  Using a separate instance of the runtime system prevents reloading a module from affecting the state of other modules.
+      Then what is effectively another separate instance of the runtime system calls "(on-code-change from-version state)" in the outermost scope of the reloaded module, if it exists.  This makes reloading stateful modules (even the 'main' one) without restarting the program possible.  Using a separate instance of the runtime system prevents reloading a module from affecting the state of other modules.
 
       The "from-version" argument is provided by Macroni.  If the module is versioned, the argument is a list of integers representing the major, minor, and patch version numbers (in that order) of the currently loaded version, else the argument is "null".
 
       The "state" argument is what was passed to "reload".
 
-      The function body should use "from-version" to dispatch to code to convert "state" to the format the updated module uses (if necessary) then assign the result to one or more variables in the outermost scope.
+      The function body should use "from-version" to dispatch to code to convert "state" to the format the reloaded module uses (if necessary) then assign the result to one or more variables in the outermost scope.
 
       The return value is unused.
 
-      After "on-code-change" returns, the reloaded module is swapped in.  This is an atomic operation.
+      After "on-code-change" returns, the reloaded module takes the place of the corresponding module in the 'main' instance of the runtime system.
 
   * files and paths
 
