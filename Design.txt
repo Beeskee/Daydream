@@ -223,7 +223,7 @@ Non-Goals
 
   The data used to resume execution is usually stored in an image file.  An image contains the set of all reachable data in a program (including the program counter and call stack frames).
 
-  Image files are not just memory written to disk.  They may be versioned so that the image file format can be changed.  References may be stored in a relocatable format, like how the listener shows cyclical references.  Recovering from an image requires applying fix-ups to data associated with external resources, like files and network sockets.
+  Image files are not just memory written to disk.  They may be versioned so that the image file format can be changed.  References may be stored in a relocatable format, like how the listener shows circular references.  Recovering from an image requires applying fix-ups to data associated with external resources, like files and network sockets.
 
   Images must be updated atomically.  Otherwise, a power or hardware failure during an update to the image would corrupt it.  If the operating system provides transactional file access, that can be used to safely update the image.  Otherwise, an updated image must be written to another file, then the original file must be replaced with the updated file.
 
@@ -390,7 +390,7 @@ Noteworthy Features
 
 * equality
 
-  Equality is much simpler in Macroni than in most Lisp-like languages.  "eqv?" compares values for immutable types and identities (i.e. memory addresses) for mutable types, like "==" in most popular programming languages.  Dictionaries always use this form of equality because it ensures keys remain associated with their values.  "equal?" compares values even for mutable types and correctly handles reference cycles, like "equal?" in Scheme.  Pattern matching always uses this form of equality because it handles immutable and mutable types consistently.
+  Equality is much simpler in Macroni than in most Lisp-like languages.  "eqv?" compares values for immutable types and identities (i.e. memory addresses) for mutable types, like "==" in most popular programming languages.  Dictionaries always use this form of equality because it ensures keys remain associated with their values.  "equal?" compares values even for mutable types and correctly handles circular references, like "equal?" in Scheme.  Pattern matching always uses this form of equality because it handles immutable and mutable types consistently.
 
 * regular expressions
 
@@ -492,7 +492,7 @@ Noteworthy Features
 
       Passing an argument to or returning a value from a macro that contains a type that has no literal syntax is a defect.
 
-      Passing an argument to or returning a value from a macro that contains a list with a reference cycle is a defect.
+      Passing an argument to or returning a value from a macro that contains a list with a circular reference is a defect.
 
       If any module-qualified symbols in the macro's expansion do not refer to a variable in the outermost scope of the macro's home module (where the macro was defined), it is a defect.  Only variables in the outermost scope are always defined.
 
@@ -631,7 +631,7 @@ Noteworthy Features
 
       /All/ variables in Macroni are encapsulated in a module.
 
-      Forms that define and mutate variables, construct and mutate data structures, perform arithmetic and logic, and perform control flow are defined in the "core" module.
+      Forms that import, export, define and mutate variables; construct and mutate data structures; perform arithmetic and logic; and perform control flow are defined in the "core" module.  This module is implicitly imported by all other modules because it is necessary to define anything else.
 
       The foreign function interface is defined in the "ffi" module.  Access to the foreign function interface must be restricted to libraries that wrap foreign code for use by Macroni.  Code with access to the foreign function interface could perform harmful output directly or violate the capability security model by converting knowledge of a capability to possession of a capability (by converting a memory address to a reference).
 
@@ -657,17 +657,17 @@ Noteworthy Features
 
     * interfaces
 
-      Modules only implicitly import the "core" module and do not implicitly export anything.  The programmer must explicitly specify the interface.  This encourages encapsulation, planning interfaces, and conscious interface change.
+      The programmer must explicitly specify a module's interface.  This encourages encapsulation and conscious interface design and change.
 
-      An importation or exportation inside an expression, except for (potentially nested) "do" forms, is a defect.  Module interfaces should not vary at run-time.  Macros may expand into importations and exportations, which makes it possible for module implementations to vary at macro-expansion-time.  Importations and exportations in "do" forms make it possible for a single macro call to expand into a combination of importations, exportations, definitions, and function and macro calls.
+      An importation or exportation inside an expression, except for (potentially nested) "do" forms, is a defect.  Module interfaces should not vary at run-time.
 
-      A dependency cycle is a defect.  It indicates two or more modules are badly decomposed.  Some definitions need to be combined into a single module to eliminate the cycle.  Others may need to be separated into other modules.
+      A circular dependency is a defect.  It indicates two or more modules are badly decomposed.  Some definitions must be combined into a single module to eliminate the circular dependency.  Others may need to be separated into other modules.
 
     * versioning
 
       Modules may be versioned.  Unversioned modules are usually used for swapping implementations of interfaces.  Versioned modules are usually used for libraries.
 
-      A subset of the Semantic Versioning format is used.  A version number consists of non-negative decimal integers for major, minor, and patch version numbers (in that order) separated by periods.  The major version number is 0 before release, then incremented to 1 at release, and then incremented by 1 each time backwards incompatible changes are made.  The minor version number is incremented by 1 each time new features are included.  The patch version number is incremented by 1 each time defects are corrected.  When the previous number is incremented by 1, the following numbers are reset to 0 (e.g. 1.2.15 to 2.0.0).  Trailing metadata is /not/ supported.
+      A subset of the Semantic Versioning scheme is used.  A version number consists of non-negative decimal integers for major, minor, and patch version numbers (in that order) separated by periods.  The major version number is 0 before release, then incremented to 1 at release, and then incremented by 1 each time backwards incompatible changes are made.  The minor version number is incremented by 1 each time new features are included.  The patch version number is incremented by 1 each time defects are corrected.  When the previous number is incremented by 1, the following numbers are reset to 0 (e.g. 1.2.15 to 2.0.0).  Trailing metadata is /not/ supported.
 
       When loading a versioned module the programming language will select the latest version that meets the specification.  The major version number must be = the requested number, and the minor and patch version numbers must be >= the requested numbers.  The programmer should not request a patch number other than 0 unless they know their implementation is affected by a defect that is corrected in a specific patch version.
 
