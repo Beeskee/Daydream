@@ -669,13 +669,13 @@ Noteworthy Features
 
       A subset of the Semantic Versioning format is used.  A version number consists of non-negative decimal integers for major, minor, and patch version numbers (in that order) separated by periods.  The major version number is 0 before release, then incremented to 1 at release, and then incremented by 1 each time backwards incompatible changes are made.  The minor version number is incremented by 1 each time new features are included.  The patch version number is incremented by 1 each time defects are corrected.  When the previous number is incremented by 1, the following numbers are reset to 0 (e.g. 1.2.15 to 2.0.0).  Trailing metadata is /not/ supported.
 
-      When loading a versioned module the programming language will use the latest version that meets the specification.  The major version number must be = the requested number, and the minor and patch version numbers must be >= the requested numbers.  The programmer should not request a patch number other than 0 unless they know their implementation is affected by a defect that is corrected in a specific patch version.
+      When loading a versioned module the programming language will select the latest version that meets the specification.  The major version number must be = the requested number, and the minor and patch version numbers must be >= the requested numbers.  The programmer should not request a patch number other than 0 unless they know their implementation is affected by a defect that is corrected in a specific patch version.
 
     * loading
 
       "import" causes modules to be executed.
 
-      Each module is macro-expanded in what is effectively a separate instance of the runtime system.  This prevents mutation within a module at macro-expansion-time from influencing the macro expansion of other modules or from influencing run-time.
+      Each module is macro-expanded in what is effectively a separate instance of the runtime system.  This prevents mutation within a module at macro-expansion-time from affecting the macro expansion of other modules or from affecting run-time.
 
     * reloading
 
@@ -685,9 +685,9 @@ Noteworthy Features
 
       "(reload module state)" is a function that returns "null".
 
-      If a version is specified, that module file is selected.  This makes upgrading to a higher major version and downgrading possible.  Otherwise, the module file is selected as in initial loading.
+      If a version is specified, that module file is selected.  This makes upgrading to a higher major version and downgrading possible.  Otherwise, the module file is selected as when initially loading.
 
-      Reloaded modules are macro-expanded the same way as in initial loading.
+      Reloaded modules are macro-expanded as when initially loading.
 
       Then what is effectively another separate instance of the runtime system calls "(on-code-change from-version state)" in the outermost scope of the reloaded module, if it exists.  This makes updating stateful modules (even the 'main' one) without restarting the program possible.  Using a separate instance of the runtime system prevents reloading a module from affecting the state of other modules.
 
@@ -698,6 +698,8 @@ Noteworthy Features
       The function body should use "from-version" to dispatch to code to convert "state" to the format the updated module uses (if necessary) then assign the result to one or more variables in the outermost scope.
 
       The return value is unused.
+
+      After "on-code-change" returns, the reloaded module is swapped in.  This is an atomic operation.
 
   * files and paths
 
