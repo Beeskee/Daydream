@@ -665,7 +665,7 @@ Noteworthy Features
 
     * versioning
 
-      Modules may be versioned.  Unversioned modules are usually used for swapping implementations of interfaces.  Versioned modules are usually used for libraries.
+      Modules may be versioned.  Unversioned modules are usually used for applications and swapping implementations of interfaces.  Versioned modules are usually used for libraries.
 
       A subset of the Semantic Versioning scheme is used.  A version number consists of non-negative decimal integers for major, minor, and patch version numbers (in that order) separated by periods.  The major version number is 0 before release, then incremented to 1 at release, and then incremented by 1 each time backwards incompatible changes are made.  The minor version number is incremented by 1 each time new features are included.  The patch version number is incremented by 1 each time defects are corrected.  When the previous number is incremented by 1, the following numbers are reset to 0 (e.g. 1.2.15 to 2.0.0).  Trailing metadata is /not/ supported.
 
