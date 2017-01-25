@@ -759,9 +759,9 @@ Noteworthy Features
 
     When the administrator installs a program they are asked to grant the program's permanent capabilities (e.g. to read its own data files and to read and write its own configuration files).  A program's permanent capabilities are called its "installation endowment".  Installation endowments should be minimal.
 
-    When the user uses a standard system dialog the program is granted a single-use capability to do what the user requested (e.g. to open or save a file).  A dialog that grants single-use capabilities is called a "PowerBox".  Most capabilities should be granted this way.
+    When the user uses a standard system dialog the program is granted a single-use capability to do what the user requested (e.g. to open or save a file).  A dialog that grants single-use capabilities is called a "powerbox".  Most capabilities should be granted this way.
 
-    Malware is forced to reveal its intentions by asking the administrator to grant an unreasonable installation endowment or by opening unrequested PowerBoxes.
+    Malware is forced to reveal its intentions by asking the administrator to grant an unreasonable installation endowment or by opening unrequested powerboxes.
 
     Code injection attacks are heavily restricted.  Most subverted programs can only damage or transmit their configuration files.  Subverted services can often damage or transmit more valuable data because their capabilities are permanent.
 
