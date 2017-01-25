@@ -667,6 +667,8 @@ Noteworthy Features
 
       Modules may be versioned.  Unversioned modules are usually used for applications and swapping implementations of interfaces.  Versioned modules are usually used for libraries.
 
+      Loading different files for the same unversioned module results in replacing the previous instance of that module in an instance of the runtime system.
+
       A subset of the Semantic Versioning scheme is used.  A version number consists of non-negative decimal integers for major, minor, and patch version numbers (in that order) separated by periods.  The major version number is 0 before release, then incremented to 1 at release, and then incremented by 1 each time backwards incompatible changes are made.  The minor version number is incremented by 1 each time new features are included.  The patch version number is incremented by 1 each time defects are corrected.  When the previous number is incremented by 1, the following numbers are reset to 0 (e.g. 1.2.15 to 2.0.0).  Trailing metadata is /not/ supported.
 
       Loading different major versions of the same module results in multiple instances of that module in an instance of the runtime system.  Loading different minor or patch versions of the same module results in replacing the previous instance of that module in an instance of the runtime system.
@@ -675,7 +677,7 @@ Noteworthy Features
 
       "import" causes modules to be executed.
 
-      When initially loading a versioned module Macroni will select the latest version that meets the specification.  The major version number must be = the requested number, and the minor and patch version numbers must be >= the requested numbers.  The programmer should not request a patch number other than 0 unless they know their implementation is affected by a defect that is corrected in a specific patch version.
+      When initially loading a versioned module, Macroni will select the latest version that meets the specification.  The major version number must be = the requested number, and the minor and patch version numbers must be >= the requested numbers.  The programmer should not request a patch number other than 0 unless they know their implementation is affected by a defect that is corrected in a specific patch version.
 
       Each module is macro-expanded in what is effectively a separate instance of the runtime system.  This prevents mutation within a module at macro-expansion-time from affecting the macro expansion of other modules or from affecting run-time.
 
@@ -687,7 +689,7 @@ Noteworthy Features
 
       "(reload module state)" is a function that returns "null".
 
-      If a version is specified, that module file is selected.  This makes downgrading possible.  Otherwise, the module file is selected as when initially loading.
+      When reloading a versioned module, the specified version is selected.  This makes downgrading possible.
 
       Reloaded modules are macro-expanded as when initially loading.
 
@@ -757,9 +759,9 @@ Noteworthy Features
 
     Programs are granted capabilities two ways.
 
-    When the administrator installs a program they are asked to grant the program's permanent capabilities (e.g. to read its own data files and to read and write its own configuration files).  A program's permanent capabilities are called its "installation endowment".  Installation endowments should be minimal.
+    When the administrator installs a program, they are asked to grant the program's permanent capabilities (e.g. to read its own data files and to read and write its own configuration files).  A program's permanent capabilities are called its "installation endowment".  Installation endowments should be minimal.
 
-    When the user uses a standard system dialog the program is granted a single-use capability to do what the user requested (e.g. to open or save a file).  A dialog that grants single-use capabilities is called a "powerbox".  Most capabilities should be granted this way.
+    When the user uses a standard system dialog, the program is granted a single-use capability to do what the user requested (e.g. to open or save a file).  A dialog that grants single-use capabilities is called a "powerbox".  Most capabilities should be granted this way.
 
     Malware is forced to reveal its intentions by asking the administrator to grant an unreasonable installation endowment or by opening unrequested powerboxes.
 
