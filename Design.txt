@@ -669,11 +669,13 @@ Noteworthy Features
 
       A subset of the Semantic Versioning scheme is used.  A version number consists of non-negative decimal integers for major, minor, and patch version numbers (in that order) separated by periods.  The major version number is 0 before release, then incremented to 1 at release, and then incremented by 1 each time backwards incompatible changes are made.  The minor version number is incremented by 1 each time new features are included.  The patch version number is incremented by 1 each time defects are corrected.  When the previous number is incremented by 1, the following numbers are reset to 0 (e.g. 1.2.15 to 2.0.0).  Trailing metadata is /not/ supported.
 
-      When loading a versioned module the programming language will select the latest version that meets the specification.  The major version number must be = the requested number, and the minor and patch version numbers must be >= the requested numbers.  The programmer should not request a patch number other than 0 unless they know their implementation is affected by a defect that is corrected in a specific patch version.
+      Loading different major versions of the same module results in multiple instances of that module in an instance of the runtime system.  Loading different minor or patch versions of the same module results in replacing the previous instance of that module in an instance of the runtime system.
 
     * loading
 
       "import" causes modules to be executed.
+
+      When initially loading a versioned module Macroni will select the latest version that meets the specification.  The major version number must be = the requested number, and the minor and patch version numbers must be >= the requested numbers.  The programmer should not request a patch number other than 0 unless they know their implementation is affected by a defect that is corrected in a specific patch version.
 
       Each module is macro-expanded in what is effectively a separate instance of the runtime system.  This prevents mutation within a module at macro-expansion-time from affecting the macro expansion of other modules or from affecting run-time.
 
@@ -685,11 +687,11 @@ Noteworthy Features
 
       "(reload module state)" is a function that returns "null".
 
-      If a version is specified, that module file is selected.  This makes upgrading to a higher major version and downgrading possible.  Otherwise, the module file is selected as when initially loading.
+      If a version is specified, that module file is selected.  This makes downgrading possible.  Otherwise, the module file is selected as when initially loading.
 
       Reloaded modules are macro-expanded as when initially loading.
 
-      Then what is effectively another separate instance of the runtime system calls "(on-code-change from-version state)" in the outermost scope of the reloaded module, if it exists.  This makes reloading stateful modules (even the 'main' one) without losing state possible.  Using a separate instance of the runtime system prevents reloading a module from affecting the state of other modules.
+      Then what is effectively another separate instance of the runtime system calls "(on-code-change from-version state)" in the outermost scope of the reloaded module (if necessary).  This makes reloading stateful modules (even the 'main' one) without losing state possible.  Using a separate instance of the runtime system prevents reloading a module from affecting the state of other modules.
 
       The "from-version" argument is provided by Macroni.  If the module is versioned, the argument is a list of integers representing the major, minor, and patch version numbers (in that order) of the corresponding module in the 'main' instance of the runtime system, else the argument is "null".
 
@@ -790,7 +792,7 @@ Noteworthy Features
 
     Internal capabilities are references.
 
-    Care has been taken to ensure that capabilities can only be obtained by initial conditions (the "core" module is implicitly imported by all modules), construction (e.g. constructing a list), and introduction (being imported, being a free variable, or being passed as an argument).  This is necessary and sufficient to support the capability security model.
+    Care has been taken to ensure that capabilities can only be obtained by initial conditions (the "core" module is implicitly imported by all other modules), construction (e.g. constructing a list), and introduction (being imported, being a free variable, or being passed as an argument).  This is necessary and sufficient to support the capability security model.
 
     Confinement of capabilities is achieved by sandboxing.
 
