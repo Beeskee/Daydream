@@ -679,7 +679,7 @@ Noteworthy Features
 
       When initially loading a versioned module, Macroni will select the latest version that meets the specification.  The major version number must be = the requested number, and the minor and patch version numbers must be >= the requested numbers.  The programmer should not request a patch number other than 0 unless they know their implementation is affected by a defect that is corrected in a specific patch version.
 
-      Each module is macro-expanded in what is effectively a separate instance of the runtime system.  This prevents mutation within a module at macro-expansion-time from affecting the macro expansion of other modules or from affecting run-time.
+      Each module is macro-expanded in what is effectively a separate instance of the runtime system.  This prevents mutation within modules at macro-expansion-time from affecting the macro expansion of other modules or from affecting run-time.
 
     * reloading
 
@@ -695,7 +695,7 @@ Noteworthy Features
 
       Then what is effectively another separate instance of the runtime system calls "(on-code-change from-version state)" in the outermost scope of the reloaded module (if necessary).  This makes reloading stateful modules (even the 'main' one) without losing state possible.  Using a separate instance of the runtime system prevents reloading a module from affecting the state of other modules.
 
-      The "from-version" argument is provided by Macroni.  If the module is versioned, the argument is a list of integers representing the major, minor, and patch version numbers (in that order) of the corresponding module in the 'main' instance of the runtime system, else the argument is "null".
+      The "from-version" argument is provided by Macroni.  If the module is versioned, the argument is a list of integers representing the major, minor, and patch version numbers (in that order) of the corresponding module in the instance of the runtime system that called "reload", else the argument is "null".
 
       The "state" argument is what was passed to "reload".
 
@@ -703,7 +703,21 @@ Noteworthy Features
 
       The return value is unused.
 
-      After "on-code-change" returns, the reloaded module takes the place of the corresponding module in the 'main' instance of the runtime system.
+      After "on-code-change" returns, the reloaded module takes the place of the corresponding module in the instance of the runtime system that called "reload".
+
+      Macroni performs sanity checks when reloading modules to improve stability and ensure security.
+
+      If the module file does not exist, it is a defect.
+
+      Gaining or losing versioning is a defect.  The unversioned and versioned modules would be different instances.  Correct and reload the modules that import from the module you want to effectively gain or lose versioning instead.
+
+      Reloading a different major version is a defect.  The different major versions would be different instances.  Correct and reload the modules that import from the module you want to effectively change major versions instead.
+
+      Semantic Versioning is enforced.  Removing exported variables or changing the number of parameters of exported functions or macros after release in a minor version upgrade is a defect.  Exporting new variables without raising the minor version is a defect.  This check is performed after the reloaded module is macro-expanded and executed, but before state migration.  The timing of this check ensures that state is not mistaken for part of the module's interface, though it is unlikely that a variable whose type may vary should be exported.  Violating Semantic Versioning could break modules that depend on the reloaded module.
+
+      If "reload" is called with a "state" argument that is not "null" and the outermost scope of the reloaded module does not contain a function named "on-code-change" with an arity of 2, it is a defect.  Macroni will attempt to call "on-code-change" (only) in this situation because it indicates state needs to be migrated.  State migration cannot succeed if this function does not exist.
+
+      Introducing a circular dependency is a defect.
 
   * files and paths
 
