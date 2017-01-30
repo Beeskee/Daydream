@@ -681,6 +681,8 @@ Noteworthy Features
 
       Each module is macro-expanded in what is effectively a separate instance of the runtime system.  This prevents mutation within modules at macro-expansion-time from affecting the macro expansion of other modules or from affecting run-time.
 
+      Then what is effectively another separate instance of the runtime system executes the module.
+
     * reloading
 
       "reload" causes modules to be reread and executed.
@@ -691,9 +693,9 @@ Noteworthy Features
 
       When reloading a versioned module, the specified version is selected.  This makes downgrading possible.
 
-      Reloaded modules are macro-expanded as when initially loading.
+      Reloaded modules are macro-expanded and executed as when initially loading.
 
-      Then what is effectively another separate instance of the runtime system calls "(on-code-change from-version state)" in the outermost scope of the reloaded module (if necessary).  This makes reloading stateful modules (even the 'main' one) without losing state possible.  Using a separate instance of the runtime system prevents reloading a module from affecting the state of other modules.
+      Then the instance of the runtime system that executed the module calls "(on-code-change from-version state)" in the outermost scope of the reloaded module (if necessary).  This makes reloading stateful modules (even the 'main' one) without losing state possible.  Using a separate instance of the runtime system prevents reloading a module from affecting the state of other modules.
 
       The "from-version" argument is provided by Macroni.  If the module is versioned, the argument is a list of integers representing the major, minor, and patch version numbers (in that order) of the corresponding module in the instance of the runtime system that called "reload", else the argument is "null".
 
@@ -722,6 +724,8 @@ Noteworthy Features
       Normally reloading another module is a defect.  This would make sandbox escapes possible.  An attacker could write arbitrary code to a file with the filename of a module the sandbox has access to a definition from then reload from that file to change that definition to that code.  It would also discourage encapsulation.  Call a function the module exports to request it reload itself or use the debugger or listener to reload it instead.
 
       Exporting "on-code-change" is a defect.  This would make sandbox escapes possible.  An attacker could write arbitrary state to a module then call a function or macro from that module to cause it to misbehave.  It would also discourage encapsulation.
+
+      If an unhandled error occurs, the reloaded module does not take the place of the corresponding module in the instance of the runtime system that called "reload".  Performing macro expansion and execution and state migration in what are effectively separate instances of the runtime system ensures the instance of the runtime system that called "reload" remains in a sane state in this situation.
 
   * files and paths
 
