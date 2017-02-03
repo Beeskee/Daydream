@@ -5,9 +5,9 @@ If the host programming language uses a tracing garbage collector, it will be re
 
 The Solution Space
 
-Interactive programs require low, constant, latency.  Garbage collectors with long or variable pauses are unacceptable.
+Interactive programs require low, constant latency.  Garbage collectors with long or variable pauses are unacceptable.
 
-All modern, popular operating systems are written in C and C++.  C and C++ use manual resource management and lack safe multithreading abstractions.  These and other flaws have had a harmful effect on operating system design.  An acceptable garbage collector design will avoid making these problems worse and provide workarounds where possible.
+All modern popular operating systems are written in C and C++.  C and C++ use manual resource management and lack safe multithreading abstractions.  These and other flaws have had a harmful effect on operating system design.  An acceptable garbage collector design will avoid making these problems worse and provide workarounds where possible.
 
 Moving corrupts C and C++ pointers.  Moving garbage collectors are unacceptable.
 
@@ -18,7 +18,7 @@ Internal Resource Management
 
 Because of the limitations imposed by C and C++, only resources which are not observable by other processes can be managed automatically.  That is, effectively, memory.
 
-Modules must be garbage collected.  Reloading a module may cause the previous instance and some of its dependencies to become unreachable.
+Modules must be garbage collected.  Reloading a module may cause some of its dependencies to become unreachable.
 
 This garbage collector is continuous, generational, and incremental (i.e. marking and sweeping are decomposed into multiple steps).
 
@@ -37,7 +37,7 @@ External Resource Management
 
 Because of the limitations imposed by C and C++, resources which are observable by other processes must be managed manually.  That includes files, graphical user interfaces, and network connections.
 
-It may seem like the garbage collector could manage external resources automatically, but that would not work reliably and would hide defects.  Modern, popular operating systems assume resources are deallocated as soon as possible, often in a specific order.  Windows will cause an error if the same process tries to open the same file for exclusive access more than once without closing it in between, and most operating systems will cause an error if the same process tries to open the same port more than once without closing it in between.  An operating system designed with automatic resource management in mind would tolerate the same process allocating the same resource multiple times and only deallocate it when it had been deallocated by the process the same number of times (or when the process terminates).  Delaying deallocating an external resource could result in errors, so the garbage collector must signal a defect condition when an external resource becomes unreachable without having been deallocated.  The garbage collector must deallocate the unreachable external resource before signaling the defect condition to prevent a resource leak.
+It may seem like the garbage collector could manage external resources automatically, but that would not work reliably and would hide defects.  Modern popular operating systems assume resources are deallocated as soon as possible, often in a specific order.  Windows will cause an error if the same process tries to open the same file for exclusive access more than once without closing it in between, and most operating systems will cause an error if the same process tries to open the same port more than once without closing it in between.  An operating system designed with automatic resource management in mind would tolerate the same process allocating the same resource multiple times and only deallocate it when it had been deallocated by the process the same number of times (or when the process terminates).  Delaying deallocating an external resource could result in errors, so the garbage collector must signal a defect condition when an external resource becomes unreachable without having been deallocated.  The garbage collector must deallocate the unreachable external resource before signaling the defect condition to prevent a resource leak.
 
 External resources must be modeled as proxy objects associated with a procedure for allocating them and a procedure for deallocating them.
 
