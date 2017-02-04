@@ -587,7 +587,7 @@ Noteworthy Features
 
     It may not be obvious how to define a local macro to simplify definitions in the outermost scope because "def" defines variables in the current scope.
 
-    You could construct the macro in the outermost scope then call it immediately by surrounding the "mac" form and any arguments in parentheses (like "let" for macros).  The advantage is this does exactly what you want.  The disadvantage is this is complicated.
+    You could construct the macro in the outermost scope then call it immediately by surrounding the "mac" form and any arguments in parentheses.  The advantage is this does exactly what you want.  The disadvantage is this is complicated.  Macroni provides the "maclet" macro, inspired by Common Lisp's "macrolet", to make this simple.
 
     You could define the macro in the outermost scope and not export it.  The advantage is this is simple.  The disadvantage is this pollutes the module's outermost scope.
 
@@ -603,12 +603,14 @@ Noteworthy Features
 
   There are useful built-in restarts for all built-in defect and input/output error types.
 
+  Conditions propagate to the instance of the runtime system that called code in another instance of the runtime system.  Calls across instances of runtime systems may be explicit (e.g. a sandboxed evaluator call) or implicit (e.g. macro expansion).
+
 * modules
 
   * purpose
 
     The module system serves multiple purposes:
-    * swapping implementations of interfaces
+    * swapping implementations
     * libraries
     * sandboxing
 
@@ -665,7 +667,7 @@ Noteworthy Features
 
     * versioning
 
-      Modules may be versioned.  Unversioned modules are usually used for applications and swapping implementations of interfaces.  Versioned modules are usually used for libraries.
+      Modules may be versioned.  Unversioned modules are usually stateful and used for applications or swapping implementations.  Versioned modules are usually stateless and used for libraries.
 
       Loading different files for the same unversioned module results in replacing the previous instance of that module in an instance of the runtime system.
 
@@ -745,9 +747,13 @@ Noteworthy Features
 
 * security
 
-  The security problem must be solved at the operating system level, not the programming language level.
+  * purpose
 
-  However, Macroni was designed with security in mind.
+    Modern popular operating systems lack effective security models.  Modern popular programming languages also lack effective security models.  With nothing standing between the user's data and malware, they have become a popular vehicle for attacks.
+
+    Those in charge of the development of commercial modern popular operating systems are motivated to not solve the problem.  Fear of vulnerabilities being exploited drive the sales of updated versions (with different vulnerabilities).  Those in charge of the development of open source modern popular operating systems are not motivated to solve the problem.  Existing software would have to run in a sandbox, and writing new software would require learning the new security model.
+
+    Macroni implements its own security model, not because that is the right way to solve the problem, but because that is the only way that remains.  Including a security model in a programming language without one requires reimplementing the programming language and software written in it, so Macroni's security model is built-in.
 
   * avoid conflation of operating systems and programming languages
 
