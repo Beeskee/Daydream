@@ -587,7 +587,7 @@ Noteworthy Features
 
     It may not be obvious how to define a local macro to simplify definitions in the outermost scope because "def" defines variables in the current scope.
 
-    You could construct the macro in the outermost scope then call it immediately by surrounding the "mac" form and any arguments in parentheses.  The advantage is this does exactly what you want.  The disadvantage is this is complicated.  Macroni provides the "maclet" macro, inspired by Common Lisp's "macrolet", to make this simple.
+    You could construct the macro in the outermost scope then call it immediately by surrounding the "mac" form and any arguments in parentheses.  The advantage is this does exactly what you want.  The disadvantage is this is complicated.  Macroni provides the "maclet" and "symaclet" macros, inspired by Common Lisp's "macrolet" and "symbol-macrolet", to make this simple.
 
     You could define the macro in the outermost scope and not export it.  The advantage is this is simple.  The disadvantage is this pollutes the module's outermost scope.
 
