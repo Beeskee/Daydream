@@ -358,7 +358,7 @@ Noteworthy Features
 
   Improper lists are not supported.  Any operation that would produce one is a defect.  Improper lists seem to be inferior to proper lists or vectors for all purposes, and the infix syntax used to specify them is inconsistent with the rest of Lisp.
 
-  There is no character type.  A string is effectively an immutable list of strings of 1 character.  This may result in more code reuse.  Strings cannot be mutated because they are frequently used as hash table keys.  Strings cannot be indexed because UTF-8 is a variable-length code.  Strings of 1 character can be converted to and from integers.
+  There is no character type.  A string is effectively an immutable list of strings of 1 character.  This may result in more code reuse.  Strings cannot be mutated because they are frequently used as hash table keys.  Strings cannot be indexed because UTF-8 is a variable-length code.  Strings can be converted to and from vectors of integers representing the bytes of their UTF-8 encoding.
 
   Vectors are dynamic arrays.  Vectors may be used as stacks.  This makes vectors more general.  Bounds are checked.  Like singly-linked lists, dynamic arrays are used in most hash table implementations, which are used in most environment implementations.  Exposing them to programs written in the programming language avoids unnecessarily restrictions.
 
@@ -476,7 +476,15 @@ Noteworthy Features
 
 * quoting
 
-  "quote", "quasiquote", "unquote", and "unquote-splicing" work like they do in Common Lisp (e.g. when nested).
+  The "quote", "quasiquote", "unquote", and "unquote-splicing" special forms behave as they do in most correctly implemented Lisp-like languages.  They are often implemented incorrectly, so they are explained here.
+
+  "'" is equivalent to "quote", "`" is equivalent to "quasiquote", "," is equivalent to "unquote", and ",@" is equivalent to "unquote-splicing".  The shorthand forms wrap the next form in their longhand form.  The parser converts the shorthand forms to the longhand forms.  This is standardized so that code-walking macros are portable.
+
+  "quote" returns its argument unevaluated.  "quasiquote" behaves like "quote", except "unquote" and "unquote-splicing" inside its argument may be evaluated.  "unquote" returns its arguments evaluated.  "unquote-splicing" evaluates its arguments, expects lists to be returned, and splices those lists' elements into the list returned by "quasiquote".
+
+  "quote" and "quasiquote" accept 1 argument.  "unquote" and "unquote-splicing" accept 0 or more arguments.  This is necessary because "unquote-splicing" may splice 0 or more elements into a list that may be "unquote"ed or "unquote-splicing"ed.  When "unquote" is called with 0 arguments, it returns "null".  When "unquote-splicing" is called with 0 arguments, it splices "null" (i.e. "quasiquote" returns that part of the list without any new elements).  When "unquote" or "unquote-splicing" are called with multiple arguments, they behave as if they had been called with each argument individually.
+
+  Only the outermost quotation (whether "quote" or "quasiquote") is removed by evaluation.  When "quasiquote" is nested, only unquotations (whether "unquote" or "unquote-splicing") at the same nesting level as the outermost quasiquotation are evaluated.  The nesting level increases by one inside each nested quasiquotation and decreases by one inside each nested unquotation.
 
   "unquote" or "unquote-splicing" outside of "quasiquote" is a defect.
 
