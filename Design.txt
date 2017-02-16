@@ -117,7 +117,7 @@ Non-Goals
 
   In Macroni
   * macros have no naming conventions because they can describe other programming languages with their own conventions
-  * 'constructor' functions are nouns, which are usually abbreviated
+  * constructor functions are nouns, which are usually abbreviated
   * normal functions and restart functions are verbs
   * event handler functions begin with "on-" and are named after occurrences
 
@@ -476,7 +476,7 @@ Noteworthy Features
 
 * quoting
 
-  The "quote", "quasiquote", "unquote", and "unquote-splicing" special forms behave as they do in most correctly implemented Lisp-like languages.  They are often implemented incorrectly, so they are explained here.
+  The "quote", "quasiquote", "unquote", and "unquote-splicing" special forms behave as they do in correctly implemented Lisp-like languages.  They are often implemented incorrectly, so they are explained here.
 
   "'" is equivalent to "quote", "`" is equivalent to "quasiquote", "," is equivalent to "unquote", and ",@" is equivalent to "unquote-splicing".  The shorthand forms wrap the next form in their longhand form.  The parser converts the shorthand forms to the longhand forms.  This is standardized so that code-walking macros are portable.
 
