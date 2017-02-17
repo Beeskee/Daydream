@@ -446,6 +446,8 @@ Noteworthy Features
 
         Only lexical scope is supported.  Dynamic scope prevents composition and makes code difficult to maintain.  Closures and partial application are a composable, maintainable alternative to dynamic scope for avoiding repeatedly specifying an argument.
 
+      * definitions
+
       * calls
 
         Even though (trailing) optional and rest parameters are supported, most forms are of fixed-arity.  Partial application only works with fixed-arity functions.  If a form cannot be used with partial application (special forms and macros), and variable-arity could be useful, it is used.  Most constructors (e.g. "dic", "lst", and "vec") are variadic because if they were not it would be impossible to create data structures with different numbers of elements.  "do" (explicit and implicit) is variadic because if it were not it would be impossible to create control flow sequences with different numbers of expressions.  Optional parameters follow "?", whereas the rest parameter follows "&".  To avoid surprising behavior, "?" and "&" are not valid variable names.  Keyword parameters are not supported.  They cannot be used with partial application, and interact in surprising ways with optional and rest parameters.  Data structures are often used where optional, rest, and keyword parameters would be used in other Lisp-like languages.
@@ -699,7 +701,7 @@ Noteworthy Features
 
       Reloading is useful to correct defects or include new features in a running program.
 
-      "(reload module state)" is a function that returns "null".
+      "(reload module)" is a function that returns "null".
 
       When reloading a versioned module, the specified version is selected.  This makes downgrading possible.
 
