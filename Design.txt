@@ -488,9 +488,15 @@ Noteworthy Features
 
   Only the outermost quotation (whether "quote" or "quasiquote") is removed by evaluation.  When "quasiquote" is nested, only unquotations (whether "unquote" or "unquote-splicing") at the same nesting level as the outermost quasiquotation are evaluated.  The nesting level increases by one inside each nested quasiquotation and decreases by one inside each nested unquotation.
 
-  "unquote" or "unquote-splicing" outside of "quasiquote" is a defect.
+  Evaluating unquotations outside of "quasiquote" is a defect.
 
-  Destructive unquote-splicing is not supported because it seems to be only useful for causing defects.
+  Evaluating "unquote-splicing" outside of a list (e.g. "`,@form") is a defect.  Be aware that evaluating "unquote" outside of a list (e.g. "`,form") is valid.
+
+  Evaluating excessive unquotations is a defect.
+
+  These checks are performed during evaluation, not parsing, so that code that constructs quasiquotations is easier to write.
+
+  Destructive unquote-splicing is not supported because it seems to be only useful for causing defects.  Be aware that "unquote-splicing" results in all spliced elements /except the last/ sharing structure.
 
 * macros
 
