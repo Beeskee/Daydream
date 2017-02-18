@@ -496,7 +496,7 @@ Noteworthy Features
 
   These checks are performed during evaluation, not parsing, so that code that constructs quasiquotations is easier to write.
 
-  Destructive unquote-splicing is not supported because it seems to be only useful for causing defects.  Be aware that "unquote-splicing" results in all spliced elements /except the last/ sharing structure.
+  Destructive unquote-splicing is not supported because it seems to be only useful for causing defects.
 
 * macros
 
